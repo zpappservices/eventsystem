@@ -1,5 +1,5 @@
 {
-  "name": "blueeventapp-fe",
+  "name": "eventapp-frontend",
   "version": "0.1.0",
   "private": true,
   "scripts": {
