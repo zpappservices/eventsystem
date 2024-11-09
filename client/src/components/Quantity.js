@@ -3,10 +3,10 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 
 const Quantity = () => {
-   const [quantity, setQuantity] = useState(1);
+   const [quantity, setQuantity] = useState(0);
 
    const handleDecrement = () => {
-      if (quantity > 1) {
+      if (quantity > 0) {
          setQuantity((prevQuantity) => prevQuantity - 1);
       }
    };
@@ -16,23 +16,23 @@ const Quantity = () => {
    };
 
    return (
-      <div className="w-fit flex items-center justify-between gap-2 overflow-hidden border border-gray-500 rounded-md">
+      <div className="flex border rounded-[8px] overflow-hidden">
          <div
-            className="leading-normal text-black px-4 transition-all duration-300 py-3 flex items-center hover:bg-[#FF7F50]"
+            className="w-10 text-[#636363] leading-[24px] text-center text-[16px] hover:bg-[#FF7F50]"
             onClick={handleDecrement}
          >
-            <RemoveIcon fontSize="small" color="#9ca3af"/>
+            -
          </div>
 
-         <p className="text-[22px] leading-normal text-black text-center w-8">
+         <p className="text-[16px] leading-normal text-black text-center w-10">
             {quantity}
          </p>
 
          <div
-            className="leading-normal text-black px-4 transition-all duration-300 py-3 flex items-center hover:bg-[#FF7F50]"
+            className="w-10 text-[#636363] leading-[24px] text-center text-[16px] hover:bg-[#FF7F50]"
             onClick={handleIncrement}
          >
-            <AddIcon fontSize="small" color="#9ca3af"/>
+            +
          </div>
       </div>
    );

@@ -36,30 +36,52 @@ const EventsDetails = ({ id }) => {
                   </p>
                </div>
                <div className="w-full flex flex-col gap-2  border-b-2 border-black pb-2.5">
-                  <p className="text-[16px] leading-snug">
-                     Regular <span className="font-semibold ms-5">$</span>5000.0
-                  </p>
-                  <p className="text-[16px] leading-snug">
-                     VIP <span className="font-semibold ms-5">$</span>10000.0
-                  </p>
-                  <p className="text-[16px] leading-snug">
-                     Silver table <span className="font-semibold ms-5">$</span>
-                     20000.0
-                  </p>
-                  <p className="text-[16px] leading-snug">
-                     Gold table <span className="font-semibold ms-5">$</span>
-                     50000.0
-                  </p>
-                  <p className="text-[16px] leading-snug">
-                     Diamond table <span className="font-semibold ms-5">$</span>
-                     150000.0
-                  </p>
+                  <div className="flex justify-between items-center">
+                     <p className="text-[16px] leading-snug">
+                        Regular <span className="font-semibold ms-5">$</span>
+                        5000.0
+                     </p>
+
+                     <Quantity />
+                  </div>
+                  <div className="flex justify-between items-center">
+                     <p className="text-[16px] leading-snug">
+                        VIP <span className="font-semibold ms-5">$</span>10000.0
+                     </p>
+
+                     <Quantity />
+                  </div>
+                  <div className="flex justify-between items-center">
+                     <p className="text-[16px] leading-snug">
+                        Silver table{" "}
+                        <span className="font-semibold ms-5">$</span>
+                        20000.0
+                     </p>
+
+                     <Quantity />
+                  </div>
+                  <div className="flex justify-between items-center">
+                     <p className="text-[16px] leading-snug">
+                        Gold table <span className="font-semibold ms-5">$</span>
+                        50000.0
+                     </p>
+
+                     <Quantity />
+                  </div>
+                  <div className="flex justify-between items-center">
+                     <p className="text-[16px] leading-snug">
+                        Diamond table{" "}
+                        <span className="font-semibold ms-5">$</span>
+                        150000.0
+                     </p>
+
+                     <Quantity />
+                  </div>
                </div>
                <div>
                   <p className="text-[20px] leading-normal font-semibold">
                      QUANTITY
                   </p>
-                  <Quantity />
                </div>
                <div className="w-full flex flex-col gap-4">
                   <Button>ADD TO CART</Button>
