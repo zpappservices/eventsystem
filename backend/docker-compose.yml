@@ -1,11 +1,11 @@
 version: '3.8'
 
 services:
-  brave-dev:
+  zpevent-dev:
     build: .
-    image: backend-brave
+    image: backend-zpevent
     ports:
       - "4000:4000"
   
-    container_name: brave-dev-backend
+    container_name: zpevent-dev-backend
 
