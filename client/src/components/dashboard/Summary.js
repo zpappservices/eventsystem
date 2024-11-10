@@ -35,4 +35,5 @@ const Summary = () => {
    );
 };
 
+export { Card };
 export default Summary;
