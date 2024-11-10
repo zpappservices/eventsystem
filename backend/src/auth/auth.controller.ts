@@ -14,8 +14,6 @@ import { SigninDto } from './dtos/signin.dto';
 import { Request, Response } from 'express';
 import { FirebaseAuthGuard } from './guards/firebase.guard';
 import { ActivateAccountDto } from './dtos/email.dto';
-import { AuthGuard } from '@nestjs/passport';
-import { LinkedInAuthGuard } from './guards/linkedln.guard';
 
 
 @Controller('auth')
@@ -61,19 +59,5 @@ export class AuthController {
     @Query('email') email: string
   ): Promise<any> {
      return this.authService.resendOtp(email);
-  }
-
-  @Get('linkedin')
-  @UseGuards(LinkedInAuthGuard)
-  linkedinLogin() {
-    // This will initiate the LinkedIn authentication process
-  }
-
-  @Get('linkedin/callback')
-  @UseGuards(LinkedInAuthGuard)
-  linkedinCallback(@Req() req) {
-    // LinkedIn redirects here after successful authentication
-    const user = req.user;
-    return user;
   }
 }
