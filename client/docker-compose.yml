@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  client-dev:
+    build: .
+    image: client-zpevent
+    ports:
+      - "3000:3000"
+  
+    container_name: client-dev
+
+
+
