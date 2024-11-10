@@ -1,19 +1,5 @@
 import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '@/integrations/prisma/prisma.service';
-import { CreateUserDto, WaitingListDto } from './dtos/createUser.dto';
-import { User, PrismaClient, Prisma } from '@prisma/client';
-import { JwtService } from '@nestjs/jwt';
-
-import { Request, Response, NextFunction } from 'express';
-import { userInfo } from 'os';
-import { askOpenAI, askOpenAI_Chunks } from '@/integrations/openAI_init';
-import { GetCareerDto, UserPreferenceDto, UserSessionDto } from './dtos/user-session.dto';
-import { json } from 'stream/consumers';
-import { stringify } from 'querystring';
-import { writeFileSync } from 'fs';
-import {  extractTextFromBase64} from '@/utils/helper';
-    
-
 
 @Injectable()
 export class UserService {
