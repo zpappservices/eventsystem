@@ -5,11 +5,11 @@ import Header from "@/components/Header";
 import Layout from "@/components/Layout";
 
 const Index = () => {
-   return (
-      <Layout>
-         <Home />
-      </Layout>
-   );
+  return (
+    <Layout>
+      <Home />
+    </Layout>
+  );
 };
 
 export default Index;
