@@ -1,5 +1,5 @@
+import { apiRequest } from "@/utils/apiService";
 import { useState, useCallback } from "react";
-import { apiRequest } from "../api/apiServices";
 
 const useApiRequest = ({
    method,
@@ -7,6 +7,7 @@ const useApiRequest = ({
    data = {},
    headers = {},
    useToken = true,
+   token,
 }) => {
    const [responseData, setResponseData] = useState(null);
    const [error, setError] = useState(null);
@@ -22,7 +23,8 @@ const useApiRequest = ({
             url,
             data,
             useToken,
-            headers
+            headers,
+            token
          );
          setResponseData(response);
       } catch (err) {

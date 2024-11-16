@@ -1,17 +1,22 @@
 import { useState } from "react";
 import { IoIosCloseCircleOutline } from "react-icons/io";
-import { FcGoogle } from "react-icons/fc";
 import { FaApple, FaFacebook } from "react-icons/fa";
 import SignUpSignInForm from "./SignUpSignInForm";
+import SocialLogin from "./auth/SocialLogin";
+import SignUp from "./auth/SignUp";
+import GoogleSignin from "./auth/GoogleSignin";
+import SignIn from "./auth/SignIn";
 
-const SignUpSignInModal = ({ isLoginModal, setIsLoginModal, setIsModalOpen }) => {
+const SignUpSignInModal = ({
+  isLoginModal,
+  setIsLoginModal,
+  setIsModalOpen,
+}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-
-  const handleSocialLogin = (provider) => console.log(`${provider} login clicked`);
 
   const resetFields = () => {
     setEmail("");
@@ -47,7 +52,9 @@ const SignUpSignInModal = ({ isLoginModal, setIsLoginModal, setIsModalOpen }) =>
             {isLoginModal ? "Sign in to your account" : "Create a new account"}
           </h2>
           <p className="text-sm mb-1">
-            {isLoginModal ? "Don't have an account?" : "Already have an account?"}
+            {isLoginModal
+              ? "Don't have an account?"
+              : "Already have an account?"}
             <button
               type="button"
               onClick={toggleModalType}
@@ -56,17 +63,10 @@ const SignUpSignInModal = ({ isLoginModal, setIsLoginModal, setIsModalOpen }) =>
               {isLoginModal ? "Sign Up" : "Sign In"}
             </button>
           </p>
-          <button
-            type="button"
-            onClick={() => handleSocialLogin("Google")}
-            className="w-full flex justify-between items-center p-1 mt-4 font-medium text-black border border-black rounded transition-transform duration-200 ease-in-out hover:scale-[1.05]"
-          >
-            <FcGoogle className="text-xl" />
-            <p className="mr-[25%]"> Continue with Google</p>
-          </button>
+          <GoogleSignin />
 
           {/*---------Sign Up and Sign In Form------------------------*/}
-          <SignUpSignInForm
+          {/* <SignUpSignInForm
             isLoginModal={isLoginModal}
             email={email}
             setEmail={setEmail}
@@ -80,29 +80,15 @@ const SignUpSignInModal = ({ isLoginModal, setIsLoginModal, setIsModalOpen }) =>
             setErrorMessage={setErrorMessage}
             resetFields={resetFields}
             setIsModalOpen={setIsModalOpen}
-          />
+          /> */}
 
-          <p className="text-gray-500 text-lg self-center my-3 font-medium">OR</p>
+          {isLoginModal ? (
+            <SignIn />
+          ) : (
+            <SignUp />
+          )}
 
-          <div className="flex gap-10">
-            <button
-              type="button"
-              onClick={() => handleSocialLogin("Apple")}
-              className="w-1/2 flex justify-between items-center p-1 mt-4 font-medium text-black border border-black rounded transition-transform duration-200 ease-in-out hover:scale-[1.05]"
-            >
-              <FaApple className="text-xl" />
-              <p className="mr-[25%]">Apple</p>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => handleSocialLogin("Facebook")}
-              className="w-1/2 flex justify-between items-center p-1 mt-4 font-medium text-black border border-black rounded transition-transform duration-200 ease-in-out hover:scale-[1.05]"
-            >
-              <FaFacebook className="text-xl" />
-              <p className="mr-[6%] sm:mr-[15%] md:mr-[20%]">Facebook</p>
-            </button>
-          </div>
+          <SocialLogin />
         </div>
       </div>
     </>

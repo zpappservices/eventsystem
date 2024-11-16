@@ -1,28 +1,29 @@
-import { auth } from "@/config/firebase";
+import React, { useEffect, useState } from "react";
+import { ButtonLoading } from "../widgets/ButtonLoading";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { ButtonLoading } from "./widgets/ButtonLoading";
+import { auth } from "@/config/firebase";
+import useAuthToken from "@/hooks/useAuthToken";
+import useApiRequest from "@/hooks/useApiRequest";
 import axios from "axios";
-import { useState } from "react";
+import { toast } from "react-toastify";
+import { useRouter } from "next/router";
 
-const SignUpSignInForm = ({
-  isLoginModal,
-  email,
-  setEmail,
-  password,
-  setPassword,
-  confirmPassword,
-  setConfirmPassword,
-  showPassword,
-  setShowPassword,
-  resetFields,
-  setIsModalOpen,
-  errorMessage,
-  setErrorMessage,
-}) => {
+const SignIn = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [key, setKey] = useState(null);
+
+  const router = useRouter();
+
+  const { storeUserToken } = useAuthToken();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMessage(""); // Reset error message on submit
+    setKey(null);
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regex for email validation
 
     if (!emailPattern.test(email)) {
@@ -30,49 +31,58 @@ const SignUpSignInForm = ({
       return;
     }
 
-    if (!isLoginModal) {
-      if (password !== confirmPassword) {
-        setErrorMessage("Passwords do not match!");
-        return;
-      }
-      //   console.log({ email, password });
-      // } else {
-      //   console.log({ email, password });
-    }
-    resetFields(); /* 
-    setIsModalOpen(false); */
+    setIsLoading(true);
 
-    if (isLoginModal) {
-      setIsLoading(true);
-      try {
-        const fbUser = await signInWithEmailAndPassword(auth, email, password);
-        console.log(fbUser?.user.accessToken);
-      } catch (error) {
-        console.log(error.message, error.code);
-      } finally {
-        setIsLoading(false);
-      }
-    } else {
+    try {
+      const fbUser = await signInWithEmailAndPassword(auth, email, password);
+      console.log(fbUser);
+      setKey(fbUser.user.accessToken);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const signin = async () => {
       setIsLoading(true);
       try {
         const response = await axios.post(
-          "http://34.171.52.201:4000/api/auth/signup"
+          "http://34.171.52.201:4000/api/auth/login",
+          { email: email, password: password },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${key}`, 
+            },
+          }
         );
-        console.log(response.data);
+
+        const data = response.data;
+        if (data?.statusCode >= 200 && data?.statusCode < 300) {
+          toast.success("Signin Successful!");
+          const id = data?.data?.existingUser?.id;
+          storeUserToken(id, key, true);
+          router.push("/dashboard")
+        } else if (data?.error || data?.message) {
+          toast.error(data?.error || data?.message || "Operation failed!");
+        } else if (data?.statusCode >= 400 && data?.statusCode < 500) {
+          toast.error(data?.error || data?.message || "Operation failed!");
+        }
       } catch (error) {
-        console.log(error);
-        <Toast
-          message="Item added to cart"
-          duration={5000}
-          actionLabel="UNDO"
-          onActionClick={() => console.log("Undo clicked")}
-          position={{ vertical: "top", horizontal: "right" }}
-        />;
+        toast.error("error");
+        console.error(
+          "Error:",
+          error.response ? error.response.data : error.message
+        );
       } finally {
         setIsLoading(false);
       }
-    }
-  };
+    };
+
+    if (key) signin();
+  }, [key]);
 
   return (
     <>
@@ -105,22 +115,6 @@ const SignUpSignInForm = ({
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        {!isLoginModal && (
-          <div className="flex flex-col">
-            <label className="text-xs mb-1">Confirm Password</label>
-            <input
-              type={showPassword ? "text" : "password"}
-              className={`p-1 border-2 rounded focus:outline-none ${
-                errorMessage === "Passwords do not match!"
-                  ? "focus:border-pink-500 focus:ring-pink-500/30 focus:ring border-pink-500"
-                  : "focus:border-[#FFC8A0] focus:ring-[#FFC8A0]/30 focus:ring border-gray-300"
-              }`}
-              required
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
-          </div>
-        )}
         {errorMessage && (
           <p className="text-pink-500 text-xs">{errorMessage}</p>
         )}
@@ -134,18 +128,18 @@ const SignUpSignInForm = ({
           Show Password
         </label>
         <button type="button" className="text-sm text-black self-end underline">
-          {isLoginModal ? "Forgot password?" : ""}
+          Forgot password?
         </button>
         <ButtonLoading
-          disabled={isLoading}
+          isLoading={isLoading}
           type="submit"
           className="w-[30%] self-center p-1 mt-3 font-medium bg-[#FF7F50] text-white rounded transition-transform duration-200 ease-in-out hover:scale-[1.05]"
         >
-          {isLoginModal ? "Continue" : "Submit"}
+          Continue
         </ButtonLoading>
       </form>
     </>
   );
 };
 
-export default SignUpSignInForm;
+export default SignIn;
