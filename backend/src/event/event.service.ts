@@ -121,4 +121,38 @@ export class EventService {
         };
       }
   }
+
+  
+  async togglePublished(id: any): Promise<any> {
+    try {
+      const event = await this.prisma.event.findUnique({ where: { id } });
+      if (!event) {
+        return {
+          statusCode: HttpStatus.NOT_FOUND,
+          data: null,
+          message: `Event with id ${id} not found`,
+        };
+      }
+      const updated = await this.prisma.event.update({
+        where: {
+          id: id,
+        },
+        data: {
+          isPublished: !event.isPublished,
+        },
+      });
+      return {
+        statusCode: HttpStatus.CREATED,
+        data: updated,
+        message: 'Success',
+      };
+    } catch (err) {
+      console.log(err);
+      return {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        data: null,
+        message: 'Fail',
+      };
+    }
+  }
 }
