@@ -8,22 +8,76 @@ datasource db {
 }
 
 model User {
-  id        String  @id @default(uuid())
-  email     String  @unique
-  accountId String @unique
-  role RoleType @default(USER)
-  username String?
-  provider    String?
-  lastLogin   DateTime?
-  createdOn            DateTime          @default(now())
-  isOnline Boolean  @default(false)
-  isVerified               Boolean           @default(false)
+  id                   String    @id @default(uuid())
+  email                String    @unique
+  accountId            String    @unique
+  role                 RoleType  @default(USER)
+  username             String?
+  provider             String?
+  lastLogin            DateTime?
+  createdOn            DateTime  @default(now())
+  isOnline             Boolean   @default(false)
+  isVerified           Boolean   @default(false)
   passwordResetToken   String?
   passwordResetExpires DateTime?
+  Event                Event[]
 
   @@unique(id)
   @@index([email])
+}
 
+model Category {
+  id          String   @id @default(uuid())
+  name        String?
+  description String?
+  active      Boolean  @default(true)
+  createdBy   String?
+  createdOn   DateTime @default(now())
+  updatedBy   String?
+  updatedOn   DateTime @default(now())
+}
+
+model Event {
+  id           String    @id @default(uuid())
+  userId       String
+  title        String
+  description  String?
+  location     String?
+  StartDate    DateTime?
+  EndDate      DateTime?
+  StartTime    String?
+  EndTime      String?
+  AllDay       Boolean?
+  image_banner String?
+  image_tile   String?
+  isPublished  Boolean?  @default(false)
+  active       Boolean   @default(true)
+  createdBy    String?
+  createdOn    DateTime  @default(now())
+  updatedBy    String?
+  updatedOn    DateTime  @default(now())
+
+  //EventContact EventContact?
+
+  user         User           @relation(fields: [userId], references: [id])
+  EventContact EventContact[]
+}
+
+model EventContact {
+  id        String   @id @default(uuid())
+  email     String?
+  phone     String?
+  facebook  String?
+  instagram String?
+  twitter   String?
+  eventId   String
+  active    Boolean  @default(true)
+  createdBy String?
+  createdOn DateTime @default(now())
+  updatedBy String?
+  updatedOn DateTime @default(now())
+
+  event Event @relation(fields: [eventId], references: [id])
 }
 
 enum RoleType {
