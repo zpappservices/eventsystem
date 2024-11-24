@@ -18,6 +18,12 @@ export enum LocationType {
   toBeAnnounced = "toBeAnnounced",
 }
 
+export enum TicketType {
+  paid = 'Paid',
+  free = "Free",
+  donation = "Donation",
+}
+
 export class EventDto {
 
   @IsNotEmpty()
@@ -82,6 +88,7 @@ export class EventDto {
   createdBy: string;
 }
 
+
 export class EventContactDto {
   @IsOptional()
   @IsString()
@@ -111,6 +118,11 @@ export class EventContactDto {
 
 
 export class EventTicketDto {
+
+  @IsNotEmpty()
+  @IsEnum(TicketType)
+  type: TicketType;
+
   @IsNotEmpty()
   @IsString()
   name: string;
@@ -126,12 +138,26 @@ export class EventTicketDto {
   @IsNotEmpty()
   @IsNumber()
   @Min(1)
-  quantity: string;
+  quantity: number;
   
   @IsNotEmpty()
   @IsDecimal()
   price: Decimal;
   
+}
+
+
+export class VendorEventDto {
+
+  @IsNotEmpty()
+  eventDto: EventDto;
+
+  @IsNotEmpty()
+  contactDto: EventContactDto;
+
+  @IsOptional()
+  ticketDto: EventTicketDto[];
+
 }
 
 
