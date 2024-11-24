@@ -1,6 +1,7 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { EventContactDto, EventDto } from './dtos/event.dto';
+import { EventContactDto, EventDto, EventTicketDto, VendorEventDto } from './dtos/event.dto';
 import { PrismaService } from '@/integrations/prisma/prisma.service';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class EventService {
@@ -31,7 +32,8 @@ export class EventService {
 
     try {
         const event = await this.prisma.event.findUnique({
-          where: {id}
+          where: {id},
+          include:{ EventTicket: true, EventContact: true}
         });
         return {
           statusCode: HttpStatus.OK,
@@ -97,6 +99,89 @@ export class EventService {
         return {
           statusCode: HttpStatus.CREATED,
           data: created,
+          message: 'Event created successfully.',
+        };
+      } catch (err) {
+        console.log(err);
+        return {
+          statusCode: HttpStatus.EXPECTATION_FAILED,
+          data: null,
+          message: 'Unable to create event.',
+        };
+      }
+  }
+
+  
+  async createEventV2(data: VendorEventDto) {
+
+    try {
+
+        const {eventDto, contactDto, ticketDto } =  data
+
+        await this.prisma.$transaction(async (pr) => {
+
+            const eventCreated = await this.prisma.event.create({
+                data: {
+                  userId: eventDto.userId,
+                  title: eventDto.title,
+                  description: eventDto.description,
+                  location: eventDto.location,
+                  StartDate: new Date(eventDto.startDate),
+                  EndDate: new Date(eventDto.endDate),
+                  StartTime: eventDto.startTime,
+                  EndTime: eventDto.endTime,
+                  AllDay: eventDto.AllDay,           
+                  image_tile: eventDto.image_tile,
+                  image_banner: eventDto.image_banner,
+                  isPublished: false,
+                  active: true,
+                  category: eventDto.categoryId,
+      
+                  createdOn: new Date(),
+                  createdBy: eventDto.createdBy,
+                }
+              });
+    
+              const contact = await this.prisma.eventContact.create({
+                data: {
+                  email: contactDto.email,
+                  phone: contactDto.phone,
+                  instagram: contactDto.instagram,
+                  facebook: contactDto.facebook,
+                  twitter: contactDto.twitter,
+                  eventId: eventCreated.id,
+      
+                  createdOn: new Date()
+                }
+              });
+          
+              const items = await pr.eventTicket.createMany({
+                data: ticketDto.map(item => (
+                  { 
+                    type: item.type,
+                    name: item.name,
+                    description: item.description,
+                    quantity: item.quantity,
+                    price: item.price,
+                    eventId: eventCreated.id,
+        
+                    createdOn: new Date() 
+      
+                  })),
+              });
+    
+        },
+        {
+          maxWait: 5000, // default: 2000
+          timeout: 10000, // default: 5000      
+          //isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
+        }
+      
+      );
+        
+        return {
+          statusCode: HttpStatus.CREATED,
+          data: "Event Created",
           message: 'Event created successfully.',
         };
       } catch (err) {
@@ -285,5 +370,112 @@ export class EventService {
         };
       }
   }
+
+    // Ticket
+    async createTicket(data: EventTicketDto) {
+
+        try {
+            const created = await this.prisma.eventTicket.create({
+              data: {
+                type: data.type,
+                name: data.name,
+                description: data.description,
+                quantity: data.quantity,
+                price: data.price,
+                eventId: data.eventId,
+    
+                createdOn: new Date()
+              }
+            });
+            return {
+              statusCode: HttpStatus.CREATED,
+              data: created,
+              message: 'Ticket created successfully.',
+            };
+          } catch (err) {
+            console.log(err);
+            return {
+              statusCode: HttpStatus.EXPECTATION_FAILED,
+              data: null,
+              message: 'Unable to create ticket  .',
+            };
+          }
+      }
+    
+      
+      async updateTicket(data: EventTicketDto, id: string) {
+    
+        try {
+            const created = await this.prisma.eventTicket.update({
+                where: {id},
+              data: {
+                type: data.type,
+                name: data.name,
+                description: data.description,
+                quantity: data.quantity,
+                price: data.price,
+                eventId: data.eventId,
+    
+                createdOn: new Date()
+              },
+            });
+            return {
+              statusCode: HttpStatus.CREATED,
+              data: created,
+              message: 'Ticket created successfully.',
+            };
+          } catch (err) {
+            console.log(err);
+            return {
+              statusCode: HttpStatus.EXPECTATION_FAILED,
+              data: null,
+              message: 'Unable to ticket event.',
+            };
+          }
+      }
+    
+        
+      async getOneTicket(id: string) {
+    
+        try {
+            const event = await this.prisma.eventTicket.findUnique({
+              where: {id}
+            });
+            return {
+              statusCode: HttpStatus.OK,
+              data: event,
+              message: 'Success',
+            };
+          } catch (err) {
+            console.log(err);
+            return {
+              statusCode: HttpStatus.NOT_FOUND,
+              data: null,
+              message: 'Unable to fetch ticket!',
+            };
+          }
+      }
+    
+        
+      async getTicketByEvent(id: string) {
+    
+        try {
+            const event = await this.prisma.eventTicket.findMany({
+              where: {eventId: id }
+            });
+            return {
+              statusCode: HttpStatus.OK,
+              data: event,
+              message: 'Success',
+            };
+          } catch (err) {
+            console.log(err);
+            return {
+              statusCode: HttpStatus.NOT_FOUND,
+              data: null,
+              message: 'Unable to fetch ticket!',
+            };
+          }
+      }
 
 }

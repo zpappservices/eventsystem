@@ -86,9 +86,10 @@ model EventContact {
 
 model EventTicket {
   id          String   @id @default(uuid())
-  name        String?
+  type        String
+  name        String
   description String?
-  price       String?
+  price       Decimal @default(0)
   quantity    Int
   eventId     String
   active      Boolean  @default(true)
