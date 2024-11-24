@@ -1,16 +1,32 @@
+import { Decimal } from '@prisma/client/runtime';
 import {
   IsNotEmpty,
   IsString,
   IsOptional,
   IsBoolean,
   IsDateString,
+  IsEnum,
+  IsNumber,
+  Min,
+  IsDecimal,
 } from 'class-validator';
 
+
+export enum LocationType {
+  venue = 'venue',
+  online = "online",
+  toBeAnnounced = "toBeAnnounced",
+}
+
 export class EventDto {
-  
+
   @IsNotEmpty()
   @IsString()
   userId: string;
+
+  @IsNotEmpty()
+  @IsString()
+  categoryId: string;
 
   @IsNotEmpty()
   @IsString()
@@ -20,25 +36,30 @@ export class EventDto {
   @IsString()
   description: string;
 
+  
   @IsOptional()
   @IsString()
   location: string;
+
+  @IsOptional()
+  @IsEnum(LocationType)
+  locationType?: LocationType;
  
   @IsNotEmpty()
   @IsDateString()
-  StartDate: Date;
+  startDate: Date;
 
   @IsNotEmpty()
   @IsDateString()
-  EndDate: Date;
+  endDate: Date;
    
   @IsNotEmpty()
   @IsString()
-  StartTime: string;
+  startTime: string;
    
   @IsNotEmpty()
   @IsString()
-  EndTime: string;
+  endTime: string;
 
      
   @IsOptional()
@@ -53,18 +74,22 @@ export class EventDto {
   @IsString()
   image_tile: string;
   
-  @IsOptional()
-  contact: EventContact;
+  // @IsOptional()
+  // contact: EventContact;
 
   @IsOptional()
   @IsString()
   createdBy: string;
 }
 
-export class EventContact {
+export class EventContactDto {
   @IsOptional()
   @IsString()
   email: string;
+
+  @IsNotEmpty()
+  @IsString()
+  eventId: string;
 
   @IsOptional()
   @IsString()
@@ -82,4 +107,31 @@ export class EventContact {
   @IsString()
   twitter: string;
 }
+
+
+
+export class EventTicketDto {
+  @IsNotEmpty()
+  @IsString()
+  name: string;
+
+  @IsNotEmpty()
+  @IsString()
+  eventId: string;
+
+  @IsOptional()
+  @IsString()
+  description: string;
+
+  @IsNotEmpty()
+  @IsNumber()
+  @Min(1)
+  quantity: string;
+  
+  @IsNotEmpty()
+  @IsDecimal()
+  price: Decimal;
+  
+}
+
 

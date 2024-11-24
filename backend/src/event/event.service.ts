@@ -1,5 +1,5 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { EventDto } from './dtos/event.dto';
+import { EventContactDto, EventDto } from './dtos/event.dto';
 import { PrismaService } from '@/integrations/prisma/prisma.service';
 
 @Injectable()
@@ -48,6 +48,28 @@ export class EventService {
       }
   }
 
+    
+  async getEventByCategory(id: string) {
+
+    try {
+        const event = await this.prisma.event.findMany({
+          where: {category : id}
+        });
+        return {
+          statusCode: HttpStatus.OK,
+          data: event,
+          message: 'Success',
+        };
+      } catch (err) {
+        console.log(err);
+        return {
+          statusCode: HttpStatus.NOT_FOUND,
+          data: null,
+          message: 'Unable to fetch event!',
+        };
+      }
+  }
+
   async createEvent(data: EventDto) {
 
     try {
@@ -57,15 +79,16 @@ export class EventService {
             title: data.title,
             description: data.description,
             location: data.location,
-            StartDate: data.StartDate,
-            EndDate: data.EndDate,
-            StartTime: data.StartTime,
-            EndTime: data.EndTime,
+            StartDate: new Date(data.startDate),
+            EndDate: new Date(data.endDate),
+            StartTime: data.startTime,
+            EndTime: data.endTime,
             AllDay: data.AllDay,           
             image_tile: data.image_tile,
             image_banner: data.image_banner,
             isPublished: false,
             active: true,
+            category: data.categoryId,
 
             createdOn: new Date(),
             createdBy: data.createdBy,
@@ -96,10 +119,10 @@ export class EventService {
             title: data.title,
             description: data.description,
             location: data.location,
-            StartDate: data.StartDate,
-            EndDate: data.EndDate,
-            StartTime: data.StartTime,
-            EndTime: data.EndTime,
+            StartDate: new Date(data.startDate),
+            EndDate: new Date(data.endDate),
+            StartTime: data.startTime,
+            EndTime: data.endTime,
             AllDay: data.AllDay,
             image_tile: data.image_tile,
             image_banner: data.image_banner,
@@ -155,4 +178,112 @@ export class EventService {
       };
     }
   }
+
+  // Contact
+  async createContact(data: EventContactDto) {
+
+    try {
+        const created = await this.prisma.eventContact.create({
+          data: {
+            email: data.email,
+            phone: data.phone,
+            instagram: data.instagram,
+            facebook: data.facebook,
+            twitter: data.twitter,
+            eventId: data.eventId,
+
+            createdOn: new Date()
+          }
+        });
+        return {
+          statusCode: HttpStatus.CREATED,
+          data: created,
+          message: 'Contact created successfully.',
+        };
+      } catch (err) {
+        console.log(err);
+        return {
+          statusCode: HttpStatus.EXPECTATION_FAILED,
+          data: null,
+          message: 'Unable to create contact.',
+        };
+      }
+  }
+
+  
+  async updateContact(data: EventContactDto, id: string) {
+
+    try {
+        const created = await this.prisma.eventContact.update({
+            where: {id},
+          data: {
+            email: data.email,
+            phone: data.phone,
+            instagram: data.instagram,
+            facebook: data.facebook,
+            twitter: data.twitter,
+            eventId: data.eventId,
+
+            createdOn: new Date()
+          },
+        });
+        return {
+          statusCode: HttpStatus.CREATED,
+          data: created,
+          message: 'Contact created successfully.',
+        };
+      } catch (err) {
+        console.log(err);
+        return {
+          statusCode: HttpStatus.EXPECTATION_FAILED,
+          data: null,
+          message: 'Unable to contact event.',
+        };
+      }
+  }
+
+    
+  async getOneContact(id: string) {
+
+    try {
+        const event = await this.prisma.eventContact.findUnique({
+          where: {id}
+        });
+        return {
+          statusCode: HttpStatus.OK,
+          data: event,
+          message: 'Success',
+        };
+      } catch (err) {
+        console.log(err);
+        return {
+          statusCode: HttpStatus.NOT_FOUND,
+          data: null,
+          message: 'Unable to fetch contact!',
+        };
+      }
+  }
+
+    
+  async getContactByEvent(id: string) {
+
+    try {
+        const event = await this.prisma.eventContact.findMany({
+          where: {eventId: id }
+        });
+        return {
+          statusCode: HttpStatus.OK,
+          data: event,
+          message: 'Success',
+        };
+      } catch (err) {
+        console.log(err);
+        return {
+          statusCode: HttpStatus.NOT_FOUND,
+          data: null,
+          message: 'Unable to fetch contact!',
+        };
+      }
+  }
+
 }
