@@ -1,5 +1,7 @@
 import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '@/integrations/prisma/prisma.service';
+import { VendorEventDto } from '@/event/dtos/event.dto';
+import { VendorDto } from './dtos/user.dto';
 
 @Injectable()
 export class UserService {
@@ -66,4 +68,108 @@ export class UserService {
     }
   }
 
+    
+  async createVendor(data: VendorDto): Promise<any> {
+    try {
+      const created = await this.prisma.vendor.create({
+        data: {
+          firstName: data.firstName,
+          lastName: data.lastName,
+          phone: data.phone,
+          email: data.email,
+          company: data.company,
+          jobTitle: data.jobTitle,
+          website: data.website,
+          photo: data.photo,
+          createdOn: new Date(),
+          active: true,
+          userId: data.userId
+        },
+      });
+      return {
+        statusCode: HttpStatus.CREATED,
+        data: created,
+        message: 'Vendor created successfully.',
+      };
+    } catch (err) {
+      console.log(err);
+      return {
+        statusCode: HttpStatus.EXPECTATION_FAILED,
+        data: null,
+        message: 'Unable to create vendor.',
+      };
+    }
+  }
+
+      
+  async updateVendor(data: VendorDto, id: string): Promise<any> {
+    try {
+      const created = await this.prisma.vendor.update({
+        where: { id},
+        data: {
+          firstName: data.firstName,
+          lastName: data.lastName,
+          phone: data.phone,
+          email: data.email,
+          company: data.company,
+          jobTitle: data.jobTitle,
+          website: data.website,
+          photo: data.photo,
+          createdOn: new Date(),
+          active: true,
+          userId: data.userId
+        },
+      });
+      return {
+        statusCode: HttpStatus.CREATED,
+        data: created,
+        message: 'Vendor updated successfully.',
+      };
+    } catch (err) {
+      console.log(err);
+      return {
+        statusCode: HttpStatus.EXPECTATION_FAILED,
+        data: null,
+        message: 'Unable to update vendor.',
+      };
+    }
+  }
+
+  
+  async getAllVendors(): Promise<any> {
+    try {
+      const users = await this.prisma.vendor.findMany();
+      return {
+        statusCode: HttpStatus.OK,
+        data: users,
+        message: 'Success',
+      };
+    } catch (err) {
+      console.log(err);
+      return {
+        statusCode: HttpStatus.NOT_FOUND,
+        data: null,
+        message: `Fail`,
+      };
+    }
+  }
+
+  async getOneVendor(id: any): Promise<any> {
+    try {
+      const user = await this.prisma.vendor.findUnique({ where: { id: id } });
+
+      return {
+        statusCode: HttpStatus.OK,
+        data: user,
+        message: 'Success',
+      };
+    } catch (err) {
+      console.log(err);
+      return {
+        statusCode: HttpStatus.NOT_FOUND,
+        data: null,
+        message: `Fail`,
+      };
+    }
+  }
 }

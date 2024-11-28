@@ -21,9 +21,11 @@ model User {
   passwordResetToken   String?
   passwordResetExpires DateTime?
   Event                Event[]
+  Vendor               Vendor[]
 
   @@unique(id)
   @@index([email])
+  VendorAccount VendorAccount[]
 }
 
 model Category {
@@ -89,7 +91,7 @@ model EventTicket {
   type        String
   name        String
   description String?
-  price       Decimal @default(0)
+  price       Decimal  @default(0)
   quantity    Int
   eventId     String
   active      Boolean  @default(true)
@@ -99,6 +101,45 @@ model EventTicket {
   updatedOn   DateTime @default(now())
 
   event Event @relation(fields: [eventId], references: [id])
+}
+
+model Vendor {
+  id        String   @id @default(uuid())
+  userId    String
+  firstName String
+  lastName  String
+  phone     String
+  email     String
+  company   String
+  jobTitle  String?
+  website   String?
+  photo     String?
+  active    Boolean  @default(true)
+  createdBy String?
+  createdOn DateTime @default(now())
+  updatedBy String?
+  updatedOn DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model VendorAccount {
+  id        String   @id @default(uuid())
+  userId    String
+  bankName String
+  bankCode String
+  accountName  String
+  accountNumber  String
+  accountId     String
+  currency     String
+  
+  active    Boolean  @default(true)
+  createdBy String?
+  createdOn DateTime @default(now())
+  updatedBy String?
+  updatedOn DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
 }
 
 enum RoleType {
