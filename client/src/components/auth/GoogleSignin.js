@@ -2,8 +2,8 @@ import React from "react";
 import { FcGoogle } from "react-icons/fc";
 
 const GoogleSignin = () => {
-    
   const handleSocialLogin = (provider) => console.log(`${provider} login clicked`);
+
   return (
     <>
       <button

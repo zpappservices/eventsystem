@@ -1,49 +1,72 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import SignUpSignInModal from "./SignUpSignInModal";
+import { useRouter } from "next/router";
+import useAuthToken from "@/hooks/useAuthToken";
+import { FaCartShopping } from "react-icons/fa6";
+import { useTicketContext } from "@/context/TicketContext"; // Assuming this provides the cart data
+import Link from "next/link";
 
 const NavBar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoginModal, setIsLoginModal] = useState(true);
+  const [totalQuantity, setTotalQuantity] = useState(0);
+  const { cart, setCart } = useTicketContext();
 
-  const handleHomeClick = () => console.log("Home clicked");
+  const { activeUser, token } = useAuthToken();
+  console.log(activeUser, token);
 
-  const handleHelpClick = () => console.log("Help clicked");
+  const { grandTotalQuantity } = useTicketContext();
+
+  const router = useRouter();
 
   const handleLoginClick = () => {
     setIsLoginModal(true);
     setIsModalOpen(true);
   };
 
-  const handleCreateEventClick = () => console.log("Create Event clicked");
+  const becomeVendor = () => router.push("/auth/onboarding.js");
+
+  console.log(cart, grandTotalQuantity);
 
   const navItems = [
-    { item: "Home", id: 1, ariaLabel: "Home", onClick: handleHomeClick },
-    {
-      item: (
-        <>
-          Help
-          <span>
-            <MdKeyboardArrowDown />
-          </span>
-        </>
-      ),
-      id: 2,
-      ariaLabel: "Help",
-      onClick: handleHelpClick,
-    },
-    { item: "Create Event", id: 4, ariaLabel: "Create Event", onClick: handleCreateEventClick },
-    { item: "Login", id: 3, ariaLabel: "Login", onClick: handleLoginClick },
+    { item: "Home", id: 1, ariaLabel: "Home", onClick: () => router.push("/") },
+    token && activeUser
+      ? {
+          item: "Become a Vendor",
+          id: 2,
+          ariaLabel: "Create Event",
+          onClick: becomeVendor,
+        }
+      : {
+          item: "Login",
+          id: 3,
+          ariaLabel: "Login",
+          onClick: handleLoginClick,
+        },
   ];
+
+  useEffect(() => {
+    const total = cart.reduce(
+      (sum, item) =>
+        sum +
+        item.tickets.reduce(
+          (ticketSum, ticket) => ticketSum + ticket.quantity,
+          0
+        ),
+      0
+    );
+    setTotalQuantity(total);
+  }, [cart]);
 
   return (
     <>
-      <nav className="flex justify-end py-5 px-5 bg-[#F1F1F1] items-center font-bold text-sm lg:text-xl">
-        <ul className="flex items-center gap-6 cursor-pointer">
+      <nav className="flex justify-end py-5 px-5 bg-[#FF7F50] items-center font-medium text-sm lg:text-lg font-inter">
+        <ul className="flex items-center justify-between gap-6 cursor-pointer">
           {navItems.map((i) => (
             <li
               role="button"
-              className="flex justify-center items-center transition-transform duration-200 ease-in-out hover:scale-[1.1] hover:text-[#FF7F50] hover:opacity-80"
+              className="flex justify-center items-center transition-all duration-300 ease-in-out hover:scale-[1.1] hover:opacity-80"
               key={i.id}
               aria-label={i.ariaLabel}
               onClick={i.onClick}
@@ -51,6 +74,14 @@ const NavBar = () => {
               {i.item}
             </li>
           ))}
+          <Link href="/cart">
+            <div className="relative shrink-0">
+              <FaCartShopping color="black" size={21} />
+              <p className="text-[9px] h-[17px] w-[17px] font-semibold flex items-center transition-all duration-300 justify-center absolute bg-white rounded-full text-[black] -top-2 -right-2 border-[#FF7F50] border-2">
+                {totalQuantity}
+              </p>
+            </div>
+          </Link>
         </ul>
       </nav>
 
