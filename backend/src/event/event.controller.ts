@@ -13,14 +13,12 @@ export class EventController {
     
   @Get('/getoneevent/:id')
   async getOneEvent(@Param('id') id: any): Promise<any> {
-    const category = await this.eventService.getOneEvent(id);
-    return category;
+    return this.eventService.getOneEvent(id);
   }
       
   @Get('/geteventbycategory/:id')
   async getEventByCategory(@Param('id') id: any): Promise<any> {
-    const category = await this.eventService.getEventByCategory(id);
-    return category;
+    return this.eventService.getEventByCategory(id);
   }
   
     @Post('/createevent')
