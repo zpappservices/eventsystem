@@ -20,7 +20,6 @@ export class UserController {
     return user;
   }
 
-  
   @Post('/create-vendor')
   async createVendor(@Body() dto: VendorDto): Promise<any> {
     return await this.userService.createVendor(dto);
@@ -32,6 +31,14 @@ export class UserController {
   @Get('/getonevendor/:id')
   async getOneVendor(@Param('id') id: any): Promise<any> {
     return this.userService.getOneVendor(id);
+  }
+  @Get('/getvendorbyuserid/:userid')
+  async getVendorBy(@Param('userid') id: any): Promise<any> {
+    return this.userService.getOneVendor(id);
+  }
+  @Get('/get-vendor-account/:userid')
+  async getVendorAccount(@Param() userid: string): Promise<any> {
+    return this.userService.getVendorAccount(userid);
   }
   @Get('/getallvendor')
   async getAllVendor(): Promise<any> {

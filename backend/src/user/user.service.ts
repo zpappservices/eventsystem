@@ -172,4 +172,42 @@ export class UserService {
       };
     }
   }
+
+  async getVendorAccount(userId: any): Promise<any> {
+    try {
+      const account = await this.prisma.vendorAccount.findFirst({ where: { userId: userId } });
+
+      return {
+        statusCode: HttpStatus.OK,
+        data: account,
+        message: 'Success',
+      };
+    } catch (err) {
+      console.log(err);
+      return {
+        statusCode: HttpStatus.NOT_FOUND,
+        data: null,
+        message: `Fail`,
+      };
+    }
+  }
+
+  async getVendorByUserId(userId: any): Promise<any> {
+    try {
+      const user = await this.prisma.vendor.findFirst({ where: { userId: userId } });
+
+      return {
+        statusCode: HttpStatus.OK,
+        data: user,
+        message: 'Success',
+      };
+    } catch (err) {
+      console.log(err);
+      return {
+        statusCode: HttpStatus.NOT_FOUND,
+        data: null,
+        message: `Fail`,
+      };
+    }
+  }
 }
