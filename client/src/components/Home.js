@@ -1,49 +1,61 @@
+import useApiRequest from "@/hooks/useApiRequest";
 import EventsCard from "./EventsCard";
 import TopEvents from "./TopEvents";
+import { useEffect } from "react";
+import { CircularProgress } from "@mui/material";
 
-const eventsData = [
-   {
-      id: 1,
-      title: "STANDUP COMEDY",
-      image: "/img/standup.svg",
-   },
-   {
-      id: 2,
-      title: "MUSIC FESTIVAL",
-      image: "/img/theater.svg",
-   },
+const Home = () => {
+  const { data, error, loading, request } = useApiRequest({
+    method: "get",
+    url: "setup/getallcategory",
+  });
 
-   {
-      id: 3,
-      title: "MUSIC FESTIVAL",
-      image: "/img/concert.svg",
-   },
+  const getEventsCategories = async () => {
+    await request();
+  };
 
-   {
-      id: 4,
-      title: "MUSIC FESTIVAL",
-      image: "/img/festival.svg",
-   },
-];
+  useEffect(() => {
+    getEventsCategories();
+  }, []);
 
-const Home = ({ next }) => {
-   return (
-      <div className="w-full flex flex-col gap-5">
-         <div className="w-full flex items-center justify-between flex-wrap gap-5">
-            {eventsData.map((event, index) => (
-               <EventsCard
-                  key={index}
-                  title={event.title}
-                  image={event.image}
-               />
-            ))}
-            <div className="w-full max-w-[390] text-[24px] font-bold">
-               Here we know how to make you enjoy in style
-            </div>
-         </div>
-         <TopEvents  />
+  // Handle loading state
+  if (loading) {
+    return (
+      <div className="h-[200px] w-full flex justify-between items-center">
+        <CircularProgress color="#FF7F50" className="mx-auto" />
       </div>
-   );
+    );
+  }
+
+  // Handle error state
+  if (error) {
+    return <div>Error loading data</div>;
+  }
+
+  return (
+    <div className="w-full flex flex-col gap-5">
+      <div className="w-full flex items-center justify-between flex-wrap gap-5">
+        {data?.data.length > 0
+          ? data.data
+              .filter(({ active }) => active)
+              .map(({ name, description }, index) => (
+                <EventsCard
+                  key={index}
+                  title={name}
+                  description={description}
+                  image="/img/standup.svg"
+                />
+              ))
+          : <div>No active categories available.</div>}
+      </div>
+
+      <div className="w-full max-w-[390] text-[24px] font-bold">
+        Here we know how to make you enjoy in style
+      </div>
+
+      <TopEvents />
+    </div>
+  );
 };
 
 export default Home;

@@ -1,17 +1,12 @@
 import { useState } from "react";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { FaApple, FaFacebook } from "react-icons/fa";
-import SignUpSignInForm from "./SignUpSignInForm";
 import SocialLogin from "./auth/SocialLogin";
 import SignUp from "./auth/SignUp";
 import GoogleSignin from "./auth/GoogleSignin";
 import SignIn from "./auth/SignIn";
 
-const SignUpSignInModal = ({
-  isLoginModal,
-  setIsLoginModal,
-  setIsModalOpen,
-}) => {
+const SignUpSignInModal = ({ isLoginModal, setIsLoginModal, setIsModalOpen }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -52,9 +47,7 @@ const SignUpSignInModal = ({
             {isLoginModal ? "Sign in to your account" : "Create a new account"}
           </h2>
           <p className="text-sm mb-1">
-            {isLoginModal
-              ? "Don't have an account?"
-              : "Already have an account?"}
+            {isLoginModal ? "Don't have an account?" : "Already have an account?"}
             <button
               type="button"
               onClick={toggleModalType}
@@ -66,27 +59,7 @@ const SignUpSignInModal = ({
           <GoogleSignin />
 
           {/*---------Sign Up and Sign In Form------------------------*/}
-          {/* <SignUpSignInForm
-            isLoginModal={isLoginModal}
-            email={email}
-            setEmail={setEmail}
-            password={password}
-            setPassword={setPassword}
-            confirmPassword={confirmPassword}
-            setConfirmPassword={setConfirmPassword}
-            showPassword={showPassword}
-            setShowPassword={setShowPassword}
-            errorMessage={errorMessage}
-            setErrorMessage={setErrorMessage}
-            resetFields={resetFields}
-            setIsModalOpen={setIsModalOpen}
-          /> */}
-
-          {isLoginModal ? (
-            <SignIn />
-          ) : (
-            <SignUp />
-          )}
+          {isLoginModal ? <SignIn /> : <SignUp />}
 
           <SocialLogin />
         </div>

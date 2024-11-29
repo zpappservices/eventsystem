@@ -35,10 +35,9 @@ const SignIn = () => {
 
     try {
       const fbUser = await signInWithEmailAndPassword(auth, email, password);
-      console.log(fbUser);
       setKey(fbUser.user.accessToken);
     } catch (error) {
-      console.log(error);
+      toast.error("Invalid credentials");
     } finally {
       setIsLoading(false);
     }

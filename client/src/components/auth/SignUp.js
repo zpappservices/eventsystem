@@ -45,6 +45,8 @@ const SignUp = () => {
     /* resetFields(); 
     setIsModalOpen(false); */
 
+    console.log({ email: email, password: password })
+
     await request();
   };
 
@@ -63,8 +65,10 @@ const SignUp = () => {
   }, [data]);
 
   useEffect(() => {
+    const err = error?.response?.data
     if (error) {
-        toast.error(error?.error || error?.message || "Operation failed! Retry.");
+        toast.error(err?.message[0] || err?.error || "Operation failed! Retry.");
+        console.log(err)
     }
   }, [error]);
 

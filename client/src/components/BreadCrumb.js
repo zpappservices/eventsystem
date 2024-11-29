@@ -16,7 +16,7 @@ const BreadCrumb = ({ id }) => {
    return (
       <div
          role="presentation"
-         className="border-b-2 border-black pb-2"
+         className="border-b-2 border-black pb-2 font-inter"
          onClick={handleClick}
       >
          <Breadcrumbs
@@ -24,6 +24,7 @@ const BreadCrumb = ({ id }) => {
             separator={
                <NavigateNextIcon fontSize="small" className="text-black" />
             }
+            className="font-inter"
          >
             <Link href="/">
                <p className="cursor-pointer text-[20px] leading-snug font-semibold text-black">

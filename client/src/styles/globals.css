@@ -1,13 +1,9 @@
-@import "./index.module";
+@import "./index.module.css";
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-
-body {
-  font-family: Arial, Helvetica, sans-serif;
-}
 
 
 @layer base {
