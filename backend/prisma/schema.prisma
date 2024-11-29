@@ -8,24 +8,24 @@ datasource db {
 }
 
 model User {
-  id                   String    @id @default(uuid())
-  email                String    @unique
-  accountId            String    @unique
-  role                 RoleType  @default(USER)
+  id                   String          @id @default(uuid())
+  email                String          @unique
+  accountId            String          @unique
+  role                 RoleType        @default(USER)
   username             String?
   provider             String?
   lastLogin            DateTime?
-  createdOn            DateTime  @default(now())
-  isOnline             Boolean   @default(false)
-  isVerified           Boolean   @default(false)
+  createdOn            DateTime        @default(now())
+  isOnline             Boolean         @default(false)
+  isVerified           Boolean         @default(false)
   passwordResetToken   String?
   passwordResetExpires DateTime?
   Event                Event[]
   Vendor               Vendor[]
+  VendorAccount        VendorAccount[]
 
   @@unique(id)
   @@index([email])
-  VendorAccount VendorAccount[]
 }
 
 model Category {
@@ -124,15 +124,15 @@ model Vendor {
 }
 
 model VendorAccount {
-  id        String   @id @default(uuid())
-  userId    String
-  bankName String
-  bankCode String
-  accountName  String
-  accountNumber  String
+  id            String @id @default(uuid())
+  userId        String @unique()
+  bankName      String
+  bankCode      String
+  accountName   String
+  accountNumber String
   accountId     String
-  currency     String
-  
+  currency      String
+
   active    Boolean  @default(true)
   createdBy String?
   createdOn DateTime @default(now())

@@ -1,5 +1,5 @@
 import { Decimal } from "@prisma/client/runtime";
-import { IsDecimal, IsEmail, IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { IsArray, IsDecimal, IsEmail, IsInt, IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 export class PaymentDto {
 
@@ -52,5 +52,59 @@ export class PaymentDto {
     @IsOptional()
     @IsString()
     percentage_charge: string;
+
+    @IsNotEmpty()
+    @IsString()
+    userId: string;
   
+  }
+
+  export class OrderDto {
+
+    @IsNotEmpty()
+    @IsEmail()
+    email: string;
+
+    @IsNotEmpty()
+    @IsString()
+    firstName: string;
+
+    @IsNotEmpty()
+    @IsString()
+    lastName: string;
+  
+    @IsNotEmpty()
+    @IsString()
+    eventId: string;
+      
+    @IsNotEmpty()
+    @IsString()
+    userId: string;
+
+    @IsDecimal()
+    toalAmount: Decimal;
+    
+    @IsOptional()
+    @IsString()
+    email_CC: string;
+        
+    @IsNotEmpty()
+    @IsArray()
+    tickets: TicketDto[];
+
+  }
+
+  export class TicketDto {
+
+    @IsNotEmpty()
+    @IsString()
+    name: string;
+
+    @IsNotEmpty()
+    @IsDecimal()
+    amount: Decimal;
+  
+    @IsNotEmpty()
+    @IsInt()
+    quantity: number;
   }
