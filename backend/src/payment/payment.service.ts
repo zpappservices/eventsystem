@@ -15,6 +15,8 @@ export class PaymentService {
     private async makeRequest(endpoint: string, method: 'get' | 'post', data: any = {}) {
         try {
 
+          console.log(`Url: ${endpoint} || \n Request: ${JSON.stringify(data) || "GET"} `)
+
           const response = await lastValueFrom(
             this.httpService.request({
               method,
@@ -29,6 +31,8 @@ export class PaymentService {
 
         } catch (error) {
             console.log(error.response?.data || 'Paystack Error')
+
+            console.log(`Error: ${JSON.stringify(error)}`)
             // return {
             //     statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
             //     data: error.response?.data,
