@@ -15,7 +15,7 @@ export class PaymentService {
     private async makeRequest(endpoint: string, method: 'get' | 'post', data: any = {}) {
         try {
 
-          console.log(`Url: ${endpoint} || \n Request: ${JSON.stringify(data) || "GET"} `)
+          console.log(`Url: ${endpoint} || \n Request: ${JSON.stringify(data)} `)
 
           const response = await lastValueFrom(
             this.httpService.request({
@@ -27,6 +27,7 @@ export class PaymentService {
               },
             }),
           );
+          console.log(`Url: ${endpoint} :: \n Response: ${JSON.stringify(response.data)} `)
           return response.data;
 
         } catch (error) {
