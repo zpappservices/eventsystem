@@ -1,5 +1,5 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { EventContactDto, EventDto, EventTicketDto, VendorEventDto } from './dtos/event.dto';
+import { Currency, EventContactDto, EventDto, EventTicketDto, VendorEventDto } from './dtos/event.dto';
 import { PrismaService } from '@/integrations/prisma/prisma.service';
 import { Prisma } from '@prisma/client';
 
@@ -133,6 +133,7 @@ export class EventService {
                   AllDay: eventDto.AllDay,           
                   image_tile: eventDto.image_tile,
                   image_banner: eventDto.image_banner,
+                  currency: eventDto.currency,
                   isPublished: false,
                   active: true,
                   category: eventDto.categoryId,
@@ -211,6 +212,7 @@ export class EventService {
             AllDay: data.AllDay,
             image_tile: data.image_tile,
             image_banner: data.image_banner,
+            currency: data.currency,
             createdOn: new Date(),
             createdBy: data.createdBy,
           },

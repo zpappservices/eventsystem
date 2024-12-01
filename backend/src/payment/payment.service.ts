@@ -1,15 +1,20 @@
 import { HttpService } from '@nestjs/axios';
 import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
 import { lastValueFrom } from 'rxjs';
-import { OrderDto, PaymentDto, SubaccountDto } from './dtos/payment.dto';
+import { OrderDto, PaymentDto, SubaccountDto, PaymentStatusEnum } from './dtos/payment.dto';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '@/integrations/prisma/prisma.service';
+import { v4 as uuidv4 } from 'uuid';
+import { Event, EventTransaction } from '@prisma/client';
+import * as QRCode from 'qrcode';
+import { EmailerService } from '@/integrations/email/emailer.service';
 
 @Injectable()
 export class PaymentService {
 
     constructor(private readonly httpService: HttpService, 
         private readonly configService: ConfigService,
+        private emailService: EmailerService,
         private prisma: PrismaService) {}
 
     private async makeRequest(endpoint: string, method: 'get' | 'post', data: any = {}) {
@@ -121,13 +126,31 @@ export class PaymentService {
         return this.makeRequest(`${url}`, 'get');
       }
 
+      async buildTransactions(data: OrderDto,event: Event, batchId: string){
+
+        let transactionList = [];
+        await data.tickets.forEach( t => {
+
+            for(let i = 0; i < t.quantity; i++){
+              let ticket = { batchId: batchId, eventId: data.eventId, eventName: event.title, 
+                userId: data.userId, ticketId: `Tic-${uuidv4()}`, ticketName: t.name, price: t.amount }
+              
+                transactionList.push(ticket);
+            }
+        });
+
+        return transactionList;
+
+      }
+
       async placeOrder(data: OrderDto) {
 
         try{
-          const url = `${this.configService.get('PAYSTACK_SUBACCOUNT')}`
+          const url = `${this.configService.get('PAYSTACK_PAYMENT_REQUEST')}`
           const charge = `${this.configService.get('PAYSTACK_CHARGE')}`
           //data.percentage_charge = charge
 
+          // Verify user
           const user = await this.prisma.user.findUnique({ where: { id: data.userId } });
 
           if(!user){
@@ -138,7 +161,23 @@ export class PaymentService {
             };
           }
 
-          const res = await this.makeRequest(`${url}`, 'post', data);
+          // Verify event
+          const event = await this.prisma.event.findUnique({ where: { id: data.eventId } });
+
+          if(!event){
+            return {
+              statusCode: HttpStatus.BAD_REQUEST,
+              data: null,
+              message: `Event with id ${data.eventId} is in-valid.`,
+            };
+          }
+
+          const batchId = uuidv4();
+          const amount = parseFloat(data.totalAmount) * 100;
+          const req = { amount: amount, email: data.email,
+             currency: event.currency, reference: batchId, callback_url: "http://localhost:4000/api/payment/payment-callback" };
+
+          const res = await this.makeRequest(`${url}`, 'post', req);
 
           if(!res.status){
             return {
@@ -146,26 +185,84 @@ export class PaymentService {
               data: null,
               message: `Unable to create account`,
             };
-          }
-
-          const account = await this.prisma.vendorAccount.create({
-          data: {
-            bankCode: res.data.bank.toString(),
-            bankName: res.data.settlement_bank,
-            accountId: res.data.subaccount_code,
-            accountNumber: res.data.account_number,
-            accountName: res.data.account_name,
-            currency: res.data.currency,
-            createdOn: new Date(),
-            active: true,
-            userId: data.userId
-          },
-        }); 
+          } 
+                    
+          const  transactionList = await this.buildTransactions(data, event, batchId)
+          
+          const logTransaction = await this.prisma.eventTransaction.createMany({
+            data: transactionList.map( t => ({
+              batchId: t.batchId,
+              eventId: t.eventId,
+              eventName: t.eventName,
+              ticketId: t.ticketId,
+              ticket: t.ticketName,
+              userId: t.userId,
+              price: t.price,
+              createdBy: "System",
+              createdOn: new Date()
+            })),
+            skipDuplicates: true, // Skip 'Bobo'
+          })
 
         return {
           statusCode: HttpStatus.CREATED,
-          data: account,
-          message: 'Account created successfully.',
+          data: res,
+          message: 'Payment request initialize.',
+        };
+        }catch(err){
+          console.log(err);
+        return {
+          statusCode: HttpStatus.EXPECTATION_FAILED,
+          data: null,
+          message: 'Operation fail.',
+          };
+        }
+        
+      }
+
+      async verifyAndUpdateTransaction(reference: string) {
+
+        try{
+
+          // Verify Transaction
+          const res = await this.verifyTransaction(reference);
+
+          if(!res.status){
+            return {
+              statusCode: HttpStatus.BAD_REQUEST,
+              data: null,
+              message: `Unable to validate payment`,
+            };
+          }
+
+          // Verify Transaction
+          const pending = await this.prisma.eventTransaction.findMany({
+            where: { batchId: reference},
+            include: { event: true, user: true}
+          }); 
+
+          if(!pending){
+            return {
+              statusCode: HttpStatus.BAD_REQUEST,
+              data: null,
+              message: `Unable to get pending transaction`,
+            };
+          }
+
+          const account = await this.prisma.eventTransaction.updateMany({
+            where: { batchId: reference },
+            data: {
+              status: PaymentStatusEnum.PAID,
+              updatedOn: new Date(),
+            },
+          }); 
+
+          const qrcodes = await this.generateQRCodes(pending);
+
+        return {
+          statusCode: HttpStatus.CREATED,
+          data: qrcodes,
+          message: 'successfully.',
         };
         }catch(err){
           console.log(err);
@@ -176,5 +273,75 @@ export class PaymentService {
           };
         }
         
+      }
+      
+      async generateQRCodes(transactions: EventTransaction[]): Promise<any> {
+        try {
+
+          const qrCodes = []
+
+          for (const t of transactions) {
+
+            const qrData = { ticketId: t.ticketId, ticketType: t.ticket, eventName: t.eventName, amount: t.price, ref: t.batchId, event: t.eventName };
+            //const transactionData = JSON.stringify(qrData);
+
+            // Generate QR Code as a data URL (Base64 image)
+            // const qrCode = await QRCode.toDataURL(transactionData, {
+            //   width: 300, // Size of the QR Code
+            // });
+
+            const qrCode = await this.generateQrCode(qrData)
+
+            qrCodes.push(qrCode);
+
+            try {
+              await this.emailService.sendTicketQRCode({ transaction: t, qrCode });
+            } catch (e) {
+              console.log(e.message);
+            }
+          }
+
+          // transactions.forEach(async (t) => {
+          //   // Convert transaction details to a JSON string
+          //   const qrData = { ticketId: t.ticketId, ticketType: t.ticket, eventName: t.eventName, amount: t.price, ref: t.batchId, event: t.eventName };
+          //   const transactionData = JSON.stringify(qrData);
+
+          //   // Generate QR Code as a data URL (Base64 image)
+          //   // const qrCode = QRCode.toDataURL(transactionData, {
+          //   //   width: 300, // Size of the QR Code
+          //   // });
+
+          //   const qrCode = await this.generateQRCode(transactionData)
+
+          //   qrCodes.push(qrCode);
+
+          //   try {
+          //     await this.emailService.sendTicketQRCode({ transaction: t, qrCode });
+          //   } catch (e) {
+          //     console.log(e.message);
+          //   }
+
+          // });         
+    
+          return qrCodes; // Return the QR Code as a Base64 string
+        } catch (error) {
+          throw new Error(`Error generating QR Code: ${error.message}`);
+        }
+      }
+
+      async generateQrCode(transactionData: object): Promise<string> {
+        try {
+          // Convert transaction data to a JSON string
+          const dataString = JSON.stringify(transactionData);
+      
+          // Generate QR Code as a Data URL
+          const qrCode = await QRCode.toDataURL(dataString, {
+            width: 300,
+          });
+      
+          return qrCode; // Return the Base64 string
+        } catch (error) {
+          throw new Error(`Failed to generate QR code: ${error.message}`);
+        }
       }
 }

@@ -38,4 +38,19 @@ export class EmailerService {
     };
     await this.sendMail(payload, 'Password Reset', 'passwordreset');
   }
+
+  async sendTicketQRCode(data: any) {
+    const payload = {
+      //email: data.transaction.user.email,
+      email: "hbshofela@gmail.com",
+      username: data.transaction.user.username,
+      qrCode: data.qrCode,
+      id: data.transaction.id,
+      amount: data.transaction.price,
+      type: data.transaction.ticket,
+      event: data.transaction.eventName,
+      date: data.transaction.event.StartDate,
+    };
+    await this.sendMail(payload, 'Ticket QR Code', 'ticket');
+  }
 }

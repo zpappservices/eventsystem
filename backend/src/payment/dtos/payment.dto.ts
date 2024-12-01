@@ -1,5 +1,5 @@
 import { Decimal } from "@prisma/client/runtime";
-import { IsArray, IsDecimal, IsEmail, IsInt, IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { IsArray, IsDecimal, IsEmail, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class PaymentDto {
 
@@ -79,10 +79,14 @@ export class PaymentDto {
       
     @IsNotEmpty()
     @IsString()
+    channel: string;
+     
+    @IsNotEmpty()
+    @IsString()
     userId: string;
 
     @IsDecimal()
-    toalAmount: Decimal;
+    totalAmount: string;
     
     @IsOptional()
     @IsString()
@@ -107,4 +111,10 @@ export class PaymentDto {
     @IsNotEmpty()
     @IsInt()
     quantity: number;
+  }
+
+  export enum PaymentStatusEnum {
+    "PENDING" = "PENDING",
+    "PAID" = "PAID",
+    "FAILED" = "FAILED",
   }

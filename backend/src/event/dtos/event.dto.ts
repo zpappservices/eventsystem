@@ -24,6 +24,13 @@ export enum TicketType {
   donation = "Donation",
 }
 
+export enum Currency {
+  NGN = 'NGN',
+  USD = "USD",
+  GHS = "GHS",
+  ZAR = "ZAR",
+}
+
 export class EventDto {
 
   @IsNotEmpty()
@@ -79,6 +86,10 @@ export class EventDto {
   @IsOptional()
   @IsString()
   image_tile: string;
+    
+  @IsOptional()
+  @IsEnum(Currency)
+  currency: Currency;
   
   // @IsOptional()
   // contact: EventContact;
