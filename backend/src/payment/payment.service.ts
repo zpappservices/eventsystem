@@ -171,11 +171,11 @@ export class PaymentService {
               message: `Event with id ${data.eventId} is in-valid.`,
             };
           }
-
+          const callBackUrl = `${this.configService.get('PAYSTACK_CALL_BACK')}`
           const batchId = uuidv4();
           const amount = parseFloat(data.totalAmount) * 100;
           const req = { amount: amount, email: data.email,
-             currency: event.currency, reference: batchId, callback_url: "http://localhost:4000/api/payment/payment-callback" };
+             currency: event.currency, reference: batchId, callback_url: callBackUrl };
 
           const res = await this.makeRequest(`${url}`, 'post', req);
 
