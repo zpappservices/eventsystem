@@ -8,21 +8,23 @@ datasource db {
 }
 
 model User {
-  id                   String          @id @default(uuid())
-  email                String          @unique
-  accountId            String          @unique
-  role                 RoleType        @default(USER)
+  id                   String             @id @default(uuid())
+  email                String             @unique
+  accountId            String             @unique
+  role                 RoleType           @default(USER)
   username             String?
   provider             String?
   lastLogin            DateTime?
-  createdOn            DateTime        @default(now())
-  isOnline             Boolean         @default(false)
-  isVerified           Boolean         @default(false)
+  createdOn            DateTime           @default(now())
+  isOnline             Boolean            @default(false)
+  isVerified           Boolean            @default(false)
+  isVendor             Boolean            @default(false)
   passwordResetToken   String?
   passwordResetExpires DateTime?
   Event                Event[]
   Vendor               Vendor[]
   VendorAccount        VendorAccount[]
+  EventTransaction     EventTransaction[]
 
   @@unique(id)
   @@index([email])
@@ -40,7 +42,7 @@ model Category {
 }
 
 model Event {
-  id           String    @id @default(uuid())
+  id           String         @id @default(uuid())
   userId       String
   category     String
   title        String
@@ -51,22 +53,22 @@ model Event {
   EndDate      DateTime?
   StartTime    String?
   EndTime      String?
-  AllDay       Boolean?  @default(false)
+  AllDay       Boolean?       @default(false)
   image_banner String?
   image_tile   String?
-  isPublished  Boolean?  @default(false)
-  active       Boolean   @default(true)
+  currency     String?
+  isPublished  Boolean?       @default(false)
+  active       Boolean        @default(true)
   createdBy    String?
-  createdOn    DateTime  @default(now())
+  createdOn    DateTime       @default(now())
   updatedBy    String?
-  updatedOn    DateTime  @default(now())
-
-  //EventContact EventContact?
-
+  updatedOn    DateTime       @default(now())
   user         User           @relation(fields: [userId], references: [id])
   EventContact EventContact[]
 
   EventTicket EventTicket[]
+
+  EventTransaction EventTransaction[]
 }
 
 model EventContact {
@@ -142,7 +144,33 @@ model VendorAccount {
   user User @relation(fields: [userId], references: [id])
 }
 
+model EventTransaction {
+  id        String        @id @default(uuid())
+  batchId   String
+  eventId   String
+  eventName String
+  userId    String
+  ticketId  String
+  ticket    String
+  price     Decimal       @default(0)
+  status    PaymentStatus @default(PENDING)
+  active    Boolean       @default(true)
+  createdBy String?
+  createdOn DateTime      @default(now())
+  updatedBy String?
+  updatedOn DateTime      @default(now())
+
+  event Event @relation(fields: [eventId], references: [id])
+  user  User  @relation(fields: [userId], references: [id])
+}
+
 enum RoleType {
   USER
   VENDOR
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
 }

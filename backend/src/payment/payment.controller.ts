@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { PaymentService } from './payment.service';
 import { OrderDto, PaymentDto, SubaccountDto } from './dtos/payment.dto';
 
@@ -9,6 +9,10 @@ export class PaymentController {
   @Post('/initiate-payment')
   async initiatePayment(@Body() dto: PaymentDto): Promise<any> {
     return this.paymentService.initializeTransaction(dto);
+  }
+  @Get('/payment-callback')
+  async paymentCallback(@Query('reference') reference: string): Promise<any> {
+    return this.paymentService.verifyAndUpdateTransaction(reference);
   }
   @Post('/place-order')
   async placeOrder(@Body() dto: OrderDto): Promise<any> {

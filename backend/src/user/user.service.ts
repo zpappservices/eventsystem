@@ -71,24 +71,44 @@ export class UserService {
     
   async createVendor(data: VendorDto): Promise<any> {
     try {
-      const created = await this.prisma.vendor.create({
-        data: {
-          firstName: data.firstName,
-          lastName: data.lastName,
-          phone: data.phone,
-          email: data.email,
-          company: data.company,
-          jobTitle: data.jobTitle,
-          website: data.website,
-          photo: data.photo,
-          createdOn: new Date(),
-          active: true,
-          userId: data.userId
-        },
-      });
+      
+      let vendorCreated: any;
+      await this.prisma.$transaction(async (pr) => {
+
+        vendorCreated = await this.prisma.vendor.create({
+            data: {
+              firstName: data.firstName,
+              lastName: data.lastName,
+              phone: data.phone,
+              email: data.email,
+              company: data.company,
+              jobTitle: data.jobTitle,
+              website: data.website,
+              photo: data.photo,
+              createdOn: new Date(),
+              active: true,
+              userId: data.userId
+            },
+          });
+
+          const user = await this.prisma.user.update({
+            where: { id: data.userId },
+            data: {
+              isVendor: true
+            }
+          });
+     
+    },
+    {
+      maxWait: 5000, // default: 2000
+      timeout: 10000, // default: 5000      
+      //isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
+    }
+  
+  );
       return {
         statusCode: HttpStatus.CREATED,
-        data: created,
+        data: vendorCreated,
         message: 'Vendor created successfully.',
       };
     } catch (err) {
