@@ -1,6 +1,10 @@
-const StageFlow = ({ steps, currentStep, handleNext, handlePrev }) => {
+const StageFlow = ({ steps, currentStep, setCurrentStep, handlePrev }) => {
 
-   console.log(handleNext)
+   const handleNext = () => {
+      if (currentStep < steps.length - 1) {
+        setCurrentStep((prevStep) => prevStep + 1);
+      }
+    };
 
    const CurrentStepComponent = steps[currentStep].component;
 

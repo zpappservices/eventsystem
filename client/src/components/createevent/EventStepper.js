@@ -21,9 +21,31 @@ export default function EventStepper() {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const handleResetStepper = () => {
+  const handleResetStepper = (setForm) => {
+    setForm((prev) => ({
+      ...prev,
+      eventDto: {
+        ...prev.eventDto,
+        title: "",
+        description: "",
+        categoryId: "",
+        location: "",
+        startDate: "",
+        endDate: "",
+        startTime: "",
+        endTime: "",
+      },
+      contactDto: {
+        email: "",
+        phone: "",
+        facebook: "",
+      },
+      ticketDto: [],
+    }));
+    
     setActiveStep(0);
   };
+  
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -54,7 +76,7 @@ export default function EventStepper() {
 
         {activeStep === 1 && <ContactDto handleNext={handleNext} handleBack={handleBack} />}
 
-        {activeStep === 2 && <TicketDto handleBack={handleBack} handleNext={handleNext} />}
+        {activeStep === 2 && <TicketDto handleBack={handleBack} handleReset={handleResetStepper} />}
       </CreateEventProvider>
     </Box>
   );

@@ -4,10 +4,12 @@ import NavBar from "./Navbar";
 
 const Layout = ({ children, isHeader = true }) => {
   return (
-    <div className="w-full max-w-[1300px] mx-auto px-5 md:px-7 py-10 flex flex-col gap-5 selection:bg-orange-600 selection:text-black">
+    <div className="w-full max-w-[1300px] mx-auto flex flex-col gap-5 selection:bg-orange-600 selection:text-black">
       <NavBar />
-      {isHeader && <Header />}
-      {children}
+      <div className="px-5 sm:px-5 space-y-4">
+        {isHeader && <Header />}
+        {children}
+      </div>
     </div>
   );
 };

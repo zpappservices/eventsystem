@@ -3,6 +3,7 @@ import EventsCard from "./EventsCard";
 import TopEvents from "./TopEvents";
 import { useEffect } from "react";
 import { CircularProgress } from "@mui/material";
+import Footer from "./website/Footer";
 
 const Home = () => {
   const { data, error, loading, request } = useApiRequest({
@@ -54,6 +55,8 @@ const Home = () => {
       </div>
 
       <TopEvents />
+
+      <Footer />
     </div>
   );
 };

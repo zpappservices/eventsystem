@@ -1,22 +1,15 @@
 import { useState, useEffect } from "react";
-import { MdKeyboardArrowDown } from "react-icons/md";
 import SignUpSignInModal from "./SignUpSignInModal";
 import { useRouter } from "next/router";
 import useAuthToken from "@/hooks/useAuthToken";
-import { FaCartShopping } from "react-icons/fa6";
-import { useTicketContext } from "@/context/TicketContext"; // Assuming this provides the cart data
 import Link from "next/link";
+import useApiRequest from "@/hooks/useApiRequest";
 
 const NavBar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoginModal, setIsLoginModal] = useState(true);
-  const [totalQuantity, setTotalQuantity] = useState(0);
-  const { cart, setCart } = useTicketContext();
 
   const { activeUser, token } = useAuthToken();
-  console.log(activeUser, token);
-
-  const { grandTotalQuantity } = useTicketContext();
 
   const router = useRouter();
 
@@ -25,19 +18,39 @@ const NavBar = () => {
     setIsModalOpen(true);
   };
 
-  const becomeVendor = () => router.push("/auth/onboarding.js");
+  const becomeVendor = () => router.push("/auth/onboarding");
+  const gotToDashboard = () => router.push("/dashboard");
 
-  console.log(cart, grandTotalQuantity);
+  const { data, error, loading, request } = useApiRequest({
+    method: "get",
+    url: `user/getoneuser/${activeUser}`,
+    data: null,
+    headers: null,
+    useToken: true,
+  });
+
+  const getUser = async () => {
+    await request();
+  };
+
+  const { isVendor = false } = data?.data || {};
 
   const navItems = [
     { item: "Home", id: 1, ariaLabel: "Home", onClick: () => router.push("/") },
     token && activeUser
-      ? {
-          item: "Become a Vendor",
-          id: 2,
-          ariaLabel: "Create Event",
-          onClick: becomeVendor,
-        }
+      ? isVendor
+        ? {
+            item: "Dashboard",
+            id: 2.0,
+            ariaLabel: "Dashboard",
+            onClick: gotToDashboard,
+          }
+        : {
+            item: "Become a Vendor",
+            id: 2.1,
+            ariaLabel: "Become a Vendor",
+            onClick: becomeVendor,
+          }
       : {
           item: "Login",
           id: 3,
@@ -47,17 +60,8 @@ const NavBar = () => {
   ];
 
   useEffect(() => {
-    const total = cart.reduce(
-      (sum, item) =>
-        sum +
-        item.tickets.reduce(
-          (ticketSum, ticket) => ticketSum + ticket.quantity,
-          0
-        ),
-      0
-    );
-    setTotalQuantity(total);
-  }, [cart]);
+    getUser();
+  }, [activeUser, token, isVendor]);
 
   return (
     <>
@@ -74,14 +78,6 @@ const NavBar = () => {
               {i.item}
             </li>
           ))}
-          <Link href="/cart">
-            <div className="relative shrink-0">
-              <FaCartShopping color="black" size={21} />
-              <p className="text-[9px] h-[17px] w-[17px] font-semibold flex items-center transition-all duration-300 justify-center absolute bg-white rounded-full text-[black] -top-2 -right-2 border-[#FF7F50] border-2">
-                {totalQuantity}
-              </p>
-            </div>
-          </Link>
         </ul>
       </nav>
 

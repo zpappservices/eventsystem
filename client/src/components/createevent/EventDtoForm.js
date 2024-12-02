@@ -36,24 +36,32 @@ function EventDtoForm({ handleNext }) {
     getEventsCategories();
   }, []);
 
-  const categories = data?.data?.map(item => item.name)
+  const categories = data?.data?.map((item) => item.name);
 
   const validateForm = () => {
     const errors = {};
     if (!formData.eventDto.title) errors.title = "Event name is required.";
-    if (!formData.eventDto.description) errors.description = "Event description is required.";
-    if (!formData.eventDto.categoryId) errors.categoryId = "Event category is required.";
-    if (!formData.eventDto.location) errors.location = "Event address is required.";
-    if (!formData.eventDto.startDate) errors.startDate = "Start date is required.";
+    if (!formData.eventDto.description)
+      errors.description = "Event description is required.";
+    if (!formData.eventDto.categoryId)
+      errors.categoryId = "Event category is required.";
+    if (!formData.eventDto.location) errors.currency = "Currency is required.";
+    if (!formData.eventDto.currency)
+      errors.location = "Event address is required.";
+    if (!formData.eventDto.startDate)
+      errors.startDate = "Start date is required.";
     if (!formData.eventDto.endDate) errors.endDate = "End date is required.";
-    if (!formData.eventDto.startTime) errors.startTime = "Start time is required.";
+    if (!formData.eventDto.startTime)
+      errors.startTime = "Start time is required.";
     if (!formData.eventDto.endTime) errors.endTime = "End time is required.";
 
     const isEndDateValid =
-      new Date(formData.eventDto.endDate) >= new Date(formData.eventDto.startDate);
+      new Date(formData.eventDto.endDate) >=
+      new Date(formData.eventDto.startDate);
 
     if (!isEndDateValid) {
-      errors.dateTime = "End date and time must be after the start date and time.";
+      errors.dateTime =
+        "End date and time must be after the start date and time.";
     }
 
     setFormError(errors);
@@ -63,6 +71,8 @@ function EventDtoForm({ handleNext }) {
   const handleSubmit = () => {
     if (validateForm()) handleNext();
   };
+
+  console.log(formData)
 
   return (
     <>
@@ -190,10 +200,32 @@ function EventDtoForm({ handleNext }) {
             error={!!formError.endTime || !!formError.dateTime}
             helperText={formError.endTime || formError.dateTime || ""}
           />
+          <TextField
+            fullWidth
+            id="demo-simple-select"
+            select
+            labelid="demo-simple-select-label"
+            label="Currency"
+            name="currency"
+            value={formData.eventDto.currency}
+            onChange={handleChange}
+            color="warning"
+            error={!!formError.currency}
+            helperText={formError.currency || ""}
+          >
+            <MenuItem value="NGN">Naira</MenuItem>
+            <MenuItem value="USD">US Dollars</MenuItem>
+            <MenuItem value="GHS">Cedis</MenuItem>
+            <MenuItem value="ZAR">Rand</MenuItem>
+          </TextField>
         </div>
       </div>
 
-      <FormButton handleAction={handleSubmit} position={"justify-end"} direction={"Next"} />
+      <FormButton
+        handleAction={handleSubmit}
+        position={"justify-end"}
+        direction={"Next"}
+      />
     </>
   );
 }

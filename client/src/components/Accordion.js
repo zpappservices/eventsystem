@@ -2,7 +2,7 @@ import { AccordionDetails, AccordionSummary } from "@mui/material";
 import Accordion from "@mui/material/Accordion";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-const CustomAccordion = () => {
+const CustomAccordion = ({ description }) => {
    return (
       <Accordion>
          <AccordionSummary
@@ -14,8 +14,7 @@ const CustomAccordion = () => {
             TICKET DETAILS
          </AccordionSummary>
          <AccordionDetails>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            malesuada lacus ex, sit amet blandit leo lobortis eget.
+            {description}
          </AccordionDetails>
       </Accordion>
    );

@@ -31,14 +31,22 @@ function ContactDto({ handleNext, handleBack }) {
 
   const validateForm = () => {
     const errors = {};
-    if (!formData.contactDto.email || !/\S+@\S+\.\S+/.test(formData.contactDto.email))
+    if (
+      !formData.contactDto.email ||
+      !/\S+@\S+\.\S+/.test(formData.contactDto.email)
+    )
       errors.email = "Enter a valid email address.";
     if (
-      !formData.contactDto.facebook ||
-      !/^https?:\/\/(www\.)?facebook\.com\/.+$/.test(formData.contactDto.facebook)
+      !!formData.contactDto.facebook &&
+      !/^https?:\/\/(www\.)?facebook\.com\/.+$/.test(
+        formData.contactDto.facebook
+      )
     )
       errors.facebook = "Enter a valid Facebook URL.";
-    if (!formData.contactDto.phone || !/^\+?\d{11}$/.test(formData.contactDto.phone))
+    if (
+      !formData.contactDto.phone ||
+      !/^\+?\d{11}$/.test(formData.contactDto.phone)
+    )
       errors.phone = "Enter a valid phone number.";
 
     setFormError(errors);
@@ -78,9 +86,17 @@ function ContactDto({ handleNext, handleBack }) {
       ))}
 
       <div className="flex justify-between">
-        <FormButton handleAction={handleBack} position={"justify-start"} direction={"Back"} />
+        <FormButton
+          handleAction={handleBack}
+          position={"justify-start"}
+          direction={"Back"}
+        />
 
-        <FormButton handleAction={handleSubmit} position={"justify-end"} direction={"Next"} />
+        <FormButton
+          handleAction={handleSubmit}
+          position={"justify-end"}
+          direction={"Next"}
+        />
       </div>
     </>
   );

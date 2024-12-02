@@ -6,9 +6,7 @@ const CreateEventContext = createContext();
 
 function CreateEventProvider({ children }) {
   const { activeUser } = useAuthToken()
-  const [formError, setFormError] = useState({}); // Specific form errors
-
-  console.log(activeUser)
+  const [formError, setFormError] = useState({});
 
   const [formData, setFormData] = useState({
     eventDto: {
@@ -21,6 +19,7 @@ function CreateEventProvider({ children }) {
       endDate: "",
       startTime: "",
       endTime: "",
+      currency: "",
       createdBy: "System",
     },
     contactDto: {
@@ -45,6 +44,7 @@ function CreateEventProvider({ children }) {
         startTime: "",
         endTime: "",
         createdBy: "System",
+        currency: ""
       },
       contactDto: {
         email: "",
