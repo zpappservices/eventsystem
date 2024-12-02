@@ -8,12 +8,18 @@ import { ConfigModule } from '@nestjs/config';
 import { DecryptRequestInterceptor, EncryptResponseInterceptor } from './utils/interceptor';
 import { EmailerModule } from './integrations/email/emailer.module';
 import { FirebaseService } from './auth/utils/firebase.service';
+import { SetupModule } from './setup/setup.module';
+import { EventModule } from './event/event.module';
+import { PaymentModule } from './payment/payment.module';
 @Module({
   imports: [
     UserModule,
     PrismaModule,
     AuthModule,
     EmailerModule,
+    SetupModule,
+    EventModule,
+    PaymentModule,
     //JwtModule,
     // ThrottlerModule.forRoot([
     //   {
