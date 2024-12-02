@@ -6,6 +6,13 @@ import Quantity from "./Quantity";
 import StyledImage from "./StyledImage";
 import { useTicketContext } from "@/context/TicketContext";
 import { toast } from "react-toastify";
+import { convertTo12HourFormat } from "@/utils/time";
+import moment from "moment";
+import { MdAccessTime, MdLocationPin } from "react-icons/md";
+import { BsCalendar2Date } from "react-icons/bs";
+import { createTicketContext } from "@/utils/ticket";
+import { useState } from "react";
+import useAuthToken from "@/hooks/useAuthToken";
 
 const eventDetails = {
   name: "Night of a Thousand Laughs",
@@ -13,127 +20,140 @@ const eventDetails = {
   date: "November 19th, 2024",
 };
 
-const EventsDetails = ({ id }) => {
-  const {
-    ticketData,
-    quantities,
-    grandTotalQuantity,
-    totalCost,
-    updateQuantity,
-    eventInfo,
-    setCart
-  } = useTicketContext();
+const EventsDetails = ({ id, details }) => {
+  const event = details?.EventTicket;
+  const [tickets, setTickets] = useState([]);
 
-  console.log(quantities, grandTotalQuantity, totalCost, eventInfo);
+  const router = useRouter();
+  const { activeUser, token } = useAuthToken();
+
+  const totalInStock = event?.reduce((acc, ticket) => acc + ticket.quantity, 0);
+  const totalQuantity = tickets?.reduce(
+    (acc, ticket) => acc + ticket.quantity,
+    0
+  );
+
+  const totalCost = tickets.reduce(
+    (acc, ticket) => acc + ticket.amount * ticket.quantity,
+    0
+  );
 
   const handleClick = () => {
+    if (!activeUser && !activeUser) {
+      toast.info("Please sign in to proceed with the purchase.");
+      return;
+    }
+
+    const serializedData = {
+      id: id,
+      tickets: JSON.stringify(tickets),
+      eventDetails: JSON.stringify({
+        totalQuantity: totalQuantity,
+        totalCost: `${totalCost}`,
+        eventName: details?.title,
+        banner: details?.image_banner,
+        currency: details?.currency,
+      }),
+    };
+
     router.push({
       pathname: "/payment",
-      query: { id: id },
+      query: serializedData,
     });
   };
 
-  const handleAddToCart = () => {
-    const cartItem = {
-      eventDetails: {
-        name: "Night of a Thousand Laughs",
-        image: "/img/event1.svg",
-        date: "November 19th, 2024",
-      },
-      total: {
-        price: totalCost,
-        quantity: grandTotalQuantity,
-      },
-      tickets: ticketData
-        .map((ticket, index) => ({
-          ticketType: ticket.ticketType,
-          price: ticket.price,
-          quantity: quantities[index],
-        }))
-        .filter((ticket) => ticket.quantity > 0), // Include only tickets with quantity > 0
-    };
-
-    const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
-    // Add the new item to the cart array
-    const updatedCart = [...existingCart, cartItem];
-    // Update localStorage with the new cart data
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
-    setCart(updatedCart);
-
-    toast.success("Event added to cart!");
-  };
-
-  const isAddToCartDisabled = quantities.every((quantity) => quantity === 0);
+  const { currency } = details || {};
 
   return (
     <div className="w-full flex flex-col gap-6">
-      <BreadCrumb id={id} />
       <div className="w-full flex flex-col md:flex-row justify-between gap-6">
         <div className="w-full max-w-[551px] cursor-pointer rounded-lg">
-          <StyledImage src="/img/event1.svg" className="w-full" />
+          <StyledImage
+            src={details?.image_banner ?? "/img/event1.svg"}
+            className="w-full"
+          />
           <div className="mt-5">
-            <p className="text-[18px] leading-normal ">Venue :</p>
-            <p className="text-[18px] leading-normal ">Date :</p>
-            <p className="text-[18px] leading-normal ">City :</p>
-            <p className="text-[18px] leading-normal ">Location :</p>
+            <p className="text-[16px] leading-normal capitalize flex items-center">
+              <MdLocationPin size={19} />
+              <span className="font-semibold mx-0.5">Location: </span>{" "}
+              {details?.location}
+            </p>
+            <p className="text-[16px] leading-normal capitalize flex items-center">
+              <BsCalendar2Date size={16} />
+              <span className="font-semibold mx-1.5">Date: </span>{" "}
+              {moment(details?.StartDate).format("YYYY-MM-DD")} -{" "}
+              {moment(details?.EndDate).format("YYYY-MM-DD")}
+            </p>
+            <p className="text-[16px] leading-normal capitalize flex items-center">
+              <MdAccessTime size={19} />
+              <span className="font-semibold mx-0.5">Time: </span>{" "}
+              {convertTo12HourFormat(details?.StartTime)} -{" "}
+              {convertTo12HourFormat(details?.EndTime)}
+            </p>
           </div>
         </div>
-        <div className="w-full max-w-[458px] flex flex-col gap-4 cursor-pointer">
+        <div className="w-full max-w-[578px] flex flex-col gap-4 cursor-pointer">
           <div>
             <p className="text-[20px] font-semibold leading-snug">
-              Night of a thousand laugh November 19th 2024
+              {details?.title}
             </p>
-            <p className="text-[#1FCA59] text-[16px] leading-snug">
-              In stock 100 tickets
-            </p>
+            {totalInStock > 0 ? (
+              <p className="text-[#1FCA59] text-[16px] leading-snug">
+                In stock {totalInStock} tickets
+              </p>
+            ) : (
+              <p className="text-red-600 text-[16px] leading-snug">
+                In stock {totalInStock} tickets
+              </p>
+            )}
           </div>
           <div className="w-full flex flex-col gap-2  border-b-2 border-gray-400 pb-2.5">
-            {ticketData.map((ticket, index) => (
+            {event?.map(({ price, name, quantity }, index) => (
               <div
                 key={index}
                 className="flex justify-between items-center gap-4"
               >
-                <p className="text-[16px] leading-snug">{ticket.ticketType} </p>
+                <p className="text-[16px] leading-snug">{name} </p>
                 <p className="text-[16px] leading-snug ms-auto mr-3">
-                  <span className="font-semibold">$</span>
-                  {ticket.price.toLocaleString()}
+                  <span className="font-semibold ms-5 mr-0.5">
+                    {currency === "USD" && "$"}
+                    {currency === "NGN" && "₦"}
+                    {currency === "GHS" && "GH₵"}
+                    {currency === "ZAR" && "R"}
+                    {!currency && "₦"}
+                  </span>
+                  {price.toLocaleString()}
                 </p>
                 <Quantity
-                  value={quantities[index]}
-                  onChange={(value) => updateQuantity(index, value)}
+                  inStock={quantity}
+                  onChange={setTickets}
+                  item={{ name: name, amount: price }}
                 />
               </div>
             ))}
           </div>
           <div className="flex flex-wrap items-center justify-between gap-1 border-b-2 border-gray-400 pb-4">
             <p className="text-[16px] leading-snug">
-              <span className="font-bold">Total Quantity:</span>{" "}
-              {grandTotalQuantity}
+              <span className="font-bold">Total Quantity:</span> {totalQuantity}
             </p>
             <p className="text-[16px] leading-snug">
               <span className="font-bold">Total Amount:</span>{" "}
-              <span className="font-semibold">$</span>
-              {totalCost}
+              <span className="font-semibold">₦</span>
+              {totalCost.toLocaleString()}
             </p>
           </div>
-          <div>
-            <p className="text-[20px] leading-normal font-semibold">QUANTITY</p>
-          </div>
-          <div className="w-full flex flex-col gap-4">
-            <Button onClick={handleAddToCart} disabled={isAddToCartDisabled}>
-              ADD TO CART
-            </Button>
+          <div className="w-full flex flex-col gap-4 my-3">
             <Button
-              disabled={isAddToCartDisabled}
-              container="bg-white border-2 border-[#FF7F50]"
+              container="w-full max-w-none"
+              disabled={tickets.length < 1}
               onClick={handleClick}
             >
-              BUY IT NOW
+              CHECKOUT
             </Button>
           </div>
 
           <div>
-            <CustomAccordion />
+            <CustomAccordion description={details?.description} />
           </div>
         </div>
       </div>

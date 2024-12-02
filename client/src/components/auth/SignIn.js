@@ -8,7 +8,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 
-const SignIn = () => {
+const SignIn = ({ closeModal }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -63,7 +63,8 @@ const SignIn = () => {
           toast.success("Signin Successful!");
           const id = data?.data?.existingUser?.id;
           storeUserToken(id, key, true);
-          router.push("/dashboard")
+         /*  router.push("/dashboard") */
+         closeModal();
         } else if (data?.error || data?.message) {
           toast.error(data?.error || data?.message || "Operation failed!");
         } else if (data?.statusCode >= 400 && data?.statusCode < 500) {

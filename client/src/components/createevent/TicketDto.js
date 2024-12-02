@@ -1,11 +1,11 @@
-import { TextField, MenuItem, FormControl } from "@mui/material";
+import { TextField, MenuItem, FormControl, Autocomplete } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import FormButton from "./FormButton";
 import { useCreateEvent } from "@/context/CreateEventContext";
 import { toast } from "react-toastify";
 import useApiRequest from "@/hooks/useApiRequest";
 
-const TicketDto = ({ handleBack }) => {
+const TicketDto = ({ handleBack, handleReset }) => {
   const [tickets, setTickets] = useState([
     {
       type: "free",
@@ -31,9 +31,30 @@ const TicketDto = ({ handleBack }) => {
     quantity: "",
   });
 
+  const ticketOptions = [
+    "Regular",
+    "VIP",
+    "Silver",
+    "Gold",
+    "Diamond",
+    "Platinum",
+  ];
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
+    setForm((prevForm) => {
+      const updatedForm = { ...prevForm, [name]: value };
+
+      if (name === "type" && value === "free") {
+        updatedForm.name = "Free";
+        updatedForm.price = "0";
+      } else if (name === "type" && value !== "free") {
+        updatedForm.name = "";
+        updatedForm.price = "";
+      }
+
+      return updatedForm;
+    });
   };
 
   const handleConfirm = () => {
@@ -68,7 +89,7 @@ const TicketDto = ({ handleBack }) => {
     url: "event/v2/createevent",
     data: formData,
     headers: null,
-    useToken: true
+    useToken: true,
   });
 
   const createEvent = async () => {
@@ -77,12 +98,16 @@ const TicketDto = ({ handleBack }) => {
 
   useEffect(() => {
     if (data?.statusCode >= 200 && data?.statusCode < 300) {
-      toast.success(data?.message || "Career Advised successfully!");
-
+      toast.success(data?.message || "Event Created successfully!");
+      handleReset(setFormData);
     } else if (data?.error || data?.message) {
-      toast.error(data?.error || data?.message || "Couldn't Post Event! Try again later.");
+      toast.error(
+        data?.error || data?.message || "Couldn't Post Event! Try again later."
+      );
     } else if (data?.statusCode >= 400 && data?.statusCode < 500) {
-      toast.error(data?.error || data?.message || "Couldn't Post Event! Try again later.");
+      toast.error(
+        data?.error || data?.message || "Couldn't Post Event! Try again later."
+      );
     }
   }, [data]);
 
@@ -105,7 +130,7 @@ const TicketDto = ({ handleBack }) => {
         )}
 
         {showForm && (
-          <div className="p-4 rounded shadow">
+          <div className="p-4 rounded shadow space-y-3">
             <FormControl fullWidth className="mb-2">
               <TextField
                 fullWidth
@@ -122,47 +147,38 @@ const TicketDto = ({ handleBack }) => {
                 <MenuItem value="paid">Paid</MenuItem>
               </TextField>
             </FormControl>
-            <FormControl fullWidth className="mb-2">
-              <TextField
-                fullWidth
-                id="demo-simple-select"
-                select
-                labelid="demo-simple-select-label"
-                label="Ticket name"
-                name="name"
-                value={form.name}
-                onChange={handleInputChange}
-                color="warning"
-              >
-                <MenuItem value="Regular">Regular</MenuItem>
-                <MenuItem value="VIP">VIP</MenuItem>
-                <MenuItem value="Silver">Silver</MenuItem>
-                <MenuItem value="Gold">Gold</MenuItem>
-                <MenuItem value="Diamond">Diamond</MenuItem>
-              </TextField>
-            </FormControl>
-            {/* 
-            <div className="mb-3">
-              <TextField
-                fullWidth
-                label="Name"
-                name="name"
-                value={form.name}
-                onChange={handleInputChange}
-                color="warning"
-              />
-            </div> */}
+
+            <Autocomplete
+              value={form.name || ""}
+              onChange={(event, newValue) => {
+                setForm({ ...form, name: newValue || "" });
+              }}
+              inputValue={form.name || ""}
+              onInputChange={(event, newInputValue) => {
+                setForm((prevForm) => ({
+                  ...prevForm,
+                  name: newInputValue,
+                }));
+              }}
+              options={ticketOptions}
+              disabled={form.type === "free"}
+              renderInput={(params) => (
+                <TextField {...params} label="Ticket name" />
+              )}
+            />
 
             <div className="mb-3">
               <TextField
-                label="Price ($)"
+                label="Price"
                 type="number"
                 name="price"
                 value={form.price}
                 onChange={handleInputChange}
                 color="warning"
+                disabled={form.type === "free"}
               />
             </div>
+
             <div className="mb-3">
               <TextField
                 label="Quantity"
@@ -190,7 +206,6 @@ const TicketDto = ({ handleBack }) => {
             </div>
           </div>
         )}
-
         <div className="mt-4">
           <h2 className="text-lg font-bold">Tickets:</h2>
           <ul className="list-disc pl-5">

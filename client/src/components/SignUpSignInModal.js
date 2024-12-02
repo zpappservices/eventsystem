@@ -59,7 +59,7 @@ const SignUpSignInModal = ({ isLoginModal, setIsLoginModal, setIsModalOpen }) =>
           <GoogleSignin />
 
           {/*---------Sign Up and Sign In Form------------------------*/}
-          {isLoginModal ? <SignIn /> : <SignUp />}
+          {isLoginModal ? <SignIn closeModal={closeModal} /> : <SignUp />}
 
           <SocialLogin />
         </div>
