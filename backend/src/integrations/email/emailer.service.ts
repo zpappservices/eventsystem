@@ -41,10 +41,10 @@ export class EmailerService {
 
   async sendTicketQRCode(data: any) {
     const payload = {
-      email: data.transaction.user.email,
-      //email: "hbshofela@gmail.com",
+      //email: data.transaction.user.email,
+      email: "hbshofela@gmail.com",
       username: data.transaction.user.username,
-      qrCode: data.qrCode,
+      qrCode: data.imageUrl,
       id: data.transaction.id,
       amount: data.transaction.price,
       type: data.transaction.ticket,
