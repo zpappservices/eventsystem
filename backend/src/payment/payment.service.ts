@@ -326,4 +326,33 @@ export class PaymentService {
           throw new Error(`Failed to generate QR code: ${error.message}`);
         }
       }
+
+      async getTransactionByReg(id: string) {
+
+        try{
+          const transactions = await this.prisma.eventTransaction.findMany({ where: { batchId: id } });
+
+          if(!transactions){
+            return {
+              statusCode: HttpStatus.BAD_REQUEST,
+              data: null,
+              message: `Reference with id ${id} not found.`,
+            };
+          }
+
+        return {
+          statusCode: HttpStatus.OK,
+          data: transactions,
+          message: 'successfully.',
+        };
+        }catch(err){
+          console.log(err);
+        return {
+          statusCode: HttpStatus.EXPECTATION_FAILED,
+          data: null,
+          message: 'Unable to fetch transaction.',
+          };
+        }
+        
+      }
 }

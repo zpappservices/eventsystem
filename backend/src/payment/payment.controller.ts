@@ -47,6 +47,10 @@ export class PaymentController {
   @Get('/get-one-transaction/:id')
   async getOneTransaction(@Param() id: string): Promise<any> {
     return this.paymentService.fetchTransaction(id);
+  }  
+  @Get('/gettransactionbyref/:id')
+  async getTransactionByReg(@Param('id') id: string): Promise<any> {
+    return this.paymentService.getTransactionByReg(id);
   }
   @Get('/getAllbank')
   async getAllBank(): Promise<any> {
