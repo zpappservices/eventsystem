@@ -1,13 +1,14 @@
 import { HttpService } from '@nestjs/axios';
 import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
 import { lastValueFrom } from 'rxjs';
-import { OrderDto, PaymentDto, SubaccountDto, PaymentStatusEnum } from './dtos/payment.dto';
+import { OrderDto, PaymentDto, SubaccountDto, PaymentStatusEnum, S3BucketEnum } from './dtos/payment.dto';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '@/integrations/prisma/prisma.service';
 import { v4 as uuidv4 } from 'uuid';
 import { Event, EventTransaction } from '@prisma/client';
 import * as QRCode from 'qrcode';
 import { EmailerService } from '@/integrations/email/emailer.service';
+import { AwsS3Service } from '@/integrations/amazons3/aws-s3.service';
 
 @Injectable()
 export class PaymentService {
@@ -15,6 +16,7 @@ export class PaymentService {
     constructor(private readonly httpService: HttpService, 
         private readonly configService: ConfigService,
         private emailService: EmailerService,
+        private awsS3Service: AwsS3Service,
         private prisma: PrismaService) {}
 
     private async makeRequest(endpoint: string, method: 'get' | 'post', data: any = {}) {
@@ -221,7 +223,7 @@ export class PaymentService {
       }
 
       async verifyAndUpdateTransaction(reference: string) {
-
+        
         try{
 
           // Verify Transaction
@@ -260,8 +262,8 @@ export class PaymentService {
           const qrcodes = await this.generateQRCodes(pending);
 
         return {
-          statusCode: HttpStatus.CREATED,
-          data: qrcodes,
+          statusCode: HttpStatus.OK,
+          data: reference,
           message: 'successfully.',
         };
         }catch(err){
@@ -269,7 +271,7 @@ export class PaymentService {
         return {
           statusCode: HttpStatus.EXPECTATION_FAILED,
           data: null,
-          message: 'Unable to create account.',
+          message: 'Unable to verify payment.',
           };
         }
         
@@ -294,34 +296,14 @@ export class PaymentService {
 
             qrCodes.push(qrCode);
 
+            const imageUrl = await this.awsS3Service.uploadBase64( S3BucketEnum.TICKET, t.ticketId, qrCode )
+
             try {
-              await this.emailService.sendTicketQRCode({ transaction: t, qrCode });
+              await this.emailService.sendTicketQRCode({ transaction: t, imageUrl });
             } catch (e) {
               console.log(e.message);
             }
-          }
-
-          // transactions.forEach(async (t) => {
-          //   // Convert transaction details to a JSON string
-          //   const qrData = { ticketId: t.ticketId, ticketType: t.ticket, eventName: t.eventName, amount: t.price, ref: t.batchId, event: t.eventName };
-          //   const transactionData = JSON.stringify(qrData);
-
-          //   // Generate QR Code as a data URL (Base64 image)
-          //   // const qrCode = QRCode.toDataURL(transactionData, {
-          //   //   width: 300, // Size of the QR Code
-          //   // });
-
-          //   const qrCode = await this.generateQRCode(transactionData)
-
-          //   qrCodes.push(qrCode);
-
-          //   try {
-          //     await this.emailService.sendTicketQRCode({ transaction: t, qrCode });
-          //   } catch (e) {
-          //     console.log(e.message);
-          //   }
-
-          // });         
+          }       
     
           return qrCodes; // Return the QR Code as a Base64 string
         } catch (error) {

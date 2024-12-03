@@ -118,3 +118,11 @@ export class PaymentDto {
     "PAID" = "PAID",
     "FAILED" = "FAILED",
   }
+
+  
+  export enum S3BucketEnum {
+    "TICKET" = "TICKET",
+    "BANNER" = "BANNER",
+    "IMAGE" = "IMAGE",
+    "CATEGORY" = "CATEGORY",
+  }
