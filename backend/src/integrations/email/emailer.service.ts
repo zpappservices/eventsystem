@@ -1,5 +1,6 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
+import { format } from 'date-fns';
 
 @Injectable()
 export class EmailerService {
@@ -49,8 +50,10 @@ export class EmailerService {
       amount: data.transaction.price,
       type: data.transaction.ticket,
       event: data.transaction.eventName,
-      date: data.transaction.event.StartDate,
+      date: format(data.transaction.event.StartDate, 'MMM dd, yyyy'),
+      time: data.transaction.event.StartTime,
+      location: data.transaction.event.location,
     };
-    await this.sendMail(payload, 'Ticket QR Code', 'ticket');
+    await this.sendMail(payload, 'Ticket Details', 'ticket');
   }
 }
