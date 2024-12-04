@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { EventService } from './event.service';
-import { EventContactDto, EventDto, EventTicketDto, VendorEventDto } from './dtos/event.dto';
+import { EventContactDto, EventDto, EventImageDto, EventTicketDto, VendorEventDto } from './dtos/event.dto';
 import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('event')
@@ -83,5 +83,10 @@ export class EventController {
     async getTicketByEvent(@Param('id') id: any): Promise<any> {
     const response = await this.eventService.getTicketByEvent(id);
     return response;
+    }
+
+    @Post('/uploadeventimage')
+    async uploadEventImage(@Body() req: EventImageDto) {
+        return this.eventService.uploadEventImage(req);
     }
 }
