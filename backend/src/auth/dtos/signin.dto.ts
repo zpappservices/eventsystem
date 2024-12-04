@@ -18,3 +18,17 @@ export class SigninDto {
   @ApiProperty()
   password: string;
 }
+
+export class IsLoginDto {
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty()
+  token: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty()
+  userId: string;
+
+
+}

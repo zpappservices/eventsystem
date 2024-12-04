@@ -28,7 +28,8 @@ export class FirebaseService {
 
   async verifyToken(token: string) {
     try {
-      return await FirebaseService.firebaseApp.auth().verifyIdToken(token);
+      const decodedToken =  await this.getFirebaseApp().auth().verifyIdToken(token);
+      return decodedToken;
     } catch (error) {
       throw new Error('Invalid token');
     }
