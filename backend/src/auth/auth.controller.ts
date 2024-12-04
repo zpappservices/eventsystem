@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { SignupDto, SingleSignonDto } from './dtos/signup.dto';
 import { AuthService } from './auth.service';
-import { SigninDto } from './dtos/signin.dto';
+import { IsLoginDto, SigninDto } from './dtos/signin.dto';
 import { Request, Response } from 'express';
 import { FirebaseAuthGuard } from './guards/firebase.guard';
 import { ActivateAccountDto } from './dtos/email.dto';
@@ -67,5 +67,11 @@ export class AuthController {
     @Query('email') email: string
   ): Promise<any> {
      return this.authService.resendOtp(email);
+  }
+  //@UseGuards(FirebaseAuthGuard)
+  @Post('/islogin')
+  async isLogin(@Body() req: IsLoginDto): Promise<void> {
+    return await this.authService.isLogin(req);
+
   }
 }
