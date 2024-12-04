@@ -7,6 +7,7 @@ import { ValidationPipe } from '@nestjs/common';
 import * as session from 'express-session';
 import * as passport from 'passport';
 import * as bodyParser from 'body-parser';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
@@ -30,6 +31,22 @@ async function bootstrap() {
   app.use(passport.session());
   app.use(bodyParser.json({ limit: '50mb' }));
   app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+
+  // Configure Swagger options
+  const config = new DocumentBuilder()
+    .setTitle('API Documentation')
+    .setDescription('API documentation for the application')
+    .setVersion('1.0')
+    //.addBearerAuth() // Optional: Adds authorization header
+    .build();
+
+  // Create Swagger document
+  const document = SwaggerModule.createDocument(app, config);
+
+  // Setup Swagger module
+  SwaggerModule.setup('api', app, document);
+
+
   const PORT = process.env.PORT || 3001;
   await app.listen(PORT, () => {
     console.log(`Server started at port ${PORT}`);
