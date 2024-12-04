@@ -17,7 +17,7 @@ export class PaymentController {
   async paymentCallback(@Query('reference') reference: string, @Res() res: Response): Promise<any> {
     const result = await this.paymentService.verifyAndUpdateTransaction(reference);
 
-    let returnUrl = this.configService.get('AWS_ACCESS_KEY_ID')
+    let returnUrl = this.configService.get('RECEIPT_URL')
     if(result.statusCode == HttpStatus.OK){
       returnUrl = `${returnUrl}?reference=${returnUrl.data}&success=true`
     }
