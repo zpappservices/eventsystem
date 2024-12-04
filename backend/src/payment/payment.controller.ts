@@ -19,7 +19,7 @@ export class PaymentController {
 
     let returnUrl = this.configService.get('RECEIPT_URL')
     if(result.statusCode == HttpStatus.OK){
-      returnUrl = `${returnUrl}?reference=${returnUrl.data}&success=true`
+      returnUrl = `${returnUrl}?reference=${result.data}&success=true`
     }
     else{
       returnUrl = `${returnUrl}?reference=xxx&success=false`
