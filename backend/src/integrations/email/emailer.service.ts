@@ -6,9 +6,10 @@ import { format } from 'date-fns';
 export class EmailerService {
   constructor(private mailerService: MailerService) {}
 
-  async sendMail(data: any, subject: string, template: string) {
+  async sendMail(data: any, subject: string, template: string ) {
     return this.mailerService.sendMail({
       to: data.email,
+      cc: data.email_cc,
       subject: subject,
       template: template,
       context: data,
@@ -53,6 +54,7 @@ export class EmailerService {
       date: format(data.transaction.event.StartDate, 'MMM dd, yyyy'),
       time: data.transaction.event.StartTime,
       location: data.transaction.event.location,
+      email_cc: data.transaction.user.email != data.email ? data.email : ""
     };
     await this.sendMail(payload, 'Ticket Details', 'ticket');
   }
