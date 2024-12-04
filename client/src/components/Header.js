@@ -4,7 +4,7 @@ const Header = ({ step }) => {
    
     const pathname = usePathname();
    return pathname === "/" ? (
-      <div className="py-5 hero rounded-[8px] overflow-hidden">
+      <div className="py-5 px-5 mx-5 hero rounded-[8px] overflow-hidden">
          <div className="hero-content rounded-sm">
             <p className="text-center leading-[140%] text-white text-xl sm:text-[40px] font-bold">
                Discover More Events

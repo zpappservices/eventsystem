@@ -222,7 +222,7 @@ const payment = () => {
                 </p>
               </div>
             </div>
-            <div className="w-full flex flex-col gap-4 mt-5">
+            <div className="w-full flex flex-col gap-4 my-5">
               <label
                 className="flex items-center gap-2 cursor-pointer text-[16px] leading-snug"
                 onClick={handleCheckboxToggle}
