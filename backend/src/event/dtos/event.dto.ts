@@ -10,6 +10,7 @@ import {
   IsNumber,
   Min,
   IsDecimal,
+  IsBase64,
 } from 'class-validator';
 
 
@@ -199,6 +200,20 @@ export class VendorEventDto {
   @IsOptional()
   @ApiProperty()
   ticketDto: EventTicketDto[];
+
+}
+
+export class EventImageDto {
+
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty()
+  image: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty()
+  eventId: string;
 
 }
 

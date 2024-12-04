@@ -1,11 +1,13 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { Currency, EventContactDto, EventDto, EventTicketDto, VendorEventDto } from './dtos/event.dto';
+import { Currency, EventContactDto, EventDto, EventImageDto, EventTicketDto, VendorEventDto } from './dtos/event.dto';
 import { PrismaService } from '@/integrations/prisma/prisma.service';
 import { Prisma } from '@prisma/client';
+import { AwsS3Service } from '@/integrations/amazons3/aws-s3.service';
+import { S3BucketEnum } from '@/payment/dtos/payment.dto';
 
 @Injectable()
 export class EventService {
-    constructor(private prisma: PrismaService) {}
+    constructor(private prisma: PrismaService, private awsS3Service: AwsS3Service) {}
 
   async getAllEvents() {
 
@@ -440,6 +442,7 @@ export class EventService {
       async getOneTicket(id: string) {
     
         try {
+          
             const event = await this.prisma.eventTicket.findUnique({
               where: {id}
             });
@@ -480,4 +483,43 @@ export class EventService {
           }
       }
 
+       // Upload event image
+    async uploadEventImage(dto: EventImageDto) {
+
+      try {
+        const { eventId, image } = dto;
+
+        const imageUrl = await this.awsS3Service.uploadBase64( S3BucketEnum.BANNER, eventId, image )
+
+        if(!imageUrl) {
+          return {
+            statusCode: HttpStatus.BAD_REQUEST,
+            data: null,
+            message: 'Fail to upload image.',
+          };
+        }
+
+          const created = await this.prisma.event.update({
+            where: { id: eventId },
+            data: {
+              image_banner: imageUrl,
+  
+              updatedOn: new Date()
+            }
+          });
+
+          return {
+            statusCode: HttpStatus.OK,
+            data: imageUrl,
+            message: 'Image uploaded.',
+          };
+        } catch (err) {
+          console.log(err);
+          return {
+            statusCode: HttpStatus.EXPECTATION_FAILED,
+            data: null,
+            message: 'Unable to upload image .',
+          };
+        }
+    }
 }
