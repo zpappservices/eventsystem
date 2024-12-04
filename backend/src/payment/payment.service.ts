@@ -259,7 +259,7 @@ export class PaymentService {
             },
           }); 
 
-          const qrcodes = await this.generateQRCodes(pending);
+          const qrcodes = await this.generateQRCodes(pending, res.data.customer.email);
 
         return {
           statusCode: HttpStatus.OK,
@@ -277,7 +277,7 @@ export class PaymentService {
         
       }
       
-      async generateQRCodes(transactions: EventTransaction[]): Promise<any> {
+      async generateQRCodes(transactions: EventTransaction[], email: string): Promise<any> {
         try {
 
           const qrCodes = []
@@ -299,7 +299,7 @@ export class PaymentService {
             const imageUrl = await this.awsS3Service.uploadBase64( S3BucketEnum.TICKET, t.ticketId, qrCode )
 
             try {
-              await this.emailService.sendTicketQRCode({ transaction: t, imageUrl });
+              await this.emailService.sendTicketQRCode({ transaction: t, imageUrl, email });
             } catch (e) {
               console.log(e.message);
             }
