@@ -24,18 +24,15 @@ const PrivateRoute = ({ children }) => {
   const { isVendor = false } = data?.data || {};
 
   useEffect(() => {
-    if (!token && !activeUser) {
+    if (!token && !activeUser ) {
       toast.info("Session expired. Please login to continue");
-      const getUser = async () => {
-        await request();
-      };
     }
 
     if (isVendor) {
       toast.info("You're already a vendor");
       router.push("/");
     }
-  }, [activeUser, token, data]);
+  }, [activeUser, token]);
 
   useEffect(() => {
     getUser();

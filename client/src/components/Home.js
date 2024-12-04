@@ -35,7 +35,7 @@ const Home = () => {
 
   return (
     <div className="w-full flex flex-col gap-5">
-      <div className="w-full flex items-center justify-between flex-wrap gap-5">
+      <div className="w-full flex items-center justify-center sm:justify-between flex-wrap gap-5">
         {data?.data.length > 0
           ? data.data
               .filter(({ active }) => active)
