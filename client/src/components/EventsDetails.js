@@ -6,7 +6,7 @@ import Quantity from "./Quantity";
 import StyledImage from "./StyledImage";
 import { useTicketContext } from "@/context/TicketContext";
 import { toast } from "react-toastify";
-import { convertTo12HourFormat } from "@/utils/time";
+import { convertTo12HourFormat, formatDate } from "@/utils/time";
 import moment from "moment";
 import { MdAccessTime, MdLocationPin } from "react-icons/md";
 import { BsCalendar2Date } from "react-icons/bs";
@@ -67,24 +67,24 @@ const EventsDetails = ({ id, details }) => {
   return (
     <div className="w-full flex flex-col gap-6">
       <div className="w-full flex flex-col md:flex-row justify-between gap-6">
-        <div className="w-full max-w-[551px] cursor-pointer rounded-lg">
+        <div className="w-full max-w-[551px] cursor-pointer">
           <StyledImage
             src={details?.image_banner ?? "/img/event1.svg"}
-            className="w-full"
+            className="w-full rounded-[30px]"
           />
           <div className="mt-5">
-            <p className="text-[16px] leading-normal capitalize flex items-center">
+            <p className="text-[14px] leading-normal capitalize flex items-center">
               <MdLocationPin size={19} />
               <span className="font-semibold mx-0.5">Location: </span>{" "}
               {details?.location}
             </p>
-            <p className="text-[16px] leading-normal capitalize flex items-center">
+            <p className="text-[14px] leading-normal capitalize flex items-center">
               <BsCalendar2Date size={16} />
               <span className="font-semibold mx-1.5">Date: </span>{" "}
-              {moment(details?.StartDate).format("YYYY-MM-DD")} -{" "}
-              {moment(details?.EndDate).format("YYYY-MM-DD")}
+              {formatDate(details?.StartDate)} -{" "}
+              {formatDate(details?.EndDate)}
             </p>
-            <p className="text-[16px] leading-normal capitalize flex items-center">
+            <p className="text-[14px] leading-normal capitalize flex items-center">
               <MdAccessTime size={19} />
               <span className="font-semibold mx-0.5">Time: </span>{" "}
               {convertTo12HourFormat(details?.StartTime)} -{" "}
@@ -111,8 +111,7 @@ const EventsDetails = ({ id, details }) => {
             {event?.map(({ price, name, quantity }, index) => (
               <div
                 key={index}
-                className="flex justify-between items-center gap-4"
-              >
+                className="flex justify-between items-center gap-4">
                 <p className="text-[16px] leading-snug">{name} </p>
                 <p className="text-[16px] leading-snug ms-auto mr-3">
                   <span className="font-semibold ms-5 mr-0.5">
@@ -146,8 +145,7 @@ const EventsDetails = ({ id, details }) => {
             <Button
               container="w-full max-w-none"
               disabled={tickets.length < 1}
-              onClick={handleClick}
-            >
+              onClick={handleClick}>
               CHECKOUT
             </Button>
           </div>

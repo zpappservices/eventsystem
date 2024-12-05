@@ -20,8 +20,10 @@ const TicketDto = ({ handleBack, handleReset }) => {
       quantity: 10,
     },
   ]);
+  const [imageData, setImageData] = useState(null);
 
-  const { formData, formError, setFormError, setFormData } = useCreateEvent();
+  const { formData, formError, setFormError, setFormData, base64Image } =
+    useCreateEvent();
 
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({
@@ -96,10 +98,31 @@ const TicketDto = ({ handleBack, handleReset }) => {
     await request();
   };
 
+  const {
+    data: uploadData,
+    error: UploadError,
+    loading: Uploading,
+    request: uploadRequest,
+  } = useApiRequest({
+    method: "post",
+    url: "event/uploadeventimage",
+    data: imageData,
+    headers: null,
+    useToken: true,
+  });
+
+  const uploadImage = async () => {
+    await uploadRequest();
+  };
+
   useEffect(() => {
     if (data?.statusCode >= 200 && data?.statusCode < 300) {
       toast.success(data?.message || "Event Created successfully!");
-      handleReset(setFormData);
+      const { id } = data?.data || {}
+      setImageData({
+        image: base64Image,
+        eventId: id,
+      });
     } else if (data?.error || data?.message) {
       toast.error(
         data?.error || data?.message || "Couldn't Post Event! Try again later."
@@ -112,10 +135,37 @@ const TicketDto = ({ handleBack, handleReset }) => {
   }, [data]);
 
   useEffect(() => {
+    if (imageData) {
+      uploadImage();
+    }
+  }, [imageData]);
+
+  useEffect(() => {
     if (error) {
       toast.error("Unexpected error. Please try again!");
     }
   }, [error]);
+
+  useEffect(() => {
+    if (uploadData?.statusCode >= 200 && uploadData?.statusCode < 300) {
+      toast.success(uploadData?.message || "Event banner uploaded successfully!");
+      /* handleReset(setFormData); */
+    } else if (uploadData?.error || uploadData?.message) {
+      toast.error(
+        uploadData?.error || uploadData?.message || "Couldn't Post Event! Try again later."
+      );
+    } else if (uploadData?.statusCode >= 400 && uploadData?.statusCode < 500) {
+      toast.error(
+        uploadData?.error || uploadData?.message || "Couldn't Post Event! Try again later."
+      );
+    }
+  }, [uploadData]);
+
+  useEffect(() => {
+    if (UploadError) {
+      toast.error("Unexpected error. Please try again!");
+    }
+  }, [UploadError]);
 
   return (
     <>
@@ -123,8 +173,7 @@ const TicketDto = ({ handleBack, handleReset }) => {
         {!showForm && (
           <button
             className="bg-[#FF7F50] hover:bg-[#FFB26F] text-white px-4 py-2 rounded transition-all duration-300 ease-in-out hover:scale-[1.1]"
-            onClick={() => setShowForm(true)}
-          >
+            onClick={() => setShowForm(true)}>
             Add Ticket
           </button>
         )}
@@ -141,8 +190,7 @@ const TicketDto = ({ handleBack, handleReset }) => {
                 name="type"
                 value={form.type}
                 onChange={handleInputChange}
-                color="warning"
-              >
+                color="warning">
                 <MenuItem value="free">Free</MenuItem>
                 <MenuItem value="paid">Paid</MenuItem>
               </TextField>
@@ -193,14 +241,12 @@ const TicketDto = ({ handleBack, handleReset }) => {
             <div className="flex space-x-5">
               <button
                 className="bg-[#62825D] hover:bg-[#B1C29E] text-white px-4 py-2 rounded transition-all duration-300 ease-in-out hover:scale-[1.1]"
-                onClick={handleConfirm}
-              >
+                onClick={handleConfirm}>
                 Confirm
               </button>
               <button
                 className="bg-[#FF7F50] hover:bg-[#FFB26F] text-white px-4 py-2 rounded transition-all duration-300 ease-in-out hover:scale-[1.1]"
-                onClick={handleCancel}
-              >
+                onClick={handleCancel}>
                 Cancel
               </button>
             </div>

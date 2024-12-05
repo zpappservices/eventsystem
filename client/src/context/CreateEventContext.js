@@ -7,6 +7,7 @@ const CreateEventContext = createContext();
 function CreateEventProvider({ children }) {
   const { activeUser } = useAuthToken()
   const [formError, setFormError] = useState({});
+  const [fileError, setFileError] = useState("");
 
   const [formData, setFormData] = useState({
     eventDto: {
@@ -30,6 +31,14 @@ function CreateEventProvider({ children }) {
     ticketDto: [
     ],
   });
+  const [base64Image, setBase64Image] = useState(null);
+
+  const handleImageChange = (base64) => {
+    setBase64Image(base64);
+    if (base64) {
+    } else {
+    }
+  };
 
   const handleResetForm = () => {
     setFormData({
@@ -70,14 +79,13 @@ function CreateEventProvider({ children }) {
     setPreview(null);
     setFormError({});
     setFileError("");
-    if (fileInputRef.current) fileInputRef.current.value = ""; // Clear the file input value
+    if (fileInputRef.current) fileInputRef.current.value = ""; 
   };
 
   {
     /**---------------------------------- NEED TO BE REVIEWED -------------- */
   }
   const [preview, setPreview] = useState(null);
-  const [fileError, setFileError] = useState(""); // File error message
   const fileInputRef = useRef(null); // Ref for file input
 
   const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
@@ -171,6 +179,8 @@ function CreateEventProvider({ children }) {
         handleSubmit,
         handleDeleteImage,
         handleResetForm,
+        base64Image,
+        handleImageChange
       }}
     >
       {children}

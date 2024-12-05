@@ -63,8 +63,6 @@ function ContactDto({ handleNext, handleBack }) {
       ...prevData,
       contactDto: { ...prevData.contactDto, [name]: value },
     }));
-
-    console.log(formData);
   };
 
   return (

@@ -1,16 +1,17 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import SignUpSignInModal from "./SignUpSignInModal";
 import { useRouter } from "next/router";
 import useAuthToken from "@/hooks/useAuthToken";
-import Link from "next/link";
 import useApiRequest from "@/hooks/useApiRequest";
 
 const NavBar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoginModal, setIsLoginModal] = useState(true);
+  const [isVendor, setIsVendor] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [navItems, setNavItems] = useState([]);
 
   const { activeUser, token } = useAuthToken();
-
   const router = useRouter();
 
   const handleLoginClick = () => {
@@ -19,49 +20,93 @@ const NavBar = () => {
   };
 
   const becomeVendor = () => router.push("/auth/onboarding");
-  const gotToDashboard = () => router.push("/dashboard");
+  const goToDashboard = () => router.push("/dashboard");
 
-  const { data, error, loading, request } = useApiRequest({
+  const { data, request } = useApiRequest({
     method: "get",
     url: `user/getoneuser/${activeUser}`,
-    data: null,
-    headers: null,
     useToken: true,
   });
 
   const getUser = async () => {
-    await request();
+    if (activeUser) await request();
   };
 
-  const { isVendor = false } = data?.data || {};
+  const {
+    data: loginStatus,
+    error: loginError,
+    request: validateSession,
+  } = useApiRequest({
+    method: "post",
+    url: "auth/islogin",
+    data: { token: token, userId: activeUser },
+    useToken: false,
+  });
 
-  const navItems = [
-    { item: "Home", id: 1, ariaLabel: "Home", onClick: () => router.push("/") },
-    token && activeUser
-      ? isVendor
-        ? {
-            item: "Dashboard",
-            id: 2.0,
-            ariaLabel: "Dashboard",
-            onClick: gotToDashboard,
-          }
-        : {
-            item: "Become a Vendor",
-            id: 2.1,
-            ariaLabel: "Become a Vendor",
-            onClick: becomeVendor,
-          }
-      : {
-          item: "Login",
-          id: 3,
-          ariaLabel: "Login",
-          onClick: handleLoginClick,
-        },
-  ];
+  const getLoginStatus = async () => {
+    if (activeUser) await validateSession();
+  };
+
+   const updateNavItems = () => {
+     const items = [
+       {
+         item: "Home",
+         id: 1,
+         ariaLabel: "Home",
+         onClick: () => router.push("/"),
+       },
+     ];
+
+     if (isLoggedIn) {
+       if (isVendor) {
+         items.push({
+           item: "Dashboard",
+           id: 2.0,
+           ariaLabel: "Dashboard",
+           onClick: goToDashboard,
+         });
+       } else {
+         items.push({
+           item: "Become a Vendor",
+           id: 2.1,
+           ariaLabel: "Become a Vendor",
+           onClick: becomeVendor,
+         });
+       }
+     } else {
+       items.push({
+         item: "Login",
+         id: 3,
+         ariaLabel: "Login",
+         onClick: handleLoginClick,
+       });
+     }
+
+     setNavItems(items);
+   };
+
+  useEffect(() => {
+    updateNavItems();
+    console.log(isLoggedIn, isVendor)
+  }, [isLoggedIn, isVendor]);
 
   useEffect(() => {
     getUser();
-  }, [activeUser, token, isVendor]);
+    getLoginStatus();
+  }, [activeUser, token]);
+
+  useEffect(() => {
+    if (data) {
+      const { isVendor: isAVendor } = data?.data || {};
+      setIsVendor(isAVendor);
+    }
+
+    if (loginStatus) {
+      const { data: isUserLoggedIn } = loginStatus || {};
+      setIsLoggedIn(isUserLoggedIn);
+    }
+    console.log(data?.data?.isVendor, loginStatus?.data)
+  }, [loginStatus, data]);
 
   return (
     <>
@@ -73,15 +118,14 @@ const NavBar = () => {
               className="flex justify-center items-center transition-all duration-300 ease-in-out hover:scale-[1.1] hover:opacity-80"
               key={i.id}
               aria-label={i.ariaLabel}
-              onClick={i.onClick}
-            >
+              onClick={i.onClick}>
               {i.item}
             </li>
           ))}
         </ul>
       </nav>
 
-      {/*--------------------------------- Login and sign up modal */}
+      {/* Login and Sign-Up Modal */}
       {isModalOpen && (
         <SignUpSignInModal
           isLoginModal={isLoginModal}
