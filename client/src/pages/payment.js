@@ -198,8 +198,7 @@ const payment = () => {
                 parsedTickets?.map(({ name, amount, quantity }, index) => (
                   <div
                     className="flex justify-between items-center gap-2"
-                    key={index}
-                  >
+                    key={index}>
                     <p className="text-[16px] leading-snug">
                       {name} x{quantity}
                     </p>
@@ -225,32 +224,36 @@ const payment = () => {
             <div className="w-full flex flex-col gap-4 my-5">
               <label
                 className="flex items-center gap-2 cursor-pointer text-[16px] leading-snug"
-                onClick={handleCheckboxToggle}
-              >
+                onClick={handleCheckboxToggle}>
                 {isChecked ? (
                   <BiCheckSquare className="text-primary text-[24px]" />
                 ) : (
                   <BiSquare className="text-gray-400 text-[24px]" />
                 )}
                 <span>
-                  I accept the{" "}
+                  I accept the
                   <Link
                     href="/terms"
                     className="text-black underline underline-offset-2"
                     target="_blank"
-                    rel="noopener noreferrer"
-                  >
+                    rel="noopener noreferrer">
                     Terms and Conditions
+                  </Link>{" "}
+                  and {"  "}
+                  <Link
+                    href="/useragreement"
+                    className="text-black underline underline-offset-2"
+                    target="_blank"
+                    rel="noopener noreferrer">
+                    User Agreement
                   </Link>
-                  .
                 </span>
               </label>
               <ButtonLoading
                 onClick={handlePay}
                 disabled={!isChecked}
                 isLoading={payLoading}
-                className="w-full max-w-none py-3.5 disabled:text-gray-700 disabled:bg-gray-400"
-              >
+                className="w-full max-w-none py-3.5 disabled:text-gray-700 disabled:bg-gray-400">
                 PAY NOW
               </ButtonLoading>
             </div>

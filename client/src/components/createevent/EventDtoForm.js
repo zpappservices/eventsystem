@@ -4,16 +4,19 @@ import MenuItem from "@mui/material/MenuItem";
 import FormButton from "./FormButton";
 import useApiRequest from "@/hooks/useApiRequest";
 import { useEffect } from "react";
+import PhotoUpload from "./PhotoUpload";
 
 function EventDtoForm({ handleNext }) {
-  const { formData, formError, setFormError, setFormData } = useCreateEvent();
-
-  const eventCategory = [
-    { value: "event 1", label: "first event" },
-    { value: "event 2", label: "second event" },
-    { value: "event 3", label: "third event" },
-    { value: "event 4", label: "fourth event" },
-  ];
+  const {
+    formData,
+    formError,
+    setFormError,
+    setFormData,
+    handleImageChange,
+    base64Image,
+    fileError,
+    setFileError,
+  } = useCreateEvent();
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -36,8 +39,6 @@ function EventDtoForm({ handleNext }) {
     getEventsCategories();
   }, []);
 
-  const categories = data?.data?.map((item) => item.name);
-
   const validateForm = () => {
     const errors = {};
     if (!formData.eventDto.title) errors.title = "Event name is required.";
@@ -54,6 +55,8 @@ function EventDtoForm({ handleNext }) {
     if (!formData.eventDto.startTime)
       errors.startTime = "Start time is required.";
     if (!formData.eventDto.endTime) errors.endTime = "End time is required.";
+    
+    if (!base64Image) errors.base64Image = "Banner Image is required.";
 
     const isEndDateValid =
       new Date(formData.eventDto.endDate) >=
@@ -72,7 +75,7 @@ function EventDtoForm({ handleNext }) {
     if (validateForm()) handleNext();
   };
 
-  console.log(formData)
+  const categories = data?.data;
 
   return (
     <>
@@ -123,11 +126,10 @@ function EventDtoForm({ handleNext }) {
           onChange={handleChange}
           color="warning"
           error={!!formError.categoryId}
-          helperText={formError.categoryId || ""}
-        >
-          {categories?.map((option) => (
-            <MenuItem key={option} value={option}>
-              {option}
+          helperText={formError.categoryId || ""}>
+          {categories?.length > 0 && categories?.map(({ name, id }) => (
+            <MenuItem key={id} value={name}>
+              {name}
             </MenuItem>
           ))}
         </TextField>
@@ -147,7 +149,12 @@ function EventDtoForm({ handleNext }) {
           helperText={formError.location || ""}
         />
       </div>
-      {/* Event Date & Time */}
+      <PhotoUpload
+        onImageChange={handleImageChange}
+        maxSizeMB={5}
+        fileError={formError.base64Image || fileError}
+        setFileError={setFileError}
+      />
       <div className="p-4">
         <h2 className="font-semibold pb-4">Event Date & Time</h2>
         <div className="sm:max-w-[80%] max-w-none grid sm:grid-cols-2 gap-y-7 gap-x-10">
@@ -211,8 +218,7 @@ function EventDtoForm({ handleNext }) {
             onChange={handleChange}
             color="warning"
             error={!!formError.currency}
-            helperText={formError.currency || ""}
-          >
+            helperText={formError.currency || ""}>
             <MenuItem value="NGN">Naira</MenuItem>
             <MenuItem value="USD">US Dollars</MenuItem>
             <MenuItem value="GHS">Cedis</MenuItem>

@@ -63,8 +63,7 @@ const SignIn = ({ closeModal }) => {
           toast.success("Signin Successful!");
           const id = data?.data?.existingUser?.id;
           storeUserToken(id, key, true);
-         /*  router.push("/dashboard") */
-         closeModal();
+          router.reload();
         } else if (data?.error || data?.message) {
           toast.error(data?.error || data?.message || "Operation failed!");
         } else if (data?.statusCode >= 400 && data?.statusCode < 500) {

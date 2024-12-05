@@ -31,11 +31,11 @@ const ticketsreceipt = () => {
   const { data: transaction = [] } = data || {};
 
   useEffect(() => {
-    if (!reference || !success) {
+    if (!transaction ) {
       toast.info("Invalid ticket receipt");
       router.push("/");
     }
-  }, [reference, success]);
+  }, [transaction]);
 
   return (
     <PrivateRoute>
@@ -77,7 +77,7 @@ const ticketsreceipt = () => {
                       bgColor="#FFFFFF"
                       fgColor="#000000"
                       level="L"
-                      className="shadow-lg p-3 py-7 rounded-[10px]  h-[200px] "
+                      className="shadow-[0_3px_10px_rgb(0,0,0,0.2)] p-3 py-7 rounded-[10px]  h-[200px] "
                     />
                     <div className="mt-3">
                       <p className="">
