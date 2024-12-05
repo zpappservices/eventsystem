@@ -119,10 +119,10 @@ export class EventService {
     try {
 
         const {eventDto, contactDto, ticketDto } =  data
-
+        let eventCreated: any;
         await this.prisma.$transaction(async (pr) => {
 
-            const eventCreated = await this.prisma.event.create({
+            eventCreated = await this.prisma.event.create({
                 data: {
                   userId: eventDto.userId,
                   title: eventDto.title,
@@ -184,7 +184,7 @@ export class EventService {
         
         return {
           statusCode: HttpStatus.CREATED,
-          data: "Event Created",
+          data: eventCreated,
           message: 'Event created successfully.',
         };
       } catch (err) {
