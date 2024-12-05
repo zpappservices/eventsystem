@@ -10,12 +10,14 @@ import {
 } from '@nestjs/common';
 import { SignupDto, SingleSignonDto } from './dtos/signup.dto';
 import { AuthService } from './auth.service';
-import { SigninDto } from './dtos/signin.dto';
+import { IsLoginDto, SigninDto } from './dtos/signin.dto';
 import { Request, Response } from 'express';
 import { FirebaseAuthGuard } from './guards/firebase.guard';
 import { ActivateAccountDto } from './dtos/email.dto';
+import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 
+@ApiTags('auth')
 @Controller('auth')
 //@UseGuards(FirebaseAuthGuard)
 export class AuthController {
@@ -24,6 +26,9 @@ export class AuthController {
 
   
   @Post('/signup')
+  @ApiOperation({ summary: 'Create a new user' })
+  @ApiBody({ description: 'Payload to signup a user', type: SignupDto })
+  @ApiResponse({ status: 201, description: 'User created successfully.' })
   async signup(
     @Body() signupDto: SignupDto,
     @Req() req: Request,
@@ -48,6 +53,9 @@ export class AuthController {
   }
 
   @Post('/verify-email')
+  @ApiOperation({ summary: 'Verify email' })
+  @ApiBody({ description: 'Payload to verify email', type: ActivateAccountDto })
+  @ApiResponse({ status: 200, description: 'Account activated successfully.' })
   async verifyEmail(
     @Body() activateAccountDto: ActivateAccountDto
   ): Promise<any> {
@@ -59,5 +67,11 @@ export class AuthController {
     @Query('email') email: string
   ): Promise<any> {
      return this.authService.resendOtp(email);
+  }
+  //@UseGuards(FirebaseAuthGuard)
+  @Post('/islogin')
+  async isLogin(@Body() req: IsLoginDto): Promise<void> {
+    return await this.authService.isLogin(req);
+
   }
 }

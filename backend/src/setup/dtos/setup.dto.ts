@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   IsNotEmpty,
   IsEmail,
@@ -11,13 +12,16 @@ import {
 export class CategoryDto {
   @IsNotEmpty()
   @IsString()
+  @ApiProperty()
   name: string;
 
   @IsOptional()
   @IsString()
+  @ApiProperty()
   description: string;
 
   @IsOptional()
   @IsString()
+  @ApiProperty()
   createdBy: string;
 }

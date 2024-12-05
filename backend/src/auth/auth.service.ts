@@ -1,6 +1,6 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { SignupDto, SingleSignonDto } from './dtos/signup.dto';
-import { SigninDto } from './dtos/signin.dto';
+import { IsLoginDto, SigninDto } from './dtos/signin.dto';
 import { UserService } from '@/user/user.service';
 import { Request } from 'express';
 import { PrismaService } from '@/integrations/prisma/prisma.service';
@@ -210,7 +210,6 @@ export class AuthService {
     }
   }
 
-
   async emailExist(email: string): Promise<any> {
     try {
 
@@ -344,4 +343,56 @@ export class AuthService {
       };
     }
   }
+
+  
+  async isLogin(dto: IsLoginDto): Promise<any> {
+    try {
+
+      const { token, userId } = dto
+
+      const isverify = await this.firebaseService.verifyToken(token);
+
+
+      if (!isverify) {
+        return {
+          statusCode: HttpStatus.UNAUTHORIZED,
+          data: false,
+          message: `UnAuthorize User.`,
+        };
+      }
+      const user = await this.prisma.user.findUnique({
+        where: { id: userId },
+      });
+
+      if (!user) {
+        return {
+          statusCode: HttpStatus.UNAUTHORIZED,
+          data: false,
+          message: `Invalid User.`,
+        };
+      }
+
+      if (isverify.uid != user.accountId) {
+        return {
+          statusCode: HttpStatus.UNAUTHORIZED,
+          data: false,
+          message: `Invalid User.`,
+        };
+      }
+
+      return {
+        statusCode: HttpStatus.OK,
+        data: true,
+        message: 'Success',
+      };
+    } catch (err) {
+      console.log(err);
+      return {
+        statusCode: HttpStatus.BAD_REQUEST,
+        data: false,
+        message: `Error reseting password!`,
+      };
+    }
+  }
+
 }

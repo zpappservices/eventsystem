@@ -1,7 +1,9 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { EventService } from './event.service';
-import { EventContactDto, EventDto, EventTicketDto, VendorEventDto } from './dtos/event.dto';
+import { EventContactDto, EventDto, EventImageDto, EventTicketDto, VendorEventDto } from './dtos/event.dto';
+import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('event')
 @Controller('event')
 export class EventController {
     constructor(private readonly eventService: EventService) {}
@@ -26,6 +28,9 @@ export class EventController {
         return this.eventService.createEvent(body);
     }
       
+    @ApiOperation({ summary: 'Create Event' })
+    @ApiBody({ description: 'Payload to create event', type: VendorEventDto })
+    @ApiResponse({ status: 201, description: 'Event created successfully.' })
     @Post('/v2/createevent')
     async createEventV2(@Body() body: VendorEventDto) {
         return this.eventService.createEventV2(body);
@@ -78,5 +83,10 @@ export class EventController {
     async getTicketByEvent(@Param('id') id: any): Promise<any> {
     const response = await this.eventService.getTicketByEvent(id);
     return response;
+    }
+
+    @Post('/uploadeventimage')
+    async uploadEventImage(@Body() req: EventImageDto) {
+        return this.eventService.uploadEventImage(req);
     }
 }
