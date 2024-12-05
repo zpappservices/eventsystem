@@ -46,7 +46,6 @@ async function bootstrap() {
   // Setup Swagger module
   SwaggerModule.setup('api', app, document);
 
-
   const PORT = process.env.PORT || 3001;
   await app.listen(PORT, () => {
     console.log(`Server started at port ${PORT}`);
