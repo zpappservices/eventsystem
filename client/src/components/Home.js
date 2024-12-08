@@ -3,7 +3,6 @@ import EventsCard from "./EventsCard";
 import TopEvents from "./TopEvents";
 import { useEffect } from "react";
 import { CircularProgress } from "@mui/material";
-import Footer from "./website/Footer";
 
 const categoryImages = {
   Music:
@@ -28,8 +27,6 @@ const categoryImages = {
 const categoryName = "Nightlife"; // This could be a variable
 const imageUrl = categoryImages[categoryName];
 
-console.log(imageUrl);
-
 const Home = () => {
   const { data, error, loading, request } = useApiRequest({
     method: "get",
@@ -47,7 +44,7 @@ const Home = () => {
   // Handle loading state
   if (loading) {
     return (
-      <div className="h-[200px] w-full flex justify-between items-center">
+      <div className="h-[400px] w-full flex justify-between items-center">
         <CircularProgress color="#FF7F50" className="mx-auto" />
       </div>
     );
@@ -82,8 +79,6 @@ const Home = () => {
       </div>
 
       <TopEvents />
-
-      <Footer />
     </div>
   );
 };

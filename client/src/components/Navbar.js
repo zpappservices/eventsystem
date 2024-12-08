@@ -3,6 +3,7 @@ import SignUpSignInModal from "./SignUpSignInModal";
 import { useRouter } from "next/router";
 import useAuthToken from "@/hooks/useAuthToken";
 import useApiRequest from "@/hooks/useApiRequest";
+import Link from "next/link";
 
 const NavBar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -49,12 +50,6 @@ const NavBar = () => {
 
    const updateNavItems = () => {
      const items = [
-       {
-         item: "Home",
-         id: 1,
-         ariaLabel: "Home",
-         onClick: () => router.push("/"),
-       },
      ];
 
      if (isLoggedIn) {
@@ -75,9 +70,9 @@ const NavBar = () => {
        }
      } else {
        items.push({
-         item: "Login",
+         item: "Signin",
          id: 3,
-         ariaLabel: "Login",
+         ariaLabel: "Signin",
          onClick: handleLoginClick,
        });
      }
@@ -87,7 +82,6 @@ const NavBar = () => {
 
   useEffect(() => {
     updateNavItems();
-    console.log(isLoggedIn, isVendor)
   }, [isLoggedIn, isVendor]);
 
   useEffect(() => {
@@ -105,23 +99,29 @@ const NavBar = () => {
       const { data: isUserLoggedIn } = loginStatus || {};
       setIsLoggedIn(isUserLoggedIn);
     }
-    console.log(data?.data?.isVendor, loginStatus?.data)
   }, [loginStatus, data]);
 
   return (
-    <>
-      <nav className="flex justify-end py-5 px-5 bg-[#FF7F50] items-center font-medium text-sm lg:text-lg font-inter">
-        <ul className="flex items-center justify-between gap-6 cursor-pointer">
-          {navItems.map((i) => (
-            <li
-              role="button"
-              className="flex justify-center items-center transition-all duration-300 ease-in-out hover:scale-[1.1] hover:opacity-80"
-              key={i.id}
-              aria-label={i.ariaLabel}
-              onClick={i.onClick}>
-              {i.item}
+    <div className="fixed top-0 left-0 z-10 w-full bg-gray-900">
+      <nav className="w-full max-w-[1300px] mx-auto flex py-7 px-5 text-white items-center font-medium text-sm">
+        <ul className="w-full flex items-center justify-between gap-6 cursor-pointer text-white">
+          <Link href="">
+            <li className="transition-all duration-300 ease-in-out hover:scale-[1.1] hover:opacity-80 text-[20px] font-bold text-[#FF7F50]">
+              Zafariplus
             </li>
-          ))}
+          </Link>
+          <div className="flex justify-end gap-5 !ms-auto">
+            {navItems.map((i) => (
+              <li
+                role="button"
+                className="ms-auto flex justify-center items-center transition-all duration-300 ease-in-out hover:scale-[1.1] hover:opacity-80"
+                key={i.id}
+                aria-label={i.ariaLabel}
+                onClick={i.onClick}>
+                {i.item}
+              </li>
+            ))}
+          </div>
         </ul>
       </nav>
 
@@ -133,7 +133,7 @@ const NavBar = () => {
           setIsModalOpen={setIsModalOpen}
         />
       )}
-    </>
+    </div>
   );
 };
 

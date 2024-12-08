@@ -7,6 +7,7 @@ import useApiRequest from "@/hooks/useApiRequest";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
+import { apiRequest } from "@/utils/apiService";
 
 const SignIn = ({ closeModal }) => {
   const [email, setEmail] = useState("");
@@ -42,23 +43,21 @@ const SignIn = ({ closeModal }) => {
       setIsLoading(false);
     }
   };
-
+console.log(key)
   useEffect(() => {
     const signin = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.post(
-          "http://34.171.52.201:4000/api/auth/login",
+        const response = await apiRequest(
+          "post",
+          "auth/login",
           { email: email, password: password },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${key}`, 
-            },
-          }
+          false,
+          null,
+          key
         );
 
-        const data = response.data;
+        const data = response;
         if (data?.statusCode >= 200 && data?.statusCode < 300) {
           toast.success("Signin Successful!");
           const id = data?.data?.existingUser?.id;

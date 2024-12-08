@@ -1,7 +1,7 @@
 import axios from "axios";
 import { getToken } from "../utils/token";
 
-const url = "http://34.171.52.201:4000";
+const url = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 const apiInstance = axios.create({
    baseURL: `${url}/api/`,
