@@ -44,19 +44,9 @@ const ticketContext = createTicketContext([
   { name: "VIP", price: 20 },
 ]);
 
-console.log(ticketContext.getGrandTotalQuantity()); // 0
-console.log(ticketContext.getTotalCost()); // 0
-
-// Update quantity
-console.log("Before Update:", ticketContext.getEventInfo());
-ticketContext.updateQuantity(0, 2);
-console.log("After Update:", ticketContext.getEventInfo());
-
-// Replace ticket data
 ticketContext.setTicketData([
   { name: "Early Bird", price: 5 },
   { name: "Regular", price: 15 },
 ]);
-console.log(ticketContext.getEventInfo());
 
 export { createTicketContext };

@@ -1,7 +1,13 @@
 // /pages/terms.js
 import Head from "next/head";
+import { useRouter } from "next/router";
 
 export default function Terms() {
+  const router = useRouter();
+
+  const goBack = () => {
+    router.back();
+  };
   return (
     <>
       <Head>
@@ -13,6 +19,12 @@ export default function Terms() {
       </Head>
       <div className="bg-gray-50 min-h-screen py-10 px-6">
         <div className="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-8">
+          <p
+            className="flex items-center gap-x-2 text-[18px] font-medium cursor-pointer mr-auto mb-5"
+            onClick={goBack}>
+            <img src="/img/return.svg" />
+            Back
+          </p>
           <h1 className="text-3xl font-bold text-gray-800 mb-6">
             Terms and Conditions
           </h1>

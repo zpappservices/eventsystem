@@ -1,9 +1,21 @@
+import { useRouter } from "next/router";
 import React from "react";
 
 const UserAgreement = () => {
+  const router = useRouter();
+
+  const goBack = () => {
+    router.back();
+  };
   return (
     <div className="min-h-screen bg-gray-100 p-6 sm:p-12">
       <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-8">
+        <p
+          className="flex items-center gap-x-2 text-[18px] font-medium cursor-pointer mr-auto mb-5"
+          onClick={goBack}>
+          <img src="/img/return.svg" />
+          Back
+        </p>
         <h1 className="text-3xl font-bold text-gray-900 mb-6">
           User Agreement
         </h1>

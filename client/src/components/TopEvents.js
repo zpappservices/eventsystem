@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import { CircularProgress } from "@mui/material";
 import { formatDate } from "@/utils/time";
 
-const TopEvents = ({ next }) => {
+const TopEvents = ({ next, isTopEvent = true, loaderClass }) => {
   const router = useRouter();
 
   const { data, error, loading, request } = useApiRequest({
@@ -23,7 +23,8 @@ const TopEvents = ({ next }) => {
 
   if (loading) {
     return (
-      <div className="h-[200px] w-full flex justify-between items-center">
+      <div
+        className={`h-[200px] w-full flex justify-between items-center ${loaderClass}`}>
         <CircularProgress color="#FF7F50" className="mx-auto" />
       </div>
     );
@@ -34,8 +35,8 @@ const TopEvents = ({ next }) => {
   }
   const events = data?.data;
   return (
-    <div className="w-full">
-      <div className="bg-black px-2 py-3">
+    <div className="w-full" id="topevents">
+      <div className={`bg-black px-2 py-3 ${isTopEvent ? "" : "hidden"}`}>
         <p className="text-[20px] leading-normal text-[#FF7F50] font-bold">
           Top events this week
         </p>
@@ -46,8 +47,7 @@ const TopEvents = ({ next }) => {
             <div
               key={item.id}
               className="w-full max-w-[249px] mx-auto cursor-pointer bg-gray-50 shadow-[0_10px_15px_-3px_rgba(0,0,0,0.1)] rounded-[10px] overflow-hidden"
-              onClick={() => router.push(`/${item?.id}`)}
-            >
+              onClick={() => router.push(`/${item?.id}`)}>
               <div>
                 <StyledImage
                   src={item?.image_banner || "/img/event1.svg"}
@@ -63,7 +63,8 @@ const TopEvents = ({ next }) => {
                   {item?.category}
                 </p>
                 <p className="text-xs mt-1 font-medium text-black text-ellipsis">
-                  <span className="mr-0.5">🗓️</span>{formatDate(item?.StartDate)}
+                  <span className="mr-0.5">🗓️</span>
+                  {formatDate(item?.StartDate)}
                 </p>
               </div>
             </div>
