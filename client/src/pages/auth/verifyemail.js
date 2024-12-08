@@ -1,5 +1,6 @@
 import OtpForm from "@/components/auth/Otp";
 import { ButtonLoading } from "@/components/widgets/ButtonLoading";
+import { apiRequest } from "@/utils/apiService";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -30,34 +31,48 @@ const Verifyemail = () => {
     setIsLoading(true);
 
     try {
-      const response = await axios.post(
-         "http://34.171.52.201:4000/api/auth/verify-email",
-         data
-       );
-   
-       if (response?.data?.statusCode >= 200 && response?.data?.statusCode < 300) {
-         toast.success("Verification Successful! Login to continue");
-         router.push("/");
-       } else if (response?.data?.error || response?.data?.message) {
-         toast.error(response?.data?.error || response?.data?.message || "Operation failed!");
-       } else if (response?.data?.statusCode >= 400 && response?.data?.statusCode < 500) {
-         toast.error(response?.data?.error || response?.data?.message || "Operation failed!");
-       }
+      const response = await apiRequest(
+        "post",
+        "auth/verify-email",
+        data
+      );
+
+      if (
+        response?.statusCode >= 200 &&
+        response?.statusCode < 300
+      ) {
+        toast.success("Verification Successful! Login to continue");
+        router.push("/");
+      } else if (response?.error || response?.message) {
+        toast.error(
+          response?.error ||
+            response?.message ||
+            "Operation failed!"
+        );
+      } else if (
+        response?.statusCode >= 400 &&
+        response?.statusCode < 500
+      ) {
+        toast.error(
+          response?.error ||
+            response?.message ||
+            "Operation failed!"
+        );
+      }
     } catch (error) {
-      toast.error("Operation failed! Check Otp and retry.")
-      console.log(error);
+      toast.error("Operation failed! Check Otp and retry.");
     } finally {
       setIsLoading(true);
     }
   };
 
   useEffect(() => {
-      if (email === undefined) return;
+    if (email === undefined) return;
 
-      if (!email) {
-         router.push("/auth/signup");
-      }
-   }, [email]);
+    if (!email) {
+      router.push("/auth/signup");
+    }
+  }, [email]);
 
   return (
     <div className="h-screen flex justify-center items-center">
@@ -84,8 +99,7 @@ const Verifyemail = () => {
           <ButtonLoading
             disabled={!isComplete}
             isLoading={isLoading}
-            className="mx-auto py-3 w-fit px-5 font-medium"
-          >
+            className="mx-auto py-3 w-fit px-5 font-medium">
             Verify email
           </ButtonLoading>
         </form>
