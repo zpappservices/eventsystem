@@ -36,7 +36,7 @@ export class EmailerService {
     const payload = {
       email: data.user.email,
       firstName: data.user.firstName,
-      url: data.activateURL,
+      url: data.link,
     };
     await this.sendMail(payload, 'Password Reset', 'passwordreset');
   }

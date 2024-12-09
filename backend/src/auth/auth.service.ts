@@ -390,7 +390,100 @@ export class AuthService {
       return {
         statusCode: HttpStatus.BAD_REQUEST,
         data: false,
-        message: `Error reseting password!`,
+        message: `Operation fail!`,
+      };
+    }
+  }
+
+    
+  async signOut(userId: string): Promise<any> {
+    try {
+
+      const existingUser = await this.userService.getOneUser(userId);
+
+      if (!existingUser) {
+        return {
+          statusCode: HttpStatus.NOT_FOUND,
+          data: false,
+          message: `User not found.`,
+        };
+      }
+
+      const firebaseResponse = await this.firebaseService.signout(existingUser.data.accountId);
+
+      if(!firebaseResponse) {
+        return {
+          statusCode: HttpStatus.BAD_REQUEST,
+          data: false,
+          message: `Signout Fail`,
+        };
+      }
+
+
+      const user = await this.prisma.user.update({
+        where: { id: existingUser.data.id },
+        data: { 
+          isOnline: false
+         }
+      })
+     
+
+      return {
+        statusCode: HttpStatus.OK,
+        data: true,
+        message: 'Success',
+      };
+    } catch (err) {
+      console.log(err);
+      return {
+        statusCode: HttpStatus.BAD_REQUEST,
+        data: false,
+        message: `Operation fail!`,
+      };
+    }
+  }
+
+      
+  async forgotPassword(email: string): Promise<any> {
+    try {
+
+      const existingUser = await this.userService.getUserByEmail(email);
+
+      if (!existingUser) {
+        return {
+          statusCode: HttpStatus.NOT_FOUND,
+          data: false,
+          message: `User not found.`,
+        };
+      }
+
+      const resetLink = await this.firebaseService.sendPasswordResetEmail(email);
+
+      if(!resetLink) {
+        return {
+          statusCode: HttpStatus.BAD_REQUEST,
+          data: false,
+          message: `Password link`,
+        };
+      }
+
+      try {
+        await this.emailService.sendPasswordReset({ user: existingUser, link: resetLink });
+      } catch (e) {
+        console.log(e.message);
+      }
+
+      return {
+        statusCode: HttpStatus.OK,
+        data: true,
+        message: 'Success',
+      };
+    } catch (err) {
+      console.log(err);
+      return {
+        statusCode: HttpStatus.BAD_REQUEST,
+        data: false,
+        message: `Operation fail!`,
       };
     }
   }
