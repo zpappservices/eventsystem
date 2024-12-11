@@ -67,19 +67,19 @@ const EventsDetails = ({ id, details }) => {
   return (
     <div className="w-full flex flex-col gap-6">
       <div className="w-full flex flex-col md:flex-row justify-between gap-6">
-        <div className="w-full max-w-[551px] cursor-pointer">
+        <div className="w-full max-w-[551px] mx-auto cursor-pointer">
           <StyledImage
             src={details?.image_banner ?? "/img/event1.svg"}
             className="w-full rounded-[30px]"
           />
-          <div className="mt-5">
+          <div className="mt-5 space-y-1">
             <p className="text-[14px] leading-normal capitalize flex items-center">
               <MdLocationPin size={19} />
               <span className="font-semibold mx-0.5">Location: </span>{" "}
               {details?.location}
             </p>
-            <p className="text-[14px] leading-normal capitalize flex items-center">
-              <BsCalendar2Date size={16} />
+            <p className="text-[14px] leading-normal capitalize flex items-start sm:items-center">
+              <BsCalendar2Date size={16} className="shrink-0"/>
               <span className="font-semibold mx-1.5">Date: </span>{" "}
               {formatDate(details?.StartDate)} -{" "}
               {formatDate(details?.EndDate)}
@@ -92,7 +92,7 @@ const EventsDetails = ({ id, details }) => {
             </p>
           </div>
         </div>
-        <div className="w-full max-w-[578px] flex flex-col gap-4 cursor-pointer">
+        <div className="w-full max-w-[578px] mx-auto flex flex-col gap-4 cursor-pointer">
           <div>
             <p className="text-[20px] font-semibold leading-snug">
               {details?.title}

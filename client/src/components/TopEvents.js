@@ -48,10 +48,10 @@ const TopEvents = ({ next, isTopEvent = true, loaderClass }) => {
               key={item.id}
               className="w-full max-w-[249px] mx-auto cursor-pointer bg-gray-50 shadow-[0_10px_15px_-3px_rgba(0,0,0,0.1)] rounded-[10px] overflow-hidden"
               onClick={() => router.push(`/${item?.id}`)}>
-              <div>
+              <div className="h-[168px]">
                 <StyledImage
                   src={item?.image_banner || "/img/event1.svg"}
-                  className="w-full"
+                  className="w-full h-full object-cover"
                 />
               </div>
 

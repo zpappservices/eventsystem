@@ -42,10 +42,6 @@ const SignUp = () => {
       setErrorMessage("Passwords do not match!");
       return;
     }
-    /* resetFields(); 
-    setIsModalOpen(false); */
-
-    console.log({ email: email, password: password })
 
     await request();
   };
@@ -79,7 +75,7 @@ const SignUp = () => {
           <label className="text-xs mb-1">Email</label>
           <input
             type="email"
-            className={`p-1 border-2 rounded focus:outline-none ${
+            className={`p-1 py-2.5 border-2 rounded-[8px] focus:outline-none ${
               errorMessage === "Please enter a valid email address or password."
                 ? "focus:border-pink-500 focus:ring-pink-500/30 focus:ring border-pink-500"
                 : "focus:border-[#FFC8A0] focus:ring-[#FFC8A0]/30 focus:ring border-gray-300"
@@ -93,7 +89,7 @@ const SignUp = () => {
           <label className="text-xs mb-1">Password</label>
           <input
             type={showPassword ? "text" : "password"}
-            className={`p-1 border-2 rounded focus:outline-none ${
+            className={`p-1 py-2.5 border-2 rounded-[8px] focus:outline-none ${
               errorMessage === "Passwords do not match!"
                 ? "focus:border-pink-500 focus:ring-pink-500/30 focus:ring border-pink-500"
                 : "focus:border-[#FFC8A0] focus:ring-[#FFC8A0]/30 focus:ring border-gray-300"
@@ -107,7 +103,7 @@ const SignUp = () => {
           <label className="text-xs mb-1">Confirm Password</label>
           <input
             type={showPassword ? "text" : "password"}
-            className={`p-1 border-2 rounded focus:outline-none ${
+            className={`p-1 py-2.5 border-2 rounded-[8px] focus:outline-none ${
               errorMessage === "Passwords do not match!"
                 ? "focus:border-pink-500 focus:ring-pink-500/30 focus:ring border-pink-500"
                 : "focus:border-[#FFC8A0] focus:ring-[#FFC8A0]/30 focus:ring border-gray-300"
@@ -133,7 +129,7 @@ const SignUp = () => {
         <ButtonLoading
           isLoading={loading}
           type="submit"
-          className="w-[30%] self-center p-1 mt-3 font-medium bg-[#FF7F50] text-white rounded transition-transform duration-200 ease-in-out hover:scale-[1.05]"
+          className="w-full self-center p-1 py-2.5 mt-3 font-medium bg-[#FF7F50] text-white rounded-[6px] transition-transform duration-200 ease-in-out hover:scale-[1.05]"
         >
           Submit
         </ButtonLoading>

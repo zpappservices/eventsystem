@@ -4,6 +4,8 @@ import { useRouter } from "next/router";
 import useAuthToken from "@/hooks/useAuthToken";
 import useApiRequest from "@/hooks/useApiRequest";
 import Link from "next/link";
+import LogOut from "./auth/LogOut";
+import { FiLogOut } from "react-icons/fi";
 
 const NavBar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -48,37 +50,36 @@ const NavBar = () => {
     if (activeUser) await validateSession();
   };
 
-   const updateNavItems = () => {
-     const items = [
-     ];
+  const updateNavItems = () => {
+    const items = [];
 
-     if (isLoggedIn) {
-       if (isVendor) {
-         items.push({
-           item: "Dashboard",
-           id: 2.0,
-           ariaLabel: "Dashboard",
-           onClick: goToDashboard,
-         });
-       } else {
-         items.push({
-           item: "Become a Vendor",
-           id: 2.1,
-           ariaLabel: "Become a Vendor",
-           onClick: becomeVendor,
-         });
-       }
-     } else {
-       items.push({
-         item: "Signin",
-         id: 3,
-         ariaLabel: "Signin",
-         onClick: handleLoginClick,
-       });
-     }
+    if (isLoggedIn) {
+      if (isVendor) {
+        items.push({
+          item: "Dashboard",
+          id: 2.0,
+          ariaLabel: "Dashboard",
+          onClick: goToDashboard,
+        });
+      } else {
+        items.push({
+          item: "Become a Vendor",
+          id: 2.1,
+          ariaLabel: "Become a Vendor",
+          onClick: becomeVendor,
+        });
+      }
+    } else {
+      items.push({
+        item: "Signin",
+        id: 3,
+        ariaLabel: "Signin",
+        onClick: handleLoginClick,
+      });
+    }
 
-     setNavItems(items);
-   };
+    setNavItems(items);
+  };
 
   useEffect(() => {
     updateNavItems();
@@ -122,6 +123,11 @@ const NavBar = () => {
               </li>
             ))}
           </div>
+          {isLoggedIn && (
+            <LogOut>
+              <FiLogOut color="white" size={20} />
+            </LogOut>
+          )}
         </ul>
       </nav>
 

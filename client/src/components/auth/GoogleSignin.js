@@ -12,8 +12,7 @@ import { toast } from "react-toastify";
 
 const GoogleSignin = ({ closeModal }) => {
   const router = useRouter();
-  const { token, activeUser } = useAuthToken()
-console.log(activeUser, token)
+
   const handleGoogleLogin = async () => {
     try {
       const provider = new GoogleAuthProvider();
@@ -54,8 +53,8 @@ console.log(activeUser, token)
         closeModal();
       } else {
         toast.error(
-          user?.message ||
-            user?.code ||
+          user?.code ||
+            user?.message ||
             "Google signin failed! Please try again"
         );
       }
@@ -77,9 +76,9 @@ console.log(activeUser, token)
       <button
         type="button"
         onClick={() => handleGoogleLogin("Google")}
-        className="w-full flex justify-between items-center p-1 mt-4 font-medium text-black border border-black rounded transition-transform duration-200 ease-in-out hover:scale-[1.05]">
+        className="w-full flex justify-center gap-3 duration-300 items-center p-1 py-2.5 mt-4 font-medium text-black border border-gray-500 rounded-[5px] transition-transform ease-in-out hover:scale-[1.05]">
         <FcGoogle className="text-xl" />
-        <p className="mr-[25%]"> Continue with Google</p>
+        <p className="text-gray-800 text-sm"> Continue with Google</p>
       </button>
     </>
   );
