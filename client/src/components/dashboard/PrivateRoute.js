@@ -2,13 +2,14 @@ import useApiRequest from "@/hooks/useApiRequest";
 import useAuthToken from "@/hooks/useAuthToken";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 const PrivateRoute = ({ children }) => {
   const { activeUser, token } = useAuthToken();
   const router = useRouter();
   const pathname = usePathname();
+  const [hasRedirected, setHasRedirected] = useState(false);
 
   const {
     data: userData,
@@ -27,16 +28,17 @@ const PrivateRoute = ({ children }) => {
   } = useApiRequest({
     method: "post",
     url: "auth/islogin",
-    data: { token: token, userId: activeUser },
+    data: { token, userId: activeUser },
     useToken: false,
   });
 
   useEffect(() => {
     if (loginStatus) {
       const { data: isLoggedIn } = loginStatus;
-      if (!isLoggedIn) {
+      if (!isLoggedIn && !hasRedirected) {
         toast.info("Session expired. Please login to continue");
         router.push("/");
+        setHasRedirected(true);
         return;
       }
     }
@@ -45,24 +47,24 @@ const PrivateRoute = ({ children }) => {
       const { data: user } = userData;
       const { isVendor = false } = user || {};
 
-      if (isVendor && pathname === "/auth/onboarding") {
-        toast.info("You're already a vendor");
-        router.push("/dashboard");
-      }
+      if (!hasRedirected) {
+        if (isVendor && pathname === "/auth/onboarding") {
+          toast.info("You're already a vendor");
+          router.push("/dashboard");
+          setHasRedirected(true);
+        }
 
-      if (!isVendor && pathname === "/dashboard") {
-        toast.info("You're not a vendor yet! Onboard to be vendor");
-        router.push("/auth/onboarding");
+        if (!isVendor && pathname === "/dashboard") {
+          toast.info("You're not a vendor yet! Onboard to be vendor");
+          router.push("/auth/onboarding");
+          setHasRedirected(true);
+        }
       }
     }
-  }, [loginStatus, userData]);
-
-  useEffect(() => {
-  }, [loginError, userError]);
+  }, [loginStatus, userData, pathname, hasRedirected]);
 
   useEffect(() => {
     validateSession();
-
     fetchUser();
   }, [activeUser, token]);
 
