@@ -10,7 +10,7 @@ import useLoading from "@/hooks/useLoading";
 import { ButtonLoading } from "../widgets/ButtonLoading";
 import { toast } from "react-toastify";
 
-const LogOut = ({ children }) => {
+const LogOut = ({ children, container }) => {
   const { isOpen, closeModal, openModal } = useModal();
   const { activeUser, clearUserToken } = useAuthToken();
   const router = useRouter();
@@ -41,10 +41,6 @@ const LogOut = ({ children }) => {
       }
     } catch (error) {
       toast.error("error");
-      console.error(
-        "Error:",
-        error.response ? error.response.data : error.message
-      );
     } finally {
       stopLoading();
     }
@@ -57,7 +53,7 @@ const LogOut = ({ children }) => {
       </div>
 
       {isOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div className={`fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 ${container}`}>
           <div className="bg-white rounded-lg p-6 w-96 space-y-7">
             <div className="flex flex-col gap-5 items-center">
               <p className="text-[25px] font-bold text-gray-800 font-inter">
@@ -91,18 +87,3 @@ const LogOut = ({ children }) => {
 };
 
 export default LogOut;
-
-{
-  <div className="flex flex-col items-center gap-5 bg-white">
-    <p className="text-[25px] font-bold text-black font-inter">Logout</p>
-    <p className="text-[18px] text-black font-inter">
-      Are you sure you want to log out?
-    </p>
-
-    <div className="flex gap-5">
-      <Button container="bg-red-600 text-white hover:bg-red-700/90">
-        Logout
-      </Button>
-    </div>
-  </div>;
-}

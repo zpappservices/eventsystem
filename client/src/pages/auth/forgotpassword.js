@@ -5,6 +5,7 @@ import useLoading from "@/hooks/useLoading";
 import { ButtonLoading } from "@/components/widgets/ButtonLoading";
 import { apiRequest } from "@/utils/apiService";
 import { toast } from "react-toastify";
+import StyledImage from "@/components/StyledImage";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -100,10 +101,11 @@ const ForgotPassword = () => {
     <div className="w-full min-h-screen flex items-center justify-center">
       <div className="max-w-[450px] flex items-center justify-center px-3 py-10 pt-24 lg:pt-10 mx-auto lg:mx-0">
         <div className="w-full bg-white p-3 sm:p-10 rounded-xl">
-          <Link href="/">
-            <p className="text-gray-800 font-bold text-center text-[20px]">
-              Zafariplus
-            </p>
+          <Link href="/" className="ms-[40px]">
+            <StyledImage
+              src="/img/zafariplus-logo.png"
+              className="w-full max-w-[10px] scale-[12]"
+            />
           </Link>
           <h2 className="text-[32px] font-semibold text-[#0B2253] text-center mt-12">
             Forgot Password
