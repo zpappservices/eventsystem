@@ -8,7 +8,9 @@ export default function App({ Component, pageProps }) {
     <>
       <TicketProvider>
         <Component {...pageProps} />
-        <ToastContainer />
+        <ToastContainer
+          theme="colored"
+        />
       </TicketProvider>
     </>
   );

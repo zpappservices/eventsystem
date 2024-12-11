@@ -4,6 +4,9 @@ import { useRouter } from "next/router";
 import useAuthToken from "@/hooks/useAuthToken";
 import useApiRequest from "@/hooks/useApiRequest";
 import Link from "next/link";
+import LogOut from "./auth/LogOut";
+import { FiLogOut } from "react-icons/fi";
+import StyledImage from "./StyledImage";
 
 const NavBar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -48,37 +51,36 @@ const NavBar = () => {
     if (activeUser) await validateSession();
   };
 
-   const updateNavItems = () => {
-     const items = [
-     ];
+  const updateNavItems = () => {
+    const items = [];
 
-     if (isLoggedIn) {
-       if (isVendor) {
-         items.push({
-           item: "Dashboard",
-           id: 2.0,
-           ariaLabel: "Dashboard",
-           onClick: goToDashboard,
-         });
-       } else {
-         items.push({
-           item: "Become a Vendor",
-           id: 2.1,
-           ariaLabel: "Become a Vendor",
-           onClick: becomeVendor,
-         });
-       }
-     } else {
-       items.push({
-         item: "Signin",
-         id: 3,
-         ariaLabel: "Signin",
-         onClick: handleLoginClick,
-       });
-     }
+    if (isLoggedIn) {
+      if (isVendor) {
+        items.push({
+          item: "Dashboard",
+          id: 2.0,
+          ariaLabel: "Dashboard",
+          onClick: goToDashboard,
+        });
+      } else {
+        items.push({
+          item: "Become a Vendor",
+          id: 2.1,
+          ariaLabel: "Become a Vendor",
+          onClick: becomeVendor,
+        });
+      }
+    } else {
+      items.push({
+        item: "Signin",
+        id: 3,
+        ariaLabel: "Signin",
+        onClick: handleLoginClick,
+      });
+    }
 
-     setNavItems(items);
-   };
+    setNavItems(items);
+  };
 
   useEffect(() => {
     updateNavItems();
@@ -105,10 +107,8 @@ const NavBar = () => {
     <div className="fixed top-0 left-0 z-10 w-full bg-gray-900">
       <nav className="w-full max-w-[1300px] mx-auto flex py-7 px-5 text-white items-center font-medium text-sm">
         <ul className="w-full flex items-center justify-between gap-6 cursor-pointer text-white">
-          <Link href="">
-            <li className="transition-all duration-300 ease-in-out hover:scale-[1.1] hover:opacity-80 text-[20px] font-bold text-[#FF7F50]">
-              Zafariplus
-            </li>
+          <Link href="/" className="ms-[40px]">
+            <StyledImage src="/img/zafariplus-logo.png" className="w-full max-w-[10px] scale-[12]"/>
           </Link>
           <div className="flex justify-end gap-5 !ms-auto">
             {navItems.map((i) => (
@@ -122,6 +122,11 @@ const NavBar = () => {
               </li>
             ))}
           </div>
+          {isLoggedIn && (
+            <LogOut>
+              <FiLogOut color="white" size={20} />
+            </LogOut>
+          )}
         </ul>
       </nav>
 

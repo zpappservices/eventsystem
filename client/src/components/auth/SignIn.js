@@ -8,6 +8,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import { apiRequest } from "@/utils/apiService";
+import Link from "next/link";
 
 const SignIn = ({ closeModal }) => {
   const [email, setEmail] = useState("");
@@ -38,12 +39,12 @@ const SignIn = ({ closeModal }) => {
       const fbUser = await signInWithEmailAndPassword(auth, email, password);
       setKey(fbUser.user.accessToken);
     } catch (error) {
-      toast.error("Invalid credentials");
+      toast.error(error.code || "Invalid credentials");
     } finally {
       setIsLoading(false);
     }
   };
-console.log(key)
+
   useEffect(() => {
     const signin = async () => {
       setIsLoading(true);
@@ -70,6 +71,7 @@ console.log(key)
         }
       } catch (error) {
         toast.error("error");
+        console.log(first)
         console.error(
           "Error:",
           error.response ? error.response.data : error.message
@@ -89,7 +91,7 @@ console.log(key)
           <label className="text-xs mb-1">Email</label>
           <input
             type="email"
-            className={`p-1 border-2 rounded focus:outline-none ${
+            className={`p-1 py-2.5 border-2 rounded-[8px] focus:outline-none ${
               errorMessage === "Please enter a valid email address or password."
                 ? "focus:border-pink-500 focus:ring-pink-500/30 focus:ring border-pink-500"
                 : "focus:border-[#FFC8A0] focus:ring-[#FFC8A0]/30 focus:ring border-gray-300"
@@ -103,7 +105,7 @@ console.log(key)
           <label className="text-xs mb-1">Password</label>
           <input
             type={showPassword ? "text" : "password"}
-            className={`p-1 border-2 rounded focus:outline-none ${
+            className={`p-1 py-2.5 border-2 rounded-[8px] focus:outline-none ${
               errorMessage === "Passwords do not match!"
                 ? "focus:border-pink-500 focus:ring-pink-500/30 focus:ring border-pink-500"
                 : "focus:border-[#FFC8A0] focus:ring-[#FFC8A0]/30 focus:ring border-gray-300"
@@ -125,14 +127,11 @@ console.log(key)
           />
           Show Password
         </label>
-        <button type="button" className="text-sm text-black self-end underline">
-          Forgot password?
-        </button>
+        <Link href="/auth/forgotpassword" className="!text-gray-600 self-end text-[14px]">Forgot password?</Link>
         <ButtonLoading
           isLoading={isLoading}
           type="submit"
-          className="w-[30%] self-center p-1 mt-3 font-medium bg-[#FF7F50] text-white rounded transition-transform duration-200 ease-in-out hover:scale-[1.05]"
-        >
+          className="w-full self-center p-1 py-2.5 mt-3 font-medium bg-[#FF7F50] text-white rounded transition-transform duration-200 ease-in-out hover:scale-[1.05]">
           Continue
         </ButtonLoading>
       </form>
