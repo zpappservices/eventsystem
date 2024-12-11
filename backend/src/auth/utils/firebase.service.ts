@@ -49,7 +49,7 @@ export class FirebaseService {
     } catch (error) {
       console.log(`Error creating user: ${error.message}`);
       return {
-        message: 'Error creating user',
+        message: `Error creating user: ${error.message}`,
         data: null,
         statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
       };
@@ -69,6 +69,29 @@ export class FirebaseService {
       };
     } catch (error) {
       throw new Error(`Error updating email verification status: ${error.message}`);
+    }
+  }
+
+  async signout(uid: string) {
+    try {
+      await this.getFirebaseApp().auth().revokeRefreshTokens(uid);
+      return true;
+    } catch (error) {
+      console.log(`Error signing out user: ${error.message}`);
+      return false;
+    }
+  }
+
+  async sendPasswordResetEmail(email: string): Promise<any> {
+    try {
+      const link = await this.getFirebaseApp().auth().generatePasswordResetLink(email);     
+
+      console.log(`Password reset link generated: ${link}`);
+      return link
+      //return { message: 'Password reset email sent successfully' };
+    } catch (error) {
+      console.log(error.message || 'Unable to send password reset email');
+      return null
     }
   }
 }
