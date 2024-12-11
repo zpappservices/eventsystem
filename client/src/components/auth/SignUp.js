@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import axios from "axios";
 import useApiRequest from "@/hooks/useApiRequest";
+import { storeCredentials } from "@/utils/token";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -49,6 +50,7 @@ const SignUp = () => {
   useEffect(() => {
     if (data?.statusCode >= 200 && data?.statusCode < 300) {
       toast.success("Email verification Code Sent!");
+      storeCredentials(email, password);
       router.push({
         pathname: "/auth/verifyemail",
         query: { email: email },
@@ -64,7 +66,6 @@ const SignUp = () => {
     const err = error?.response?.data
     if (error) {
         toast.error(err?.message[0] || err?.error || "Operation failed! Retry.");
-        console.log(err)
     }
   }, [error]);
 

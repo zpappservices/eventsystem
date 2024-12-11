@@ -6,6 +6,7 @@ import useApiRequest from "@/hooks/useApiRequest";
 import Link from "next/link";
 import LogOut from "./auth/LogOut";
 import { FiLogOut } from "react-icons/fi";
+import StyledImage from "./StyledImage";
 
 const NavBar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -106,10 +107,8 @@ const NavBar = () => {
     <div className="fixed top-0 left-0 z-10 w-full bg-gray-900">
       <nav className="w-full max-w-[1300px] mx-auto flex py-7 px-5 text-white items-center font-medium text-sm">
         <ul className="w-full flex items-center justify-between gap-6 cursor-pointer text-white">
-          <Link href="">
-            <li className="transition-all duration-300 ease-in-out hover:scale-[1.1] hover:opacity-80 text-[20px] font-bold text-[#FF7F50]">
-              Zafariplus
-            </li>
+          <Link href="/" className="ms-[40px]">
+            <StyledImage src="/img/zafariplus-logo.png" className="w-full max-w-[10px] scale-[12]"/>
           </Link>
           <div className="flex justify-end gap-5 !ms-auto">
             {navItems.map((i) => (
