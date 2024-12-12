@@ -1,14 +1,15 @@
 import { HttpService } from '@nestjs/axios';
 import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
 import { lastValueFrom } from 'rxjs';
-import { OrderDto, PaymentDto, SubaccountDto, PaymentStatusEnum, S3BucketEnum } from './dtos/payment.dto';
+import { OrderDto, PaymentDto, SubaccountDto, PaymentStatusEnum, S3BucketEnum, ChargeSetupDto, ChargeTypeEnum } from './dtos/payment.dto';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '@/integrations/prisma/prisma.service';
 import { v4 as uuidv4 } from 'uuid';
-import { Event, EventTransaction } from '@prisma/client';
+import { ChargeSetup, Event, EventTransaction } from '@prisma/client';
 import * as QRCode from 'qrcode';
 import { EmailerService } from '@/integrations/email/emailer.service';
 import { AwsS3Service } from '@/integrations/amazons3/aws-s3.service';
+import { Decimal } from '@prisma/client/runtime';
 
 @Injectable()
 export class PaymentService {
@@ -149,7 +150,7 @@ export class PaymentService {
 
         try{
           const url = `${this.configService.get('PAYSTACK_PAYMENT_REQUEST')}`
-          const charge = `${this.configService.get('PAYSTACK_CHARGE')}`
+          //const charge = `${this.configService.get('PAYSTACK_CHARGE')}`
           //data.percentage_charge = charge
 
           // Verify user
@@ -173,11 +174,21 @@ export class PaymentService {
               message: `Event with id ${data.eventId} is in-valid.`,
             };
           }
+
+          // Get event charge
+          const chargeSetup = await this.prisma.chargeSetup.findFirst({ where: { id: data.eventId } });
+
+
           const callBackUrl = `${this.configService.get('PAYSTACK_CALL_BACK')}`
           const batchId = uuidv4();
           const amount = parseFloat(data.totalAmount) * 100;
+          let charge;
+
+          if(chargeSetup){ charge = await this.GetEventComission(amount, chargeSetup)}
+
+
           const req = { amount: amount, email: data.email,
-             currency: event.currency, reference: batchId, callback_url: callBackUrl };
+             currency: event.currency, reference: batchId, callback_url: callBackUrl, transaction_charge: charge };
 
           const res = await this.makeRequest(`${url}`, 'post', req);
 
@@ -355,4 +366,119 @@ export class PaymentService {
         }
         
       }
+
+      async GetEventComission(amount: number, chargeSetup: ChargeSetup){
+        let charge = 0;
+        try{
+          if(chargeSetup.type == ChargeTypeEnum.PERCENT){
+            charge = (chargeSetup.value / 100) * amount;
+          }
+        }catch(e){
+
+        }
+
+        return charge
+      }
+
+      // Payment Charge
+      
+    async createChargeSetup(dto: ChargeSetupDto): Promise<any> {
+      try {
+        const createMany = await this.prisma.chargeSetup.create({
+          data: {
+            eventId: dto.eventId,
+            type: dto.type,
+            value: dto.value,
+          }
+        });
+
+        return {
+          statusCode: HttpStatus.CREATED,
+          data: createMany,
+          message: 'Charge created successfully.',
+        };
+      } catch (err) {
+        console.log(err);
+        return {
+          statusCode: HttpStatus.EXPECTATION_FAILED,
+          data: null,
+          message: 'Unable to create charge.',
+        };
+      }
+    }
+
+        
+  async getAllChargeSetup(): Promise<any> {
+    try {
+      const charges = await this.prisma.chargeSetup.findMany({ });
+
+      return {
+        statusCode: HttpStatus.CREATED,
+        data: charges,
+        message: 'successfully.',
+      };
+    } catch (err) {
+      console.log(err);
+      return {
+        statusCode: HttpStatus.EXPECTATION_FAILED,
+        data: null,
+        message: 'Fail.',
+      };
+    }
+  }
+
+          
+  async getOneChargeSetup(id: string): Promise<any> {
+    try {
+      const charges = await this.prisma.chargeSetup.findUnique({where: {id} });
+
+      if(!charges){
+        return {
+          statusCode: HttpStatus.NOT_FOUND,
+          data: null,
+          message: `Charge with id ${id} not found.`,
+        };
+      }
+      return {
+        statusCode: HttpStatus.CREATED,
+        data: charges,
+        message: 'successfully.',
+      };
+    } catch (err) {
+      console.log(err);
+      return {
+        statusCode: HttpStatus.EXPECTATION_FAILED,
+        data: null,
+        message: 'Fail.',
+      };
+    }
+  }
+
+            
+  async getChargeSetupByEvent(eventId: string): Promise<any> {
+    try {
+      const charges = await this.prisma.chargeSetup.findFirst({where: {eventId} });
+
+      if(!charges){
+        return {
+          statusCode: HttpStatus.NOT_FOUND,
+          data: null,
+          message: `Charge with event id ${eventId} not found.`,
+        };
+      }
+      return {
+        statusCode: HttpStatus.CREATED,
+        data: charges,
+        message: 'successfully.',
+      };
+    } catch (err) {
+      console.log(err);
+      return {
+        statusCode: HttpStatus.EXPECTATION_FAILED,
+        data: null,
+        message: 'Fail.',
+      };
+    }
+  }
+
 }

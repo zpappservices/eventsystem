@@ -1,6 +1,12 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Decimal } from "@prisma/client/runtime";
-import { IsArray, IsDecimal, IsEmail, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsArray, IsDecimal, IsEmail, IsEnum, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+
+
+export enum ChargeTypeEnum {
+  "PERCENT" = "PERCENT",
+  "FLAT" = "FLAT",
+}
 
 export class PaymentDto {
 
@@ -138,6 +144,25 @@ export class PaymentDto {
     @ApiProperty()
     quantity: number;
   }
+
+  export class ChargeSetupDto {
+
+    @IsNotEmpty()
+    @IsString()
+    @ApiProperty()
+    eventId: string;
+ 
+    @IsNotEmpty()
+    @IsEnum(ChargeTypeEnum)
+    @ApiProperty()
+    type: ChargeTypeEnum;
+  
+    @IsNotEmpty()
+    @IsNumber()
+    @ApiProperty()
+    value: number;
+  }
+
 
   export enum PaymentStatusEnum {
     "PENDING" = "PENDING",
