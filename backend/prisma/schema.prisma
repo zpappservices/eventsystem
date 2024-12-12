@@ -69,6 +69,8 @@ model Event {
   EventTicket EventTicket[]
 
   EventTransaction EventTransaction[]
+
+  ChargeSetup ChargeSetup[]
 }
 
 model EventContact {
@@ -154,6 +156,7 @@ model EventTransaction {
   ticket    String
   price     Decimal       @default(0)
   status    PaymentStatus @default(PENDING)
+  checkIn   Boolean?      @default(false)
   active    Boolean       @default(true)
   createdBy String?
   createdOn DateTime      @default(now())
@@ -162,6 +165,20 @@ model EventTransaction {
 
   event Event @relation(fields: [eventId], references: [id])
   user  User  @relation(fields: [userId], references: [id])
+}
+
+model ChargeSetup {
+  id        String   @id @default(uuid())
+  eventId   String
+  type      String
+  value     Float    @default(0)
+  active    Boolean  @default(true)
+  createdBy String?
+  createdOn DateTime @default(now())
+  updatedBy String?
+  updatedOn DateTime @default(now())
+
+  event Event @relation(fields: [eventId], references: [id])
 }
 
 enum RoleType {
