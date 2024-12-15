@@ -218,3 +218,16 @@ export class EventImageDto {
 }
 
 
+export class CheckinDto {
+
+  @IsNotEmpty()
+  @ApiProperty()
+  eventId: string;
+
+  @IsNotEmpty()
+  @ApiProperty()
+  ticketId: string;
+
+}
+
+

@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { EventService } from './event.service';
-import { EventContactDto, EventDto, EventImageDto, EventTicketDto, VendorEventDto } from './dtos/event.dto';
+import { CheckinDto, EventContactDto, EventDto, EventImageDto, EventTicketDto, VendorEventDto } from './dtos/event.dto';
 import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('event')
@@ -16,6 +16,23 @@ export class EventController {
   @Get('/getoneevent/:id')
   async getOneEvent(@Param('id') id: any): Promise<any> {
     return this.eventService.getOneEvent(id);
+  }
+
+      
+  @Get('/getallVendorEvents/:vendorid')
+  async getallVendorEvents(@Param('vendorid') vendorId: string): Promise<any> {
+    return this.eventService.getAllVendorEvents(vendorId);
+  }
+        
+  @Get('/getVendoractiveEvents/:vendorid')
+  async getVendorActiveEvents(@Param('vendorid') vendorId: string): Promise<any> {
+    return this.eventService.getVendorActiveEvents(vendorId);
+  }
+
+          
+  @Get('/getVendorDashboardSumarry/:vendorid')
+  async getVendorDashboardSumarry(@Param('vendorid') vendorId: string): Promise<any> {
+    return this.eventService.getDashboardSummary(vendorId);
   }
       
   @Get('/geteventbycategory/:id')
@@ -82,6 +99,13 @@ export class EventController {
     @Get('/getticketbyevent/:id')
     async getTicketByEvent(@Param('id') id: any): Promise<any> {
     const response = await this.eventService.getTicketByEvent(id);
+    return response;
+    }
+
+           
+    @Get('/checkin/:ticket')
+    async checkinTicket(@Body() dto: CheckinDto): Promise<any> {
+    const response = await this.eventService.checkinTicket(dto);
     return response;
     }
 

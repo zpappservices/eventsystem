@@ -1,5 +1,5 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { Currency, EventContactDto, EventDto, EventImageDto, EventTicketDto, VendorEventDto } from './dtos/event.dto';
+import { CheckinDto, Currency, EventContactDto, EventDto, EventImageDto, EventTicketDto, VendorEventDto } from './dtos/event.dto';
 import { PrismaService } from '@/integrations/prisma/prisma.service';
 import { Prisma } from '@prisma/client';
 import { AwsS3Service } from '@/integrations/amazons3/aws-s3.service';
@@ -52,6 +52,55 @@ export class EventService {
       }
   }
 
+  async getAllVendorEvents(vendorId: string) {
+
+    try {
+        const event = await this.prisma.event.findMany({
+          where: { userId: vendorId }
+        });
+        return {
+          statusCode: HttpStatus.OK,
+          data: event,
+          message: 'Success',
+        };
+      } catch (err) {
+        console.log(err);
+        return {
+          statusCode: HttpStatus.NOT_FOUND,
+          data: null,
+          message: 'Unable to fetch event!',
+        };
+      }
+  }
+
+  async getVendorActiveEvents(vendorId: string) {
+
+    try {
+
+        const today = new Date();
+
+        const event = await this.prisma.event.findMany({
+          where: { 
+            userId: vendorId,
+            EndDate: {
+              gte: today, // Get events starting today or later
+            },
+           }
+        });
+        return {
+          statusCode: HttpStatus.OK,
+          data: event,
+          message: 'Success',
+        };
+      } catch (err) {
+        console.log(err);
+        return {
+          statusCode: HttpStatus.NOT_FOUND,
+          data: null,
+          message: 'Unable to fetch event!',
+        };
+      }
+  }
     
   async getEventByCategory(id: string) {
 
@@ -266,6 +315,68 @@ export class EventService {
         message: 'Fail',
       };
     }
+  }
+
+  
+  async getDashboardSummary(vendorId: string) {
+
+    try {
+        const events = await this.prisma.event.findMany({
+          //include: { tickets: true },
+        });
+        const today = new Date()
+
+        const [activeEvent, totalEvent, totalTransactions, totalAmmountSold ] = await Promise.all([
+          
+          this.prisma.event.count({
+            where: { 
+              userId: vendorId,
+              EndDate: {
+                gte: today, // Get events starting today or later
+              },
+             }
+          }),
+          this.prisma.event.count({
+            where: { 
+              userId: vendorId            
+             }
+          }),
+
+         this.prisma.eventTransaction.count({
+          where: { 
+            event: {
+              userId: vendorId
+            }
+           },
+        }),
+
+        this.prisma.eventTransaction.aggregate({
+          where: { 
+            event: {
+              userId: vendorId
+            }
+           },
+           _sum: {
+            price: true,
+          },
+        }),
+
+        ]);
+
+
+        return {
+          statusCode: HttpStatus.OK,
+          data: {activeEvent, totalEvent, totalTransactions, totalAmmountSold:totalAmmountSold._sum.price},
+          message: 'Success',
+        };
+      } catch (err) {
+        console.log(err);
+        return {
+          statusCode: HttpStatus.NOT_FOUND,
+          data: null,
+          message: 'Unable to fetch event!',
+        };
+      }
   }
 
   // Contact
@@ -519,6 +630,46 @@ export class EventService {
             statusCode: HttpStatus.EXPECTATION_FAILED,
             data: null,
             message: 'Unable to upload image .',
+          };
+        }
+    }
+
+       
+    async checkinTicket(data: CheckinDto) {
+    
+      try {
+        const { eventId, ticketId } = data
+
+        const event = await this.prisma.eventTicket.findFirst({
+          where: {eventId: eventId }
+        });
+
+        if(!event){
+          return {
+            statusCode: HttpStatus.NOT_FOUND,
+            data: null,
+            message: 'Event not found',
+          };
+        }
+
+          const created = await this.prisma.eventTransaction.update({
+            where: {  id: event.id },
+            data: {
+              checkIn: true,
+              createdOn: new Date()
+            },
+          });
+          return {
+            statusCode: HttpStatus.OK,
+            data: true,
+            message: 'Ticket Check In.',
+          };
+        } catch (err) {
+          console.log(err);
+          return {
+            statusCode: HttpStatus.EXPECTATION_FAILED,
+            data: false,
+            message: 'Unable to checkin event ticket.',
           };
         }
     }
