@@ -9,10 +9,10 @@ export class EmailerService {
   async sendMail(data: any, subject: string, template: string ) {
     return this.mailerService.sendMail({
       to: data.email,
-      cc: data.email_cc,
+      cc: data.email_cc!,
       subject: subject,
       template: template,
-      context: data,
+      context: data
     });
   }
 
@@ -56,6 +56,6 @@ export class EmailerService {
       location: data.transaction.event.location,
       email_cc: data.transaction.user.email != data.email ? data.email : ""
     };
-    await this.sendMail(payload, 'Ticket Details', 'ticket');
+    const x = await this.sendMail(payload, 'Ticket Details', 'ticket');
   }
 }

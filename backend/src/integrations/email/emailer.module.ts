@@ -12,6 +12,7 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
           service: 'Hostinger',
           host: 'smtp.hostinger.com',
           port: 465, // Use 587 for TLS
+          //port: 587,
           secure: true, // Use false for TLS (port 587)         
           auth: {
             user: 'no-reply@zafariplus.com',
