@@ -37,6 +37,7 @@ const SignIn = ({ closeModal }) => {
 
     try {
       const fbUser = await signInWithEmailAndPassword(auth, email, password);
+      const token = await fbUser.user.getIdToken();
       setKey(fbUser.user.accessToken);
     } catch (error) {
       toast.error(error.code || "Invalid credentials");
@@ -70,12 +71,7 @@ const SignIn = ({ closeModal }) => {
           toast.error(data?.error || data?.message || "Operation failed!");
         }
       } catch (error) {
-        toast.error("error");
-        console.log(first)
-        console.error(
-          "Error:",
-          error.response ? error.response.data : error.message
-        );
+        toast.error(error?.response?.data?.message || "There was an error processing your request");
       } finally {
         setIsLoading(false);
       }
