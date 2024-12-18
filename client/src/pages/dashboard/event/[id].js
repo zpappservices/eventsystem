@@ -67,7 +67,7 @@ const event = () => {
 
   useEffect(() => {
     getEvent();
-  }, []);
+  }, [router]);
 
   const { data: event = {} } = data || {};
 
@@ -77,7 +77,7 @@ const event = () => {
     <Layout>
       <div className="bg-white px-5 py-10 sm:p-10">
         <div className="w-full flex flex-col gap-2">
-          <p className="text-[20px] font-bold leading-[24px]">My Events</p>
+          <p className="text-[20px] font-bold leading-[24px]">Update Event</p>
           <Box sx={{ width: "100%" }}>
             <Box
               sx={{
@@ -126,10 +126,10 @@ const event = () => {
                 <UpdateEvent event={event}/>
               </CustomTabPanel>
               <CustomTabPanel value={value} index={1}>
-                <UpdateContact />
+                <UpdateContact event={event}/>
               </CustomTabPanel>
               <CustomTabPanel value={value} index={2}>
-                <UpdateTicket />
+                <UpdateTicket event={event}/>
               </CustomTabPanel>
             </div>
           </Box>

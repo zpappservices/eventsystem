@@ -13,6 +13,10 @@ import PhotoUpload from "../createevent/PhotoUpload";
 import StyledImage from "../StyledImage";
 import Button from "../Button";
 import { ButtonLoading } from "../widgets/ButtonLoading";
+import useLoading from "@/hooks/useLoading";
+import { apiRequest } from "@/utils/apiService";
+import { toast } from "react-toastify";
+import { useRouter } from "next/router";
 
 const UpdateEvent = ({ event }) => {
   const { activeUser } = useAuthToken();
@@ -21,6 +25,9 @@ const UpdateEvent = ({ event }) => {
   const [error, setError] = useState({});
   const [fileError, setFileError] = useState();
   const [isEditable, setIsEditable] = useState(false);
+  const router = useRouter();
+
+  const { startLoading, stopLoading, isLoading } = useLoading();
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -60,7 +67,7 @@ const UpdateEvent = ({ event }) => {
       title: event?.title || "",
       description: event?.description || "",
       location: event?.location || "",
-      locationType: event?.locationType || "",
+      locationType: event?.locationType || "venue",
       startDate: event?.StartDate || "",
       endDate: event?.EndDate || "",
       startTime: event?.StartTime || "",
@@ -78,6 +85,27 @@ const UpdateEvent = ({ event }) => {
     setIsEditable(false);
     if (eventData) {
       setForm(eventData);
+    }
+  };
+
+  const updateEvent = async () => {
+    startLoading();
+    try {
+      const data = await apiRequest(
+        "post",
+        `event/updateevent/${event?.id}`,
+        form,
+        true
+      );
+
+      toast.success("Event updated successfully!");
+      setTimeout(() => {
+        router.reload();
+      }, 1500);
+    } catch (error) {
+      toast.error(error?.response?.data?.message[0] || "Error updating event");
+    } finally {
+      stopLoading();
     }
   };
   return (
@@ -190,7 +218,12 @@ const UpdateEvent = ({ event }) => {
               Cancel
             </ButtonLoading>
 
-            <ButtonLoading className="!w-fit px-10">Save</ButtonLoading>
+            <ButtonLoading
+              isLoading={isLoading}
+              className="!w-fit px-10"
+              onClick={updateEvent}>
+              Save
+            </ButtonLoading>
           </div>
         )}
       </form>

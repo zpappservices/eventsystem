@@ -13,7 +13,6 @@ const PhotoUpload = ({
 }) => {
   const [preview, setPreview] = useState(null);
   const fileInputRef = useRef(null);
-  console.log(preview, file)
 
   const handleChange = (event) => {
     const file = event.target.files[0];
@@ -48,8 +47,8 @@ const PhotoUpload = ({
 
   useEffect(() => {
     setPreview(file);
-  }, [file])
-  
+  }, [file]);
+
   return (
     <div className="">
       <p className="block text-md font-semibold text-gray-900">Banner Image</p>
@@ -86,6 +85,7 @@ const PhotoUpload = ({
               className="sr-only"
               onChange={handleChange}
               ref={fileInputRef}
+              disabled={disabled}
               {...props}
             />
           </label>
@@ -94,7 +94,7 @@ const PhotoUpload = ({
             <div className="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 flex items-center justify-center">
               <button
                 type="button"
-                onClick={!disabled && handleDeleteImage}
+                onClick={!disabled ? handleDeleteImage : undefined}
                 className="text-white text-lg p-2 bg-black/70 rounded-full hover:bg-red-500">
                 <FaTrash />
               </button>
@@ -102,7 +102,9 @@ const PhotoUpload = ({
           )}
         </div>
       </div>
-      {fileError && <p className="text-red-600 text-xs ms-2 mt-1">{fileError}</p>}
+      {fileError && (
+        <p className="text-red-600 text-xs ms-2 mt-1">{fileError}</p>
+      )}
     </div>
   );
 };

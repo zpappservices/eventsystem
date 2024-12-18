@@ -11,6 +11,7 @@ const TextInput = ({
   inputClassName = "",
   disabled = false,
   errorMessage = "",
+  type="text"
 }) => {
   return (
     <div className={`space-y-1 ${containerClassName}`}>
@@ -20,7 +21,7 @@ const TextInput = ({
       </label>
       <div className="w-full">
         <input
-          type="text"
+          type={type}
           className={`w-full h-[48px] rounded-[5px] border py-2.5 px-4 outline-none
             transition-colors focus:border-primary bg-gray-50/50 focus:transition-all duration-300 
             ${errorMessage ? "border-red-500" : "border-gray-300"}

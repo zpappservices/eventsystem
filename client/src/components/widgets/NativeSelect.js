@@ -26,14 +26,14 @@ const Select = ({
             transition-colors cursor-pointer focus:border-primary focus:transition-all duration-300 
             ${
               selectedOption
-                ? "text-baseBlack"
+                ? "text-black border-gray-300"
                 : "text-neutrals400 border-gray-300"
             } ${selectClassName}`}
           style={{
             appearance: "none",
             backgroundImage: 'url("/img/select-dropdown.svg")',
             backgroundRepeat: "no-repeat",
-            backgroundPosition: "98% center",
+            backgroundPosition: "96% center",
           }}
           name={name}
           value={selectedOption}

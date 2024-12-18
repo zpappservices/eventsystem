@@ -191,8 +191,9 @@ const TicketDto = ({ handleBack, handleReset }) => {
                 value={form.type}
                 onChange={handleInputChange}
                 color="warning">
-                <MenuItem value="free">Free</MenuItem>
-                <MenuItem value="paid">Paid</MenuItem>
+                <MenuItem value="Free">Free</MenuItem>
+                <MenuItem value="Paid">Paid</MenuItem>
+                <MenuItem value="Donation">Donation</MenuItem>
               </TextField>
             </FormControl>
 
