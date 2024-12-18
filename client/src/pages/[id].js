@@ -30,7 +30,6 @@ const Event = () => {
   }, []);
 
   const { data: event = {} } = data || {};
-  console.log(event);
 
   return (
     <Layout>

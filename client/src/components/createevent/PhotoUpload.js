@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { FaTrash } from "react-icons/fa";
 import { FiUpload } from "react-icons/fi";
 
@@ -7,6 +7,9 @@ const PhotoUpload = ({
   maxSizeMB = 5,
   fileError,
   setFileError,
+  file,
+  disabled,
+  ...props
 }) => {
   const [preview, setPreview] = useState(null);
   const fileInputRef = useRef(null);
@@ -42,8 +45,12 @@ const PhotoUpload = ({
     onImageChange && onImageChange(null); // Notify parent about deletion
   };
 
+  useEffect(() => {
+    setPreview(file);
+  }, [file]);
+
   return (
-    <div className="p-4">
+    <div className="">
       <p className="block text-md font-semibold text-gray-900">Banner Image</p>
       <div className="mt-2 flex">
         <div
@@ -78,6 +85,8 @@ const PhotoUpload = ({
               className="sr-only"
               onChange={handleChange}
               ref={fileInputRef}
+              disabled={disabled}
+              {...props}
             />
           </label>
 
@@ -85,7 +94,7 @@ const PhotoUpload = ({
             <div className="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 flex items-center justify-center">
               <button
                 type="button"
-                onClick={handleDeleteImage}
+                onClick={!disabled ? handleDeleteImage : undefined}
                 className="text-white text-lg p-2 bg-black/70 rounded-full hover:bg-red-500">
                 <FaTrash />
               </button>
@@ -93,7 +102,9 @@ const PhotoUpload = ({
           )}
         </div>
       </div>
-      {fileError && <p className="text-red-600 text-xs ms-2 mt-1">{fileError}</p>}
+      {fileError && (
+        <p className="text-red-600 text-xs ms-2 mt-1">{fileError}</p>
+      )}
     </div>
   );
 };

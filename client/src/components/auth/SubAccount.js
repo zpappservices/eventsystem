@@ -6,7 +6,7 @@ import useApiRequest from "@/hooks/useApiRequest";
 import { toast } from "react-toastify";
 import useAuthToken from "@/hooks/useAuthToken";
 
-const SubAccount = () => {
+const SubAccount = ({ isDashboard, onClose }) => {
   const { activeUser } = useAuthToken();
   const [formData, setFormData] = useState({
     business_name: "",
@@ -157,8 +157,7 @@ const SubAccount = () => {
         maxWidth: "400px",
         margin: "0 auto",
       }}
-      className="w-full max-w-[440px] flex flex-col gap-5"
-    >
+      className="w-full max-w-[440px] flex flex-col gap-5">
       {fields?.map((field) =>
         field.type === "select" ? (
           <FormControl fullWidth key={field.id}>
@@ -199,8 +198,7 @@ const SubAccount = () => {
                     },
                   },
                 },
-              }}
-            >
+              }}>
               {field?.options?.length > 0 &&
                 field?.options?.map((option) => (
                   <MenuItem key={option.id} value={option.code}>
@@ -244,14 +242,22 @@ const SubAccount = () => {
           />
         )
       )}
-
-      <ButtonLoading
-        className="py-3.5 w-full"
-        onClick={handleSubmit}
-        isLoading={loading}
-      >
-        Proceed
-      </ButtonLoading>
+      <div className="flex gap-5">
+        {isDashboard && (
+          <ButtonLoading
+            className="py-3.5 w-full flex-1 bg-gray-600"
+            onClick={onClose}
+            isLoading={loading}>
+            Back
+          </ButtonLoading>
+        )}
+        <ButtonLoading
+          className="py-3.5 w-full flex-1"
+          onClick={handleSubmit}
+          isLoading={loading}>
+          Proceed
+        </ButtonLoading>
+      </div>
     </form>
   );
 };

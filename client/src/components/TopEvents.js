@@ -50,7 +50,9 @@ const TopEvents = ({ next, isTopEvent = true, loaderClass }) => {
               onClick={() => router.push(`/${item?.id}`)}>
               <div className="h-[168px]">
                 <StyledImage
-                  src={item?.image_banner || "/img/event1.svg"}
+                  src={
+                    item?.image_banner || "https://via.placeholder.com/300x200?text="
+                  }
                   className="w-full h-full object-cover"
                 />
               </div>

@@ -18,15 +18,13 @@ const Profile = () => {
     getUser();
   }, [activeUser, token]);
 
-    const { username } = data?.data || {}
-    
-    console.log(username);
-    return (
-      <div className="text-[20px] leading-[20px] ms-auto">
-        {" "}
-        Welcome <span className="capitalize font-bold">{username}</span>
-      </div>
-    );
+  const { username } = data?.data || {};
+  return (
+    <div className="text-[20px] leading-[20px] ms-auto">
+      {" "}
+      Welcome <span className="capitalize font-bold">{username}</span>
+    </div>
+  );
 };
 
 export default Profile;

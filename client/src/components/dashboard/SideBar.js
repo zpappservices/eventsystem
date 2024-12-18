@@ -139,7 +139,7 @@ const SideBar = ({ isOpen, toggleMenu, showModal }) => {
                 </li>
               )}
             </Link>
-            <Link
+            {/* <Link
               href="/dashboard/eventanalysis"
               className={`transition-all duration-300 relative ps-5 ${
                 pathname === "/dashboard/eventanalysis" ? "bg-white" : ""
@@ -165,7 +165,7 @@ const SideBar = ({ isOpen, toggleMenu, showModal }) => {
                   Event Analysis
                 </li>
               )}
-            </Link>
+            </Link> */}
             <Link
               href="/dashboard/payout"
               className={`transition-all duration-300 relative ps-5 ${
@@ -193,7 +193,7 @@ const SideBar = ({ isOpen, toggleMenu, showModal }) => {
                 </li>
               )}
             </Link>
-            <Link
+            {/* <Link
               href="/dashboard/profile"
               className={`transition-all duration-300 relative ps-5 ${
                 pathname === "/dashboard/profile" ? "bg-white" : ""
@@ -219,8 +219,8 @@ const SideBar = ({ isOpen, toggleMenu, showModal }) => {
                   My Profile
                 </li>
               )}
-            </Link>
-            <Link
+            </Link> */}
+            {/* <Link
               href="/dashboard/settings"
               className={`transition-all duration-300 relative ps-5 ${
                 pathname === "/dashboard/settings" ? "bg-white" : ""
@@ -246,8 +246,8 @@ const SideBar = ({ isOpen, toggleMenu, showModal }) => {
                   Account Settiings
                 </li>
               )}
-            </Link>
-            <Link
+            </Link> */}
+            {/*<Link
               href="/dashboard/help"
               className={`transition-all duration-300 relative ps-5 ${
                 pathname === "/dashboard/help" ? "bg-white" : ""
@@ -273,7 +273,7 @@ const SideBar = ({ isOpen, toggleMenu, showModal }) => {
                   Need Help ?
                 </li>
               )}
-            </Link>
+            </Link> */}
             <li
               className="text-black flex gap-x-4 ms-5 items-center p-3 rounded-l-full transition-all cursor-pointer"
               onClick={openModal}>
