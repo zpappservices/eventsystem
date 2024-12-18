@@ -124,6 +124,58 @@ export class PaymentService {
         }
         
       }
+                
+    async getVendorAccount(userId: string): Promise<any> {
+      try {
+        const account = await this.prisma.vendorAccount.findFirst({where: {userId} });
+
+        if(!account){
+          return {
+            statusCode: HttpStatus.NOT_FOUND,
+            data: null,
+            message: `Account with user id ${userId} not found.`,
+          };
+        }
+        return {
+          statusCode: HttpStatus.CREATED,
+          data: account,
+          message: 'successfully.',
+        };
+      } catch (err) {
+        console.log(err);
+        return {
+          statusCode: HttpStatus.EXPECTATION_FAILED,
+          data: null,
+          message: 'Fail.',
+        };
+      }
+    }
+
+    async getAllVendorAccount(): Promise<any> {
+      try {
+        const account = await this.prisma.vendorAccount.findMany({});
+
+        if(!account){
+          return {
+            statusCode: HttpStatus.NOT_FOUND,
+            data: null,
+            message: `no record found.`,
+          };
+        }
+        return {
+          statusCode: HttpStatus.CREATED,
+          data: account,
+          message: 'successfully.',
+        };
+      } catch (err) {
+        console.log(err);
+        return {
+          statusCode: HttpStatus.EXPECTATION_FAILED,
+          data: null,
+          message: 'Fail.',
+        };
+      }
+    }
       async bankList() {
         const url = `${this.configService.get('PAYSTACK_BANK')}`
         return this.makeRequest(`${url}`, 'get');

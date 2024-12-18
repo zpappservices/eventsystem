@@ -34,6 +34,14 @@ export class PaymentController {
   async createSubaccount(@Body() dto: SubaccountDto): Promise<any> {
     return this.paymentService.createSubaccount(dto);
   }
+  @Get('/get-vendor-account/:userId')
+  async getVendorAccount(@Param('userId') userId: string): Promise<any> {
+    return this.paymentService.getVendorAccount(userId);
+  } 
+  @Get('/get-all-vendor-account')
+  async getUserSettlementAccount(): Promise<any> {
+    return this.paymentService.getAllVendorAccount();
+  }  
   
   @Get('/verify-transaction/:id')
   async verifyTransaction(@Param() id: string): 
