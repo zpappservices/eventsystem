@@ -6,6 +6,9 @@ import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
+import UpdateEvent from "@/components/event/UpdateEvent";
+import UpdateContact from "@/components/event/UpdateContact";
+import UpdateTicket from "@/components/event/UpdateTicket";
 
 function CustomTabPanel(props) {
    const { children, value, index, ...other } = props;
@@ -18,7 +21,7 @@ function CustomTabPanel(props) {
          aria-labelledby={`simple-tab-${index}`}
          {...other}
       >
-         {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+         {value === index && <Box className=" py-5 sm:px-3">{children}</Box>}
       </div>
    );
 }
@@ -47,7 +50,7 @@ const event = () => {
   const { id } = router.query;
 
   useEffect(() => {
-    if (!id) router.push("/");
+    if (!id && router.isReady) router.push("/dashboard");
   }, [id]);
 
   const { data, error, loading, request } = useApiRequest({
@@ -72,7 +75,7 @@ const event = () => {
 
   return (
     <Layout>
-      <div className="bg-white p-10">
+      <div className="bg-white px-5 py-10 sm:p-10">
         <div className="w-full flex flex-col gap-2">
           <p className="text-[20px] font-bold leading-[24px]">My Events</p>
           <Box sx={{ width: "100%" }}>
@@ -101,7 +104,7 @@ const event = () => {
                       paddingX: "10px",
                       fontSize: "15px",
                       fontWeight: "600",
-                      lineHeight: "35.62px",
+                      lineHeight: "22.62px",
                       fontFamily: "Inter",
                       textTransform: "capitalize",
                       color: value === index ? "#1E944D" : "inherit",
@@ -112,20 +115,21 @@ const event = () => {
                       "&:hover": {
                         color: "#FF875B",
                       },
-                    }}
+                        }}
+                        className="text-[14px] sm:text-[15px] leading-[20px]"
                   />
                 ))}
               </Tabs>
             </Box>
-            <div>
+            <div className="w-full overflow-x-auto pt-3">
               <CustomTabPanel value={value} index={0}>
-                sdas
+                <UpdateEvent event={event}/>
               </CustomTabPanel>
               <CustomTabPanel value={value} index={1}>
-                asa
+                <UpdateContact />
               </CustomTabPanel>
               <CustomTabPanel value={value} index={2}>
-                asa
+                <UpdateTicket />
               </CustomTabPanel>
             </div>
           </Box>
