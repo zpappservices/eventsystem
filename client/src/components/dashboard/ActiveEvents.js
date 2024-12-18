@@ -8,7 +8,8 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import useAuthToken from "@/hooks/useAuthToken";
 import useApiRequest from "@/hooks/useApiRequest";
-import { formatDate } from "@/utils/time";
+import { convertTo12HourFormat, formatDate } from "@/utils/time";
+import { useRouter } from "next/router";
 
 function createData(name, calories, fat, carbs, protein) {
   return { name, calories, fat, carbs, protein };
@@ -21,9 +22,13 @@ const rows = [
 
 const ActiveEvents = () => {
   const { activeUser } = useAuthToken();
+  const router = useRouter();
+
   const { data, request } = useApiRequest({
     method: "get",
     url: `event/getallVendorEvents/${activeUser}`,
+    data: null,
+    headers: {},
     useToken: true,
   });
 
@@ -48,10 +53,16 @@ const ActiveEvents = () => {
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell>Event Name</TableCell>
-                <TableCell align="center">Category</TableCell>
-                <TableCell align="center">Date & Time</TableCell>
-                <TableCell align="center">Location</TableCell>
+                <TableCell className="font-bold">Event Name</TableCell>
+                <TableCell align="center" className="font-bold">
+                  Category
+                </TableCell>
+                <TableCell align="center" className="font-bold">
+                  Date & Time
+                </TableCell>
+                <TableCell align="center" className="font-bold">
+                  Location
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -61,7 +72,9 @@ const ActiveEvents = () => {
                     key={id}
                     sx={{
                       "&:last-child td, &:last-child th": { border: 0 },
-                    }}>
+                    }}
+                    className="cursor-pointer"
+                    onClick={() => router.push(`/dashboard/event/${id}`)}>
                     <TableCell
                       component="th"
                       scope="row"
@@ -69,8 +82,9 @@ const ActiveEvents = () => {
                       {title}
                     </TableCell>
                     <TableCell align="center">{category}</TableCell>
-                    <TableCell align="center" className="w-[250px]">
-                      {formatDate(StartDate)}
+                    <TableCell align="center" className="w-[350px]">
+                      {formatDate(StartDate)}{" "}
+                      {convertTo12HourFormat(StartTime)}
                     </TableCell>
                     <TableCell align="center">{location}</TableCell>
                   </TableRow>
