@@ -1,6 +1,6 @@
 import { Body, Controller, Get, HttpStatus, Param, Post, Query, Res } from '@nestjs/common';
 import { PaymentService } from './payment.service';
-import { OrderDto, PaymentDto, SubaccountDto } from './dtos/payment.dto';
+import { ChargeSetupDto, ChargeTypeEnum, OrderDto, PaymentDto, SubaccountDto } from './dtos/payment.dto';
 import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 
@@ -34,6 +34,14 @@ export class PaymentController {
   async createSubaccount(@Body() dto: SubaccountDto): Promise<any> {
     return this.paymentService.createSubaccount(dto);
   }
+  @Get('/get-vendor-account/:userId')
+  async getVendorAccount(@Param('userId') userId: string): Promise<any> {
+    return this.paymentService.getVendorAccount(userId);
+  } 
+  @Get('/get-all-vendor-account')
+  async getUserSettlementAccount(): Promise<any> {
+    return this.paymentService.getAllVendorAccount();
+  }  
   
   @Get('/verify-transaction/:id')
   async verifyTransaction(@Param() id: string): 
@@ -56,4 +64,21 @@ export class PaymentController {
   async getAllBank(): Promise<any> {
     return this.paymentService.bankList();
   }
+
+  @Post('/charge-setup')
+  async chargeSetup(@Body() dto: ChargeSetupDto): Promise<any> {
+    return this.paymentService.createChargeSetup(dto);
+  }
+  @Get('/get-all-chargesetup/:id')
+  async getAllchargeSetup(): Promise<any> {
+    return this.paymentService.getAllChargeSetup();
+  }
+  @Get('/get-one-chargesetup/:id')
+  async getOnechargeSetup(@Param() id: string): Promise<any> {
+    return this.paymentService.getOneChargeSetup(id);
+  } 
+  @Get('/get-event-chargesetup/:id')
+  async getEventchargeSetup(@Param() id: string): Promise<any> {
+    return this.paymentService.getChargeSetupByEvent(id);
+  } 
 }
