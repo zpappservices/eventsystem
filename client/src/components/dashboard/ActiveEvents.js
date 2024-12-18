@@ -45,7 +45,7 @@ const ActiveEvents = () => {
   const activeEvents = events?.filter((event) => event.active === true);
   return (
     <div className="w-full flex flex-col gap-10">
-      <p className="text-[20px] font-bold leading-[24px]">
+      <p className="text-[20px] !font-bold leading-[24px]">
         Active Event Tickets
       </p>
       <div>
@@ -53,14 +53,14 @@ const ActiveEvents = () => {
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell className="font-bold">Event Name</TableCell>
-                <TableCell align="center" className="font-bold">
+                <TableCell className="!font-bold">Event Name</TableCell>
+                <TableCell align="center" className="!font-bold">
                   Category
                 </TableCell>
-                <TableCell align="center" className="font-bold">
+                <TableCell align="center" className="!font-bold">
                   Date & Time
                 </TableCell>
-                <TableCell align="center" className="font-bold">
+                <TableCell align="center" className="!font-bold">
                   Location
                 </TableCell>
               </TableRow>

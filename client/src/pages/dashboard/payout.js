@@ -13,9 +13,9 @@ const payout = () => {
           <Account />
         </div>
 
-        <div className="w-full max-w-[1000px] bg-white px-5 py-6 pb-10 drop-shadow-lg">
+        {/* <div className="w-full max-w-[1000px] bg-white px-5 py-6 pb-10 drop-shadow-lg">
           <PayoutHistory />
-        </div>
+        </div> */}
       </div>
     </Layout>
   );
