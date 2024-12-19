@@ -168,6 +168,15 @@ export class EventService {
     try {
 
         const {eventDto, contactDto, ticketDto } =  data
+        const now = new Date().getTime();
+        const startDate = new Date(eventDto.startDate).getTime();
+        if(startDate < now) {
+          return {
+            statusCode: HttpStatus.BAD_REQUEST,
+            data: null,
+            message: 'Event date can not be in the past',
+          };
+        }
         let eventCreated: any;
         await this.prisma.$transaction(async (pr) => {
 
@@ -366,7 +375,7 @@ export class EventService {
 
         return {
           statusCode: HttpStatus.OK,
-          data: {activeEvent, totalEvent, totalTransactions, totalAmmountSold:totalAmmountSold._sum.price},
+          data: {activeEvent, totalEvent, totalTransactions, totalAmmountSold:totalAmmountSold._sum.price || 0},
           message: 'Success',
         };
       } catch (err) {
