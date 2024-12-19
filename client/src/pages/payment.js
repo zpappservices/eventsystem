@@ -176,8 +176,11 @@ const payment = () => {
           </div>
           <div className="w-full max-w-[558px] flex flex-col gap-2 cursor-pointer">
             <StyledImage
-              src="/img/event1.svg"
-              className="w-full max-h-[300px] object-cover"
+              src={
+                parsedEvents?.banner ||
+                "https://via.placeholder.com/300x200?text="
+              }
+              className="w-full max-h-[300px] object-cover !rounded-[15px]"
             />
             <p className="text-[18px] text-gray-800 font-medium leading-snug">
               {eventName}
