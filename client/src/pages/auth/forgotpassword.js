@@ -103,8 +103,8 @@ const ForgotPassword = () => {
         <div className="w-full bg-white p-3 sm:p-10 rounded-xl">
           <Link href="/" className="ms-[40px]">
             <StyledImage
-              src="/img/zafariplus-logo.png"
-              className="w-full max-w-[10px] scale-[12]"
+              src="/img/zafariplus-logo-black.png"
+              className="w-full max-w-[10px] scale-[12] mx-auto hover:scale-[13.2] duration-300"
             />
           </Link>
           <h2 className="text-[32px] font-semibold text-[#0B2253] text-center mt-12">
@@ -149,7 +149,7 @@ const ForgotPassword = () => {
           </form>
           <p className="text-[15px] text-[#81909D] text-center mt-3">
             <span className="text-custard500 underline">
-              <Link href="/auth/signin">Back To Login</Link>
+              <Link href="/">Back To Login</Link>
             </span>
           </p>
         </div>

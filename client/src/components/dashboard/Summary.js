@@ -40,13 +40,13 @@ const Summary = () => {
           amount={activeEvent}
           background="bg-black"
         />
-        <Card
+        {/* <Card
           title="Total Amount Sales"
           amount={`₵ ${totalAmmountSold
             ?.toString()
             ?.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`}
           background="bg-[#FF7F50]"
-        />
+        /> */}
         <Card
           title="Total Transactions"
           amount={totalTransactions}

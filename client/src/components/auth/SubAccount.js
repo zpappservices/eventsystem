@@ -158,6 +158,9 @@ const SubAccount = ({ isDashboard, onClose }) => {
         margin: "0 auto",
       }}
       className="w-full max-w-[440px] flex flex-col gap-5">
+      <div className="text-center">
+        This is the account for receiving your payments.<br /> Please confirm the details.
+      </div>
       {fields?.map((field) =>
         field.type === "select" ? (
           <FormControl fullWidth key={field.id}>

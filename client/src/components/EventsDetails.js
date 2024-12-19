@@ -68,10 +68,12 @@ const EventsDetails = ({ id, details }) => {
     <div className="w-full flex flex-col gap-6">
       <div className="w-full flex flex-col md:flex-row justify-between gap-6">
         <div className="w-full max-w-[551px] mx-auto cursor-pointer">
-          <StyledImage
-            src={details?.image_banner ?? "/img/event1.svg"}
-            className="w-full rounded-[30px]"
-          />
+          <div className="w-full h-[400px] overflow-hidden">
+            <StyledImage
+              src={details?.image_banner ?? "/img/event1.svg"}
+              className="w-full h-full rounded-[30px] object-cover"
+            />
+          </div>
           <div className="mt-5 space-y-1">
             <p className="text-[14px] leading-normal capitalize flex items-center">
               <MdLocationPin size={19} />
@@ -79,10 +81,9 @@ const EventsDetails = ({ id, details }) => {
               {details?.location}
             </p>
             <p className="text-[14px] leading-normal capitalize flex items-start sm:items-center">
-              <BsCalendar2Date size={16} className="shrink-0"/>
+              <BsCalendar2Date size={16} className="shrink-0" />
               <span className="font-semibold mx-1.5">Date: </span>{" "}
-              {formatDate(details?.StartDate)} -{" "}
-              {formatDate(details?.EndDate)}
+              {formatDate(details?.StartDate)} - {formatDate(details?.EndDate)}
             </p>
             <p className="text-[14px] leading-normal capitalize flex items-center">
               <MdAccessTime size={19} />
@@ -121,7 +122,7 @@ const EventsDetails = ({ id, details }) => {
                     {currency === "ZAR" && "R"}
                     {!currency && "₦"}
                   </span>
-                  {price.toLocaleString()}
+                  {price?.toString()?.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                 </p>
                 <Quantity
                   inStock={quantity}
@@ -137,8 +138,14 @@ const EventsDetails = ({ id, details }) => {
             </p>
             <p className="text-[16px] leading-snug">
               <span className="font-bold">Total Amount:</span>{" "}
-              <span className="font-semibold">₦</span>
-              {totalCost.toLocaleString()}
+              <span className="font-semibold ms-5 mr-0.5">
+                {currency === "USD" && "$"}
+                {currency === "NGN" && "₦"}
+                {currency === "GHS" && "GH₵"}
+                {currency === "ZAR" && "R"}
+                {!currency && "₦"}
+              </span>
+              {totalCost?.toString()?.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
             </p>
           </div>
           <div className="w-full flex flex-col gap-4 my-3">

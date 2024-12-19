@@ -42,7 +42,7 @@ const OnboardingHeader = ({ step = 0 }) => {
                <Step step={step} />
             </div>
             <div className="mx-[-16px] sm:mx-[-27px]">
-               <Step step={step} value={1} title="Create a subaccount" />
+               <Step step={step} value={1} title="Create settlement account" />
             </div>
          </div>
       </div>
