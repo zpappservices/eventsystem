@@ -45,7 +45,7 @@ function ContactDto({ handleNext, handleBack }) {
       errors.facebook = "Enter a valid Facebook URL.";
     if (
       !formData.contactDto.phone ||
-      !/^\+?\d{11}$/.test(formData.contactDto.phone)
+      !/^\+?\d{10,15}$/.test(formData.contactDto.phone)
     )
       errors.phone = "Enter a valid phone number.";
 
@@ -79,6 +79,7 @@ function ContactDto({ handleNext, handleBack }) {
             color="warning"
             error={!!formError[field.name]}
             helperText={formError[field.name] || ""}
+            type={field?.type}
           />
         </div>
       ))}

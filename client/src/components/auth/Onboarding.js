@@ -15,7 +15,6 @@ const Onboarding = ({ next }) => {
     phone: "",
     email: "",
     company: "",
-    jobTitle: "",
     website: "",
     photo: "",
   });
@@ -97,8 +96,6 @@ const Onboarding = ({ next }) => {
     }
   };
 
-  console.log(filteredFormData)
-
   return (
     <form
       onSubmit={handleSubmit}
@@ -122,7 +119,6 @@ const Onboarding = ({ next }) => {
         },
         { id: "email", label: "Email", type: "email", required: true },
         { id: "company", label: "Company", type: "text", required: true },
-        { id: "jobTitle", label: "Job Title", type: "text", required: false },
         { id: "website", label: "Website", type: "text", required: false },
       ].map((field) => (
         <div key={field.id} className="w-full">

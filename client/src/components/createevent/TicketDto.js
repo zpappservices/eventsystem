@@ -4,6 +4,8 @@ import FormButton from "./FormButton";
 import { useCreateEvent } from "@/context/CreateEventContext";
 import { toast } from "react-toastify";
 import useApiRequest from "@/hooks/useApiRequest";
+import { MdDelete } from "react-icons/md";
+import { FaClipboardList } from "react-icons/fa";
 
 const TicketDto = ({ handleBack, handleReset }) => {
   const [tickets, setTickets] = useState([
@@ -115,6 +117,16 @@ const TicketDto = ({ handleBack, handleReset }) => {
     await uploadRequest();
   };
 
+  const deleteTicket = (index) => {
+    setFormData((prevData) => {
+      const updatedTickets = prevData.ticketDto.filter((_, i) => i !== index);
+      return {
+        ...prevData,
+        ticketDto: updatedTickets,
+      };
+    });
+  };
+
   useEffect(() => {
     if (data?.statusCode >= 200 && data?.statusCode < 300) {
       toast.success(data?.message || "Event Created successfully!");
@@ -180,61 +192,63 @@ const TicketDto = ({ handleBack, handleReset }) => {
 
         {showForm && (
           <div className="p-4 rounded shadow space-y-3">
-            <FormControl fullWidth className="mb-2">
-              <TextField
-                fullWidth
-                id="demo-simple-select"
-                select
-                labelid="demo-simple-select-label"
-                label="Ticket Type"
-                name="type"
-                value={form.type}
-                onChange={handleInputChange}
-                color="warning">
-                <MenuItem value="Free">Free</MenuItem>
-                <MenuItem value="Paid">Paid</MenuItem>
-                <MenuItem value="Donation">Donation</MenuItem>
-              </TextField>
-            </FormControl>
+            <div className="flex gap-5">
+              <FormControl className="mb-2 flex-1">
+                <TextField
+                  id="demo-simple-select"
+                  select
+                  labelid="demo-simple-select-label"
+                  label="Ticket Type"
+                  name="type"
+                  value={form.type}
+                  onChange={handleInputChange}
+                  color="warning">
+                  <MenuItem value="Free">Free</MenuItem>
+                  <MenuItem value="Paid">Paid</MenuItem>
+                  <MenuItem value="Donation">Donation</MenuItem>
+                </TextField>
+              </FormControl>
 
-            <Autocomplete
-              value={form.name || ""}
-              onChange={(event, newValue) => {
-                setForm({ ...form, name: newValue || "" });
-              }}
-              inputValue={form.name || ""}
-              onInputChange={(event, newInputValue) => {
-                setForm((prevForm) => ({
-                  ...prevForm,
-                  name: newInputValue,
-                }));
-              }}
-              options={ticketOptions}
-              disabled={form.type === "free"}
-              renderInput={(params) => (
-                <TextField {...params} label="Ticket name" />
-              )}
-            />
+              <Autocomplete
+                value={form.name || ""}
+                onChange={(event, newValue) => {
+                  setForm({ ...form, name: newValue || "" });
+                }}
+                inputValue={form.name || ""}
+                onInputChange={(event, newInputValue) => {
+                  setForm((prevForm) => ({
+                    ...prevForm,
+                    name: newInputValue,
+                  }));
+                }}
+                options={ticketOptions}
+                disabled={form.type === "free"}
+                className="flex-1"
+                renderInput={(params) => (
+                  <TextField {...params} label="Ticket name" />
+                )}
+              />
+            </div>
 
-            <div className="mb-3">
+            <div className="mb-3 flex gap-5">
               <TextField
                 label="Price"
                 type="number"
                 name="price"
                 value={form.price}
                 onChange={handleInputChange}
+                className="flex-1"
                 color="warning"
                 disabled={form.type === "free"}
               />
-            </div>
 
-            <div className="mb-3">
               <TextField
                 label="Quantity"
                 type="number"
                 name="quantity"
                 value={form.quantity}
                 onChange={handleInputChange}
+                className="flex-1"
                 color="warning"
               />
             </div>
@@ -255,12 +269,14 @@ const TicketDto = ({ handleBack, handleReset }) => {
         )}
         <div className="mt-4">
           <h2 className="text-lg font-bold">Tickets:</h2>
-          <ul className="list-disc pl-5">
+          <ul className="list-disc pl-2">
             {formData?.ticketDto?.map((ticket, index) => (
-              <li key={index}>
+              <div key={index} className="flex items-center gap-2">
+                <FaClipboardList />
                 {`${ticket.name} (${ticket.type})=> `}
                 <span>{`Price of tickets $(${ticket.price}) - Number of tickets: (${ticket.quantity})`}</span>
-              </li>
+                <MdDelete size={18} color="red" className="cursor-pointer" onClick={() => deleteTicket(index)}/>
+              </div>
             ))}
           </ul>
         </div>

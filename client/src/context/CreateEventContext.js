@@ -15,6 +15,7 @@ function CreateEventProvider({ children }) {
       description: "",
       categoryId: "",
       location: "",
+      locationType: "",
       userId: activeUser,
       startDate: "",
       endDate: "",

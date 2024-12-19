@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 
 const Quantity = ({ onChange, inStock, item }) => {
   const [quantity, setQuantity] = useState(0);
@@ -25,7 +26,8 @@ const Quantity = ({ onChange, inStock, item }) => {
   };
 
   const handleIncrement = () => {
-    if (quantity < inStock) {
+    const maxQuantity = Math.min(inStock, 5);
+    if (quantity < maxQuantity) {
       const newQuantity = quantity + 1;
       setQuantity(newQuantity);
 
@@ -44,6 +46,8 @@ const Quantity = ({ onChange, inStock, item }) => {
           return [...prev, { ...item, quantity: newQuantity }];
         }
       });
+    } else {
+      toast.info(`Maximum ticket limit reached: ${maxQuantity}`);
     }
   };
 
@@ -51,8 +55,7 @@ const Quantity = ({ onChange, inStock, item }) => {
     <div className="flex border rounded-[8px] overflow-hidden">
       <div
         className="w-10 text-[#636363] leading-[24px] text-center text-[16px] hover:bg-[#FF7F50] cursor-pointer"
-        onClick={handleDecrement}
-      >
+        onClick={handleDecrement}>
         -
       </div>
       <p className="text-[16px] leading-normal text-black text-center w-10">
@@ -60,8 +63,7 @@ const Quantity = ({ onChange, inStock, item }) => {
       </p>
       <div
         className="w-10 text-[#636363] leading-[24px] text-center text-[16px] hover:bg-[#FF7F50] cursor-pointer"
-        onClick={handleIncrement}
-      >
+        onClick={handleIncrement}>
         +
       </div>
     </div>

@@ -20,11 +20,30 @@ function EventDtoForm({ handleNext }) {
 
   function handleChange(e) {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      eventDto: { ...prevData.eventDto, [name]: value },
-    }));
+
+    setFormData((prevData) => {
+      if (name === "locationType") {
+        return {
+          ...prevData,
+          eventDto: {
+            ...prevData.eventDto,
+            [name]: value,
+            location:
+              value === "Online" ? "Online" : "", 
+          },
+        };
+      }
+
+      return {
+        ...prevData,
+        eventDto: {
+          ...prevData.eventDto,
+          [name]: value,
+        },
+      };
+    });
   }
+
 
   const { data, error, loading, request } = useApiRequest({
     method: "get",
@@ -46,16 +65,20 @@ function EventDtoForm({ handleNext }) {
       errors.description = "Event description is required.";
     if (!formData.eventDto.categoryId)
       errors.categoryId = "Event category is required.";
-    if (!formData.eventDto.location) errors.currency = "Currency is required.";
-    if (!formData.eventDto.currency)
-      errors.location = "Event address is required.";
+    if (!formData.eventDto.currency) errors.currency = "Currency is required.";
     if (!formData.eventDto.startDate)
       errors.startDate = "Start date is required.";
     if (!formData.eventDto.endDate) errors.endDate = "End date is required.";
     if (!formData.eventDto.startTime)
       errors.startTime = "Start time is required.";
     if (!formData.eventDto.endTime) errors.endTime = "End time is required.";
-    
+
+    if (formData.eventDto.locationType === "Venue") {
+      if (!formData.eventDto.location)
+        errors.location = "Event address is required.";
+      if (!formData.eventDto.venue) errors.venue = "Venue name is required.";
+    }
+
     if (!base64Image) errors.base64Image = "Banner Image is required.";
 
     const isEndDateValid =
@@ -71,11 +94,13 @@ function EventDtoForm({ handleNext }) {
     return Object.keys(errors).length === 0;
   };
 
+
   const handleSubmit = () => {
     if (validateForm()) handleNext();
   };
 
   const categories = data?.data;
+  console.log(formData)
 
   return (
     <>
@@ -127,34 +152,57 @@ function EventDtoForm({ handleNext }) {
           color="warning"
           error={!!formError.categoryId}
           helperText={formError.categoryId || ""}>
-          {categories?.length > 0 && categories?.map(({ name, id }) => (
-            <MenuItem key={id} value={name}>
-              {name}
-            </MenuItem>
-          ))}
+          {categories?.length > 0 &&
+            categories?.map(({ name, id }) => (
+              <MenuItem key={id} value={name}>
+                {name}
+              </MenuItem>
+            ))}
+        </TextField>
+      </div>
+      <div className="p-4">
+        <h2 className="font-semibold pb-2">Location type</h2>
+        <TextField
+          fullWidth
+          id="demo-simple-select"
+          select
+          labelid="demo-simple-select-label"
+          label="Location type"
+          name="locationType"
+          value={formData.eventDto.locationType}
+          onChange={handleChange}
+          color="warning"
+          error={!!formError.locationType}
+          helperText={formError.locationType || ""}>
+          <MenuItem value="Online">Online</MenuItem>
+          <MenuItem value="Venue">Venue</MenuItem>
         </TextField>
       </div>
       {/* Event Address */}
+      {formData.eventDto.locationType === "Venue" && (
+        <div className="p-4">
+          <h2 className="font-semibold pb-2">Event Location</h2>
+          <TextField
+            fullWidth
+            label="Enter event address"
+            id="event-address"
+            name="location"
+            value={formData.eventDto.location}
+            onChange={handleChange}
+            color="warning"
+            error={!!formError.location}
+            helperText={formError.location || ""}
+          />
+        </div>
+      )}
       <div className="p-4">
-        <h2 className="font-semibold pb-2">Event Address</h2>
-        <TextField
-          fullWidth
-          label="Enter event address"
-          id="event-address"
-          name="location"
-          value={formData.eventDto.location}
-          onChange={handleChange}
-          color="warning"
-          error={!!formError.location}
-          helperText={formError.location || ""}
+        <PhotoUpload
+          onImageChange={handleImageChange}
+          maxSizeMB={5}
+          fileError={formError.base64Image || fileError}
+          setFileError={setFileError}
         />
       </div>
-      <PhotoUpload
-        onImageChange={handleImageChange}
-        maxSizeMB={5}
-        fileError={formError.base64Image || fileError}
-        setFileError={setFileError}
-      />
       <div className="p-4">
         <h2 className="font-semibold pb-4">Event Date & Time</h2>
         <div className="sm:max-w-[80%] max-w-none grid sm:grid-cols-2 gap-y-7 gap-x-10">
@@ -169,6 +217,9 @@ function EventDtoForm({ handleNext }) {
             color="warning"
             error={!!formError.startDate || !!formError.dateTime}
             helperText={formError.startDate || formError.dateTime || ""}
+            inputProps={{
+              min: new Date().toISOString().split("T")[0],
+            }}
           />
           <TextField
             label="Time starts"
@@ -193,6 +244,9 @@ function EventDtoForm({ handleNext }) {
             color="warning"
             error={!!formError.endDate || !!formError.dateTime}
             helperText={formError.endDate || formError.dateTime || ""}
+            inputProps={{
+              min: new Date().toISOString().split("T")[0], 
+            }}
           />
           <TextField
             label="Time ends"
