@@ -102,6 +102,13 @@ export class EventController {
     return response;
     }
 
+            
+    @Get('/getticketbyuser/:userId')
+    async getTicketByUser(@Param('userId') userId: string): Promise<any> {
+    const response = await this.eventService.getTicketByUserId(userId);
+    return response;
+    }
+
            
     @Get('/checkin/:ticket')
     async checkinTicket(@Body() dto: CheckinDto): Promise<any> {

@@ -603,6 +603,49 @@ export class EventService {
           }
       }
 
+              
+      async getTicketByUserId(userId: string) {
+    
+        try {
+          const distinctEventNames = await this.prisma.eventTransaction.findMany({
+            where: { userId },
+            select: {
+              eventName: true,
+            },
+            distinct: ['eventName'], // Get distinct event names
+          });
+
+          const groupedTickets = await Promise.all(
+            distinctEventNames.map(async (event) => {
+              const transaction = await this.prisma.eventTransaction.findMany({
+                where: {
+                  eventName: event.eventName,
+                  userId: userId // Fetch tickets for each eventName
+                },
+              });
+      
+              return {
+                eventName: event.eventName, // Grouped by eventName
+                transaction, // List of tickets for this eventName
+              };
+            }),
+          );
+
+            return {
+              statusCode: HttpStatus.OK,
+              data: groupedTickets,
+              message: 'Success',
+            };
+          } catch (err) {
+            console.log(err);
+            return {
+              statusCode: HttpStatus.NOT_FOUND,
+              data: null,
+              message: 'Unable to fetch ticket!',
+            };
+          }
+      }
+
        // Upload event image
     async uploadEventImage(dto: EventImageDto) {
 
