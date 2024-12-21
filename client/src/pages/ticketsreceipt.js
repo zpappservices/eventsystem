@@ -20,24 +20,38 @@ const ticketsreceipt = () => {
     useToken: true,
   });
 
+  const {
+    data: verifyData,
+    error: verifyError,
+    loading: verifyLoading,
+    request: verifyRequest,
+  } = useApiRequest({
+    method: "get",
+    url: `payment/verify-transaction/4501263899`,
+    data: null,
+    headers: null,
+    useToken: true,
+  });
+
   const getTransactions = async () => {
     await request();
+    await verifyRequest();
   };
 
   useEffect(() => {
     getTransactions();
-  }, [data]);
+  }, []);
 
   const { data: transaction = [] } = data || {};
 
   useEffect(() => {
-    if (!transaction ) {
+    if (!transaction) {
       toast.info("Invalid ticket receipt");
       router.push("/");
     }
   }, [transaction]);
-  
-  
+
+  /* console.log(verifyData, verifyError); */
 
   return (
     <PrivateRoute>
@@ -51,7 +65,7 @@ const ticketsreceipt = () => {
           </p>
         </div>
 
-        {success === true && (
+        {success === "true" && transaction?.length > 0 && (
           <div className="mx-auto w-full my-3 flex flex-col gap-2 items-center">
             <StyledImage src="/img/ticket-success.svg" />
 
@@ -109,21 +123,25 @@ const ticketsreceipt = () => {
           </div>
         )}
 
-        {success !== true && (
-          <div className="flex flex-col max-w-[380px] gap-5 mx-auto !my-16">
-            <StyledImage src="/img/ticket-fail.svg" className="w-full max-w-[150px] mx-auto"/>
+        {success === "false" ||
+          (transaction?.length < 1 && (
+            <div className="flex flex-col max-w-[380px] gap-5 mx-auto !my-16">
+              <StyledImage
+                src="/img/ticket-fail.svg"
+                className="w-full max-w-[150px] mx-auto"
+              />
 
-            <div>
-              <p className="text-[16px] leading-[21px] text-gray-700 text-center">
-                Oops! Something went wrong.
-              </p>
-              <p className="text-[16px] leading-[20px] text-gray-700 text-center">
-                Your ticket purchase could not be confirmed. Please try again
-                later.
-              </p>
+              <div>
+                <p className="text-[16px] leading-[21px] text-gray-700 text-center">
+                  Oops! Something went wrong.
+                </p>
+                <p className="text-[16px] leading-[20px] text-gray-700 text-center">
+                  Your ticket purchase could not be confirmed. Please try again
+                  later.
+                </p>
+              </div>
             </div>
-          </div>
-        )}
+          ))}
       </Layout>
     </PrivateRoute>
   );

@@ -34,8 +34,6 @@ const payment = () => {
   const { totalQuantity, totalCost, eventName, banner, currency } =
     parsedEvents || {};
 
-  console.log(parsedTickets, parsedEvents, parseInt(totalCost));
-
   const handleCheckboxToggle = () => {
     setIsChecked((prev) => !prev);
   };
@@ -136,28 +134,30 @@ const payment = () => {
   useEffect(() => {
     const { authorization_url = "" } = payData?.data?.data || {};
     if (payData?.statusCode >= 200 && payData?.statusCode < 300) {
-      toast.success(payData?.message || "Event Created successfully!");
+      toast.success(payData?.message || "Payment initiated successfully!");
 
       console.log(authorization_url, payData);
       if (authorization_url) {
         window.location.href = authorization_url;
       } 
     } else if (payData?.error || payData?.message) {
+      console.log(payData)
       toast.error(
         payData?.error ||
           payData?.message ||
-          "Couldn't Post Event! Try again later."
+          "Couldn't initiate payment! Please Try again later"
       );
     } else if (payData?.statusCode >= 400 && payData?.statusCode < 500) {
       toast.error(
         payData?.error ||
           payData?.message ||
-          "Couldn't Post Event! Try again later."
+          "Couldn't initiate payment! Please Try again later"
       );
     }
   }, [payData]);
 
   useEffect(() => {
+    console.log(payError)
     if (payError) {
       toast.error("Unexpected error. Please try again!");
     }
@@ -234,10 +234,10 @@ const payment = () => {
                   <BiSquare className="text-gray-400 text-[24px]" />
                 )}
                 <span>
-                  I accept the
+                  I accept the{" "}
                   <Link
                     href="/terms"
-                    className="text-black underline underline-offset-2"
+                    className="text-[#FF7F50] font-medium"
                     target="_blank"
                     rel="noopener noreferrer">
                     Terms and Conditions
@@ -245,7 +245,7 @@ const payment = () => {
                   and {"  "}
                   <Link
                     href="/useragreement"
-                    className="text-black underline underline-offset-2"
+                    className="text-[#FF7F50] font-medium"
                     target="_blank"
                     rel="noopener noreferrer">
                     User Agreement
