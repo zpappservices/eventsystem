@@ -62,14 +62,14 @@ const NavBar = () => {
           ariaLabel: "Dashboard",
           onClick: goToDashboard,
         });
-      } else {
+      } /* else {
         items.push({
           item: "Become a Vendor",
           id: 2.1,
           ariaLabel: "Become a Vendor",
           onClick: becomeVendor,
         });
-      }
+      } */
     } else {
       items.push({
         item: "Signin",
