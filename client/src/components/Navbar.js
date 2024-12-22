@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import SignUpSignInModal from "./SignUpSignInModal";
 import { useRouter } from "next/router";
 import useAuthToken from "@/hooks/useAuthToken";
@@ -7,6 +7,7 @@ import Link from "next/link";
 import LogOut from "./auth/LogOut";
 import { FiLogOut } from "react-icons/fi";
 import StyledImage from "./StyledImage";
+import { BiCaretDown } from "react-icons/bi";
 
 const NavBar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -14,9 +15,12 @@ const NavBar = () => {
   const [isVendor, setIsVendor] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [navItems, setNavItems] = useState([]);
+  const [user, setUser] = useState("");
+  const [dropdown, setDropdown] = useState(false);
 
   const { activeUser, token } = useAuthToken();
   const router = useRouter();
+  const dropdownRef = useRef(null);
 
   const handleLoginClick = () => {
     setIsLoginModal(true);
@@ -62,7 +66,7 @@ const NavBar = () => {
           ariaLabel: "Dashboard",
           onClick: goToDashboard,
         });
-      } /* else {
+      } /*  else {
         items.push({
           item: "Become a Vendor",
           id: 2.1,
@@ -93,8 +97,9 @@ const NavBar = () => {
 
   useEffect(() => {
     if (data) {
-      const { isVendor: isAVendor } = data?.data || {};
+      const { isVendor: isAVendor, username = "" } = data?.data || {};
       setIsVendor(isAVendor);
+      setUser(username);
     }
 
     if (loginStatus) {
@@ -103,18 +108,40 @@ const NavBar = () => {
     }
   }, [loginStatus, data]);
 
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdown(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [dropdown]);
+
+  const hasDashboard = navItems?.some(
+    (navItem) => navItem?.item === "Dashboard"
+  );
+
   return (
     <div className="fixed top-0 left-0 z-10 w-full bg-gray-900">
       <nav className="w-full max-w-[1300px] mx-auto flex py-7 px-5 text-white items-center font-medium text-sm">
         <ul className="w-full flex items-center justify-between gap-6 cursor-pointer text-white">
           <Link href="/" className="ms-[40px]">
-            <StyledImage src="/img/zafariplus-logo.png" className="w-full max-w-[10px] scale-[12]"/>
+            <StyledImage
+              src="/img/zafariplus-logo.png"
+              className="w-full max-w-[10px] scale-[12]"
+            />
           </Link>
           <div className="flex justify-end gap-5 !ms-auto">
-            {navItems.map((i) => (
+            {navItems?.map((i) => (
               <li
                 role="button"
-                className="ms-auto flex justify-center items-center transition-all duration-300 ease-in-out hover:scale-[1.1] hover:opacity-80"
+                className={`ms-auto flex justify-center items-center transition-all duration-300 ease-in-out hover:scale-[1.1] hover:opacity-80 ${
+                  i?.item === "Dashboard" ? "hidden sm:flex" : ""
+                }`}
                 key={i.id}
                 aria-label={i.ariaLabel}
                 onClick={i.onClick}>
@@ -122,6 +149,36 @@ const NavBar = () => {
               </li>
             ))}
           </div>
+          {isLoggedIn && user && (
+            <div
+              className="relative flex gap-2 items-center"
+              ref={dropdownRef}
+              onClick={() => setDropdown(!dropdown)}>
+              <p className="ms-auto flex justify-center items-center transition-all duration-300 ease-in-out hover:scale-[1.1] hover:opacity-80">
+                {user}
+              </p>
+              <BiCaretDown
+                color="white"
+                className={`duration-200 ${dropdown ? "rotate-180" : ""}`}
+              />
+              {dropdown && (
+                <div className="absolute top-7 rounded-[5px] bg-white shadow-xl min-w-full w-fit p-1 text-black space-y-1">
+                  <Link href="/users/tickets">
+                    <p className="px-2 py-2 hover:bg-slate-100 rounded-[5px]">
+                      My tickets
+                    </p>
+                  </Link>
+                  {hasDashboard && (
+                    <Link href="/dashboard" className="sm:hidden">
+                      <p className="px-2 py-2 hover:bg-slate-100 rounded-[5px]">
+                        Dashboard
+                      </p>
+                    </Link>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
           {isLoggedIn && (
             <LogOut>
               <FiLogOut color="white" size={20} />

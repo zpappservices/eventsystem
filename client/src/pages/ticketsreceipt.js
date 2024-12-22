@@ -51,8 +51,6 @@ const ticketsreceipt = () => {
     }
   }, [transaction]);
 
-  /* console.log(verifyData, verifyError); */
-
   return (
     <PrivateRoute>
       <Layout isHeader={false}>
@@ -98,7 +96,7 @@ const ticketsreceipt = () => {
                       key={id}>
                       <QRCode
                         title="title"
-                        value={batchId}
+                        value={ticketId}
                         bgColor="#FFFFFF"
                         fgColor="#000000"
                         level="L"

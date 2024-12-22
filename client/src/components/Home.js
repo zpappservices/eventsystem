@@ -57,28 +57,35 @@ const Home = () => {
 
   return (
     <div className="w-full flex flex-col gap-5">
-      <div className="w-full flex items-center justify-center sm:justify-between flex-wrap gap-5">
-        {data?.data.length > 0 ? (
-          data.data
-            .filter(({ active }) => active)
-            .map(({ name, description }, index) => (
-              <EventsCard
-                key={index}
-                title={name}
-                description={description}
-                image={categoryImages[name] ?? "/img/standup.svg"}
-              />
-            ))
-        ) : (
-          <div>No active categories available.</div>
-        )}
+      <TopEvents />
+
+      <div className="space-y-10">
+        <div className="bg-black px-2 py-3">
+          <p className="text-[20px] leading-normal text-[#FF7F50] font-bold">
+            Categories
+          </p>
+        </div>
+        <div className="w-full flex items-center justify-center sm:justify-between flex-wrap gap-5">
+          {data?.data.length > 0 ? (
+            data.data
+              .filter(({ active }) => active)
+              .map(({ name, description }, index) => (
+                <EventsCard
+                  key={index}
+                  title={name}
+                  description={description}
+                  image={categoryImages[name] ?? "/img/standup.svg"}
+                />
+              ))
+          ) : (
+            <div>No active categories available.</div>
+          )}
+        </div>
       </div>
 
       <div className="w-full max-w-[390] text-[24px] font-bold">
         Here we know how to make you enjoy in style
       </div>
-
-      <TopEvents />
     </div>
   );
 };

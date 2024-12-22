@@ -136,12 +136,10 @@ const payment = () => {
     if (payData?.statusCode >= 200 && payData?.statusCode < 300) {
       toast.success(payData?.message || "Payment initiated successfully!");
 
-      console.log(authorization_url, payData);
       if (authorization_url) {
         window.location.href = authorization_url;
       } 
     } else if (payData?.error || payData?.message) {
-      console.log(payData)
       toast.error(
         payData?.error ||
           payData?.message ||
@@ -157,7 +155,6 @@ const payment = () => {
   }, [payData]);
 
   useEffect(() => {
-    console.log(payError)
     if (payError) {
       toast.error("Unexpected error. Please try again!");
     }
