@@ -57,6 +57,10 @@ const GoogleSignin = ({ closeModal }) => {
             toast.success("Google signin successful!");
             storeUserToken(id, token, true);
           }
+        } else if (router.pathname === "/auth/vendor/signup") {
+          toast.success("Google signin successful!");
+          storeUserToken(id, token, true);
+          router.push("/auth/onboarding");
         } else {
           closeModal && closeModal();
           toast.success("Google signin successful!");

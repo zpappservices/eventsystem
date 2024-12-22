@@ -14,7 +14,7 @@ const onboarding = () => {
   const router = useRouter();
 
   const goBack = () => {
-    router.back();
+    router.push("/auth/vendor/signup");
   };
 
   return (

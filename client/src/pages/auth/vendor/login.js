@@ -156,6 +156,12 @@ const Login = ({ closeModal }) => {
             Continue
           </ButtonLoading>
         </form>
+        <p className="!text-gray-600 self-end text-[14px] text-center">
+          Don't have a vendor account?{" "}
+          <Link href="/auth/vendor/signup" className="text-[#FF7F50]">
+            Sign up
+          </Link>
+        </p>
       </div>
     </div>
   );
