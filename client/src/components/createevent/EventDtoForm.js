@@ -75,8 +75,7 @@ function EventDtoForm({ handleNext }) {
 
     if (formData.eventDto.locationType === "Venue") {
       if (!formData.eventDto.location)
-        errors.location = "Event address is required.";
-      if (!formData.eventDto.venue) errors.venue = "Venue name is required.";
+        errors.location = "Event location is required.";
     }
 
     if (!base64Image) errors.base64Image = "Banner Image is required.";
@@ -100,7 +99,6 @@ function EventDtoForm({ handleNext }) {
   };
 
   const categories = data?.data;
-  console.log(formData)
 
   return (
     <>
@@ -262,6 +260,7 @@ function EventDtoForm({ handleNext }) {
             helperText={formError.endTime || formError.dateTime || ""}
           />
           <TextField
+            disabled={true}
             fullWidth
             id="demo-simple-select"
             select

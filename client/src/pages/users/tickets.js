@@ -74,7 +74,7 @@ const tickets = () => {
         )}
         {loading && (
           <div className="h-[60vh] flex justify-center items-center">
-            <Loader />
+            <Loader className="animate-spin" />
           </div>
         )}
       </Layout>

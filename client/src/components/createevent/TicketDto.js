@@ -161,7 +161,7 @@ const TicketDto = ({ handleBack, handleReset }) => {
   useEffect(() => {
     if (uploadData?.statusCode >= 200 && uploadData?.statusCode < 300) {
       toast.success(uploadData?.message || "Event banner uploaded successfully!");
-      /* handleReset(setFormData); */
+      handleReset(setFormData);
     } else if (uploadData?.error || uploadData?.message) {
       toast.error(
         uploadData?.error || uploadData?.message || "Couldn't Post Event! Try again later."
@@ -205,7 +205,6 @@ const TicketDto = ({ handleBack, handleReset }) => {
                   color="warning">
                   <MenuItem value="Free">Free</MenuItem>
                   <MenuItem value="Paid">Paid</MenuItem>
-                  <MenuItem value="Donation">Donation</MenuItem>
                 </TextField>
               </FormControl>
 

@@ -2,6 +2,7 @@ import PrivateRoute from "@/components/dashboard/PrivateRoute";
 import Layout from "@/components/Layout";
 import StyledImage from "@/components/StyledImage";
 import useApiRequest from "@/hooks/useApiRequest";
+import { Loader } from "lucide-react";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import QRCode from "react-qr-code";
@@ -27,7 +28,7 @@ const ticketsreceipt = () => {
     request: verifyRequest,
   } = useApiRequest({
     method: "get",
-    url: `payment/verify-transaction/4501263899`,
+    url: `payment/verify-transaction/${reference}`,
     data: null,
     headers: null,
     useToken: true,
@@ -35,12 +36,14 @@ const ticketsreceipt = () => {
 
   const getTransactions = async () => {
     await request();
-    await verifyRequest();
   };
 
   useEffect(() => {
-    getTransactions();
-  }, []);
+    if (reference) {
+      getTransactions();
+      verifyRequest();
+    }
+  }, [reference]);
 
   const { data: transaction = [] } = data || {};
 
@@ -50,6 +53,16 @@ const ticketsreceipt = () => {
       router.push("/");
     }
   }, [transaction]);
+
+  if (loading || verifyLoading) {
+    return (
+      <PrivateRoute>
+        <Layout isHeader={false}>
+          <div className="w-full min-h-[60vh] flex justify-center items-center"><Loader className="animate-spin"/></div>
+        </Layout>
+      </PrivateRoute>
+    );
+  }
 
   return (
     <PrivateRoute>
@@ -121,23 +134,29 @@ const ticketsreceipt = () => {
           </div>
         )}
 
-        {success === "false" ||
+        {success === "false" && (
+          <div className="flex flex-col max-w-[380px] gap-5 mx-auto !my-16">
+            <StyledImage
+              src="/img/ticket-fail.svg"
+              className="w-full max-w-[150px] mx-auto"
+            />
+
+            <div>
+              <p className="text-[16px] leading-[21px] text-gray-700 text-center">
+                Oops! Something went wrong.
+              </p>
+              <p className="text-[16px] leading-[20px] text-gray-700 text-center">
+                Your ticket purchase could not be confirmed. Please try again
+                later.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {success === "true" ||
           (transaction?.length < 1 && (
             <div className="flex flex-col max-w-[380px] gap-5 mx-auto !my-16">
-              <StyledImage
-                src="/img/ticket-fail.svg"
-                className="w-full max-w-[150px] mx-auto"
-              />
-
-              <div>
-                <p className="text-[16px] leading-[21px] text-gray-700 text-center">
-                  Oops! Something went wrong.
-                </p>
-                <p className="text-[16px] leading-[20px] text-gray-700 text-center">
-                  Your ticket purchase could not be confirmed. Please try again
-                  later.
-                </p>
-              </div>
+              No tickets were found
             </div>
           ))}
       </Layout>
