@@ -13,6 +13,8 @@ import { toast } from "react-toastify";
 const GoogleSignin = ({ closeModal }) => {
   const router = useRouter();
 
+  const { storeUserToken } = useAuthToken();
+
   const handleGoogleLogin = async () => {
     try {
       const provider = new GoogleAuthProvider();
@@ -44,13 +46,23 @@ const GoogleSignin = ({ closeModal }) => {
       );
 
       if (user?.statusCode >= 200 && user?.statusCode < 300) {
-        const { id } = user?.data?.existingUser;
-        storeToken(id, token, true);
+        const id = user?.data?.existingUser?.id;
+        const role = user?.data?.existingUser?.role;
 
-        toast.success("Google signin successful!");
-
-        router.reload();
-        closeModal();
+        if (router.pathname === "/auth/vendor/login") {
+          if (role === "USER") {
+            toast.error("Account is not a vendor account!");
+            return;
+          } else {
+            toast.success("Google signin successful!");
+            storeUserToken(id, token, true);
+          }
+        } else {
+          closeModal && closeModal();
+          toast.success("Google signin successful!");
+          storeUserToken(id, token, true);
+          router.reload();
+        }
       } else {
         toast.error(
           user?.code ||
@@ -63,10 +75,8 @@ const GoogleSignin = ({ closeModal }) => {
         const err = handleFirebaseError(error);
         toast.error(error.message);
       } else if (error.response) {
-        console.error(error);
       } else {
         toast.error("An unexpected error occurred! Please try again");
-        console.error("General error: ", error);
       }
     }
   };

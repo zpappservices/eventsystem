@@ -82,7 +82,7 @@ const SideBar = ({ isOpen, toggleMenu, showModal }) => {
       <div
         className={`${
           isOpen ? "translate-x-0" : "translate-x-[-100%] md:translate-x-0"
-        } w-[260px] md:w-[350px] h-screen bg-[#f5f3f3] text-[14px] transition-all duration-300 fixed md:static z-30 pt-[82px] md:pt-0 top-0 left-0 md:left-auto overflow-y-auto md:overflow-y-hidden`}>
+        } w-[260px] md:w-[350px] h-screen bg-[#f5f3f3] text-[14px] transition-all duration-300 fixed md:static z-30 pt-[95px] md:pt-0 top-0 left-0 md:left-auto overflow-y-auto md:overflow-y-hidden`}>
         <div className="flex flex-col h-[93%] gap-y-[180px]">
           <ul className="text-[#A5D4B8] flex flex-col text-[16px]">
             <Link

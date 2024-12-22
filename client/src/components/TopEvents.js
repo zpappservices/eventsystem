@@ -58,13 +58,13 @@ const TopEvents = ({ next, isTopEvent = true, loaderClass }) => {
               </div>
 
               <div className="py-2 px-3 pb-3">
-                <p className="text-lg text-black font-semibold">
+                <p className="text-lg text-black font-semibold overflow-hidden text-ellipsis whitespace-nowrap">
                   {item?.title}
                 </p>
                 <p className="font-inter text-xs font-medium bg-[#FF7F50] w-fit rounded-[8px] px-1.5 text-white">
                   {item?.category}
                 </p>
-                <p className="text-xs mt-1 font-medium text-black text-ellipsis">
+                <p className="text-xs mt-1 font-medium text-black overflow-hidden text-ellipsis whitespace-nowrap">
                   <span className="mr-0.5">🗓️</span>
                   {formatDate(item?.StartDate)}
                 </p>

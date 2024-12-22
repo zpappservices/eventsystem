@@ -8,9 +8,7 @@ export const useModal = () => {
   };
 
   const closeModal = () => {
-    console.log("Closing modal");
     setIsOpen(false);
-    console.log(isOpen);
   };
 
   return {

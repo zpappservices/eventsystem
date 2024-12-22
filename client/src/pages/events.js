@@ -29,7 +29,6 @@ const Events = () => {
         setCategories(data?.data);
       }
     } catch (error) {
-      console.error(error);
     } finally {
       stopLoading();
     }

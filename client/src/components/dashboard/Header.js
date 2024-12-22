@@ -25,7 +25,7 @@ const Header = ({ toggleMenu, route = "Dashboard", isOpen }) => {
            <Link href="/" className="ms-[40px]">
              <StyledImage
                src="/img/zafariplus-logo-black.png"
-               className="w-full max-w-[10px] scale-[12] mx-auto hover:scale-[13.2] duration-300"
+               className="w-full max-w-[10px] scale-[11] sm:scale-[12] mx-auto hover:scale-[13.2] duration-300"
              />
            </Link>
 

@@ -20,7 +20,7 @@ const Profile = () => {
 
   const { username } = data?.data || {};
   return (
-    <div className="text-[20px] leading-[20px] ms-auto">
+    <div className="text-[15px] sm:text-[20px] leading-[20px] ms-auto">
       {" "}
       Welcome <span className="capitalize font-bold">{username}</span>
     </div>
