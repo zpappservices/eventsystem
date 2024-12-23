@@ -210,6 +210,10 @@ export class PaymentService {
             };
           }
 
+          const url = `${this.configService.get('PAYSTACK_PAYMENT_REQUEST')}`
+          //const charge = `${this.configService.get('PAYSTACK_CHARGE')}`
+          //data.percentage_charge = charge
+
           // Verify user
           const user = await this.prisma.user.findUnique({ where: { id: data.userId } });
 
@@ -234,6 +238,90 @@ export class PaymentService {
 
           // Get event charge
           const chargeSetup = await this.prisma.chargeSetup.findFirst({ where: { id: data.eventId } });
+
+
+          const callBackUrl = `${this.configService.get('PAYSTACK_CALL_BACK')}`
+          const batchId = uuidv4();
+          const amount = parseFloat(data.totalAmount) * 100;
+          let charge;
+
+          if(chargeSetup){ charge = await this.GetEventComission(amount, chargeSetup)}
+
+
+          const req = { amount: amount, email: data.email,
+             currency: event.currency, reference: batchId, callback_url: callBackUrl, transaction_charge: charge };
+
+          const res = await this.makeRequest(`${url}`, 'post', req);
+
+          if(!res.status){
+            return {
+              statusCode: HttpStatus.BAD_REQUEST,
+              data: null,
+              message: `Unable to create account`,
+            };
+          } 
+                    
+          const  transactionList = await this.buildTransactions(data, event, batchId)
+          
+          const logTransaction = await this.prisma.eventTransaction.createMany({
+            data: transactionList.map( t => ({
+              batchId: t.batchId,
+              eventId: t.eventId,
+              eventName: t.eventName,
+              ticketId: t.ticketId,
+              ticket: t.ticketName,
+              userId: t.userId,
+              price: t.price,
+              createdBy: "System",
+              createdOn: new Date()
+            })),
+            skipDuplicates: true, // Skip 'Bobo'
+          })
+
+        return {
+          statusCode: HttpStatus.CREATED,
+          data: res,
+          message: 'Payment request initialize.',
+        };
+        }catch(err){
+          console.log(err);
+        return {
+          statusCode: HttpStatus.EXPECTATION_FAILED,
+          data: null,
+          message: 'Operation fail.',
+          };
+        }
+        
+      }
+
+      async saveSpot(data: OrderDto) {
+
+        try{
+
+          // Verify user
+          const user = await this.prisma.user.findUnique({ where: { id: data.userId } });
+
+          if(!user){
+            return {
+              statusCode: HttpStatus.BAD_REQUEST,
+              data: null,
+              message: `User with id ${data.userId} is in-valid.`,
+            };
+          }
+
+          // Verify event
+          const event = await this.prisma.event.findUnique({ where: { id: data.eventId } });
+
+          if(!event){
+            return {
+              statusCode: HttpStatus.BAD_REQUEST,
+              data: null,
+              message: `Event with id ${data.eventId} is in-valid.`,
+            };
+          }
+
+          // Get event charge
+          //const chargeSetup = await this.prisma.chargeSetup.findFirst({ where: { id: data.eventId } });
 
           const batchId = uuidv4();
         
@@ -264,7 +352,7 @@ export class PaymentService {
 
         return {
           statusCode: HttpStatus.CREATED,
-          data: logTransaction,
+          data: batchId,
           message: 'Spot Reserved.',
         };
         }catch(err){
