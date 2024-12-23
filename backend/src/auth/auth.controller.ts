@@ -45,7 +45,7 @@ export class AuthController {
     return user;
   }
 
-  @UseGuards(FirebaseAuthGuard)
+  //@UseGuards(FirebaseAuthGuard)
   @Post('/login')
   async signin(@Body() loginDto: SigninDto): Promise<void> {
     const user = await this.authService.signin(loginDto);
