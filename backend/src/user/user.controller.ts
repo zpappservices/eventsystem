@@ -32,7 +32,7 @@ export class UserController {
   @Post('/update-vendor/:id')
   async updateVendor(@Body() dto: VendorDto, @Param() id: string): Promise<any> {
     return await this.userService.updateVendor(dto, id);
-  }
+  } 
   @Get('/getonevendor/:id')
   async getOneVendor(@Param('id') id: any): Promise<any> {
     return this.userService.getOneVendor(id);
