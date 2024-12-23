@@ -44,5 +44,9 @@ export class UserController {
   async getAllVendor(): Promise<any> {
     return this.userService.getAllVendors();
   }
+  @Get('/verify-vendor/:userid')
+  async verifyVendor(@Param() userid: string): Promise<any> {
+    return this.userService.verifyVendor(userid);
+  }
  
 }

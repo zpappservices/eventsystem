@@ -30,5 +30,12 @@ export class IsLoginDto {
   @ApiProperty()
   userId: string;
 
+}
 
+
+export class AccountClosure {
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty()
+  userId: string;
 }

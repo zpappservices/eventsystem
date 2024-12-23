@@ -86,7 +86,7 @@ export class UserService {
               website: data.website,
               photo: data.photo,
               createdOn: new Date(),
-              active: true,
+              active: false,
               userId: data.userId
             },
           });
@@ -220,6 +220,44 @@ export class UserService {
         statusCode: HttpStatus.OK,
         data: user,
         message: 'Success',
+      };
+    } catch (err) {
+      console.log(err);
+      return {
+        statusCode: HttpStatus.NOT_FOUND,
+        data: null,
+        message: `Fail`,
+      };
+    }
+  }
+
+  
+  async verifyVendor(userId: any): Promise<any> {
+    try {
+
+      const user = await this.prisma.vendor.findFirst({ where: { userId: userId } });
+
+      const account = await this.prisma.vendorAccount.findFirst({ where: { userId: userId } });
+
+      if(!user || !account){
+        return {
+          statusCode: HttpStatus.OK,
+          data: null,
+          message: 'Onboarding or account information not completed',
+        };
+      }
+
+      const update = await this.prisma.vendor.update({ 
+        where: { id: user.id },
+        data: {
+          active: true
+        }
+
+      });
+      return {
+        statusCode: HttpStatus.OK,
+        data: user,
+        message: 'Vendor Verified',
       };
     } catch (err) {
       console.log(err);

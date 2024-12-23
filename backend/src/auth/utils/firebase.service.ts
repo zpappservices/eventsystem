@@ -94,4 +94,14 @@ export class FirebaseService {
       return null
     }
   }
+
+  async deleteUser(uid: string) {
+    try {
+      await this.getFirebaseApp().auth().deleteUser(uid);
+      return true;
+    } catch (error) {
+      console.log(`Error signing out user: ${error.message}`);
+      return false;
+    }
+  }
 }
