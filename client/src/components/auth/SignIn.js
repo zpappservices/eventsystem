@@ -60,6 +60,7 @@ const SignIn = ({ closeModal }) => {
         );
 
         const data = response;
+        console.log(data)
         if (data?.statusCode >= 200 && data?.statusCode < 300) {
           toast.success("Signin Successful!");
           const id = data?.data?.existingUser?.id;

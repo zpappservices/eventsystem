@@ -54,7 +54,7 @@ function CreateEventProvider({ children }) {
         startTime: "",
         endTime: "",
         createdBy: "System",
-        currency: "NGN",
+        currency: "",
       },
       contactDto: {
         email: "",

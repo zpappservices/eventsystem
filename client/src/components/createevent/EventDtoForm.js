@@ -260,7 +260,6 @@ function EventDtoForm({ handleNext }) {
             helperText={formError.endTime || formError.dateTime || ""}
           />
           <TextField
-            disabled={true}
             fullWidth
             id="demo-simple-select"
             select
@@ -273,9 +272,9 @@ function EventDtoForm({ handleNext }) {
             error={!!formError.currency}
             helperText={formError.currency || ""}>
             <MenuItem value="NGN">Naira</MenuItem>
-            <MenuItem value="USD">US Dollars</MenuItem>
+            {/* <MenuItem value="USD">US Dollars</MenuItem>
             <MenuItem value="GHS">Cedis</MenuItem>
-            <MenuItem value="ZAR">Rand</MenuItem>
+            <MenuItem value="ZAR">Rand</MenuItem> */}
           </TextField>
         </div>
       </div>
