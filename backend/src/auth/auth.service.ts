@@ -123,7 +123,7 @@ export class AuthService {
             message: `Vendor has not been onboarded!`,
           };
         }
-        if(!vendor.active){
+        if(!vendor.data.active){
           return {
             statusCode: HttpStatus.BAD_REQUEST,
             data: null,
