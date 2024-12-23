@@ -61,7 +61,7 @@ const Login = ({ closeModal }) => {
 
         const data = response;
         if (data?.statusCode >= 200 && data?.statusCode < 300) {
-          if (data?.data?.existingUser?.role === "USER") {
+          if (!data?.data?.existingUser?.isVendor) {
             toast.error("Account is not a vendor account");
             return;
           }

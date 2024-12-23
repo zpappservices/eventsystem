@@ -148,10 +148,10 @@ const NavBar = () => {
                 {i.item}
               </li>
             ))}
-            {!hasDashboard && (
+            {!isLoggedIn && (
               <li
                 role="button"
-                className="ms-auto hidden sm:flex justify-center items-center transition-all duration-300 ease-in-out hover:scale-[1.1] hover:opacity-80"
+                className="ms-auto flex justify-center items-center transition-all duration-300 ease-in-out hover:scale-[1.1] hover:opacity-80"
                 onClick={() => router.push("/auth/vendor/signup")}>
                 Register Vendor
               </li>
@@ -176,13 +176,14 @@ const NavBar = () => {
                       My tickets
                     </p>
                   </Link>
-                  {hasDashboard ? (
+                  {hasDashboard && (
                     <Link href="/dashboard" className="sm:hidden">
                       <p className="px-2 py-2 hover:bg-slate-100 rounded-[5px]">
                         Dashboard
                       </p>
                     </Link>
-                  ) : (
+                  )}
+                  {!isLoggedIn && (
                     <Link href="/auth/vendor/signup" className="sm:hidden">
                       <p className="px-2 py-2 hover:bg-slate-100 rounded-[5px]">
                         Register Vendor
