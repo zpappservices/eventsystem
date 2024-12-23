@@ -116,11 +116,11 @@ export class AuthService {
       if (existingUser.isVendor) {
         const vendor = await this.userService.getVendorByUserId(existingUser.userId);
 
-        if(!vendor || !vendor.active){
+        if(!vendor){
           return {
             statusCode: HttpStatus.BAD_REQUEST,
             data: null,
-            message: `Vendor ha not been onboarded!`,
+            message: `Vendor has not been onboarded!`,
           };
         }
         if(!vendor.active){
