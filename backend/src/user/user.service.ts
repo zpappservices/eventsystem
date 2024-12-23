@@ -2,6 +2,7 @@ import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '@/integrations/prisma/prisma.service';
 import { VendorEventDto } from '@/event/dtos/event.dto';
 import { VendorDto } from './dtos/user.dto';
+import { RoleType } from '@prisma/client';
 
 @Injectable()
 export class UserService {
@@ -94,7 +95,8 @@ export class UserService {
           const user = await this.prisma.user.update({
             where: { id: data.userId },
             data: {
-              isVendor: true
+              isVendor: true,
+              role: RoleType.VENDOR
             }
           });
      
