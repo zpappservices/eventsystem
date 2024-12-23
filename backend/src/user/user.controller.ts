@@ -19,6 +19,11 @@ export class UserController {
     const user = await this.userService.getOneUser(id);
     return user;
   }
+  @Get('/get-user-by-email')
+  async getUserByEmail(@Query('email') email: string): Promise<any> {
+    const user = await this.userService.getUserByEmail(email);
+    return user;
+  }
 
   @Post('/create-vendor')
   async createVendor(@Body() dto: VendorDto): Promise<any> {
@@ -27,7 +32,7 @@ export class UserController {
   @Post('/update-vendor/:id')
   async updateVendor(@Body() dto: VendorDto, @Param() id: string): Promise<any> {
     return await this.userService.updateVendor(dto, id);
-  }
+  } 
   @Get('/getonevendor/:id')
   async getOneVendor(@Param('id') id: any): Promise<any> {
     return this.userService.getOneVendor(id);
@@ -44,9 +49,9 @@ export class UserController {
   async getAllVendor(): Promise<any> {
     return this.userService.getAllVendors();
   }
-  @Get('/verify-vendor/:userid')
-  async verifyVendor(@Param() userid: string): Promise<any> {
-    return this.userService.verifyVendor(userid);
+  @Get('/verify-vendor/:userId')
+  async verifyVendor(@Param('userId') userId: string): Promise<any> {
+    return this.userService.verifyVendor(userId);
   }
  
 }
