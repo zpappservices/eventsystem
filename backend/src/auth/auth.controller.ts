@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { SignupDto, SingleSignonDto } from './dtos/signup.dto';
 import { AuthService } from './auth.service';
-import { IsLoginDto, SigninDto } from './dtos/signin.dto';
+import { AccountClosure, IsLoginDto, SigninDto } from './dtos/signin.dto';
 import { Request, Response } from 'express';
 import { FirebaseAuthGuard } from './guards/firebase.guard';
 import { ActivateAccountDto } from './dtos/email.dto';
@@ -81,5 +81,12 @@ export class AuthController {
   @Post('/forgotpassword')
   async forgotpassword(@Body('email') email: string) {
     return this.authService.forgotPassword(email);
+  }
+
+  @Post('/close-user-account')
+  @ApiOperation({ summary: 'Close User Account a new user' })
+
+  async closeUserAccount(@Body() dto: AccountClosure) {
+    return this.authService.closeUserAccount(dto.userId);
   }
 }

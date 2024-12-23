@@ -113,6 +113,26 @@ export class AuthService {
         };
       }
 
+      if (existingUser.isVendor) {
+        const vendor = await this.userService.getVendorByUserId(existingUser.userId);
+
+        if(!vendor || !vendor.active){
+          return {
+            statusCode: HttpStatus.BAD_REQUEST,
+            data: null,
+            message: `Vendor ha not been onboarded!`,
+          };
+        }
+        if(!vendor.active){
+          return {
+            statusCode: HttpStatus.BAD_REQUEST,
+            data: null,
+            message: `Vendor Account Pending Verification!`,
+          };
+        }
+        
+      }
+
       await this.prisma.user.update({
         where: { id: existingUser.id },
         data: {
@@ -477,6 +497,61 @@ export class AuthService {
         statusCode: HttpStatus.OK,
         data: true,
         message: 'Success',
+      };
+    } catch (err) {
+      console.log(err);
+      return {
+        statusCode: HttpStatus.BAD_REQUEST,
+        data: false,
+        message: `Operation fail!`,
+      };
+    }
+  }
+
+        
+  async closeUserAccount(userId: string): Promise<any> {
+    try {
+
+      const existingUser = await this.prisma.user.findUnique({ where: { id: userId } });
+
+      if (!existingUser) {
+        return {
+          statusCode: HttpStatus.NOT_FOUND,
+          data: false,
+          message: `User not found.`,
+        };
+      }
+
+      const deleteFirebaseUser = await this.firebaseService.deleteUser(existingUser.accountId);
+
+      if(!deleteFirebaseUser) {
+        return {
+          statusCode: HttpStatus.BAD_REQUEST,
+          data: false,
+          message: `Unable to delete User`,
+        };
+      }
+      console.log(`User with id ${userId} deleted from firebase`);
+
+      const vendor = await this.prisma.vendor.findFirst({ where: { userId: userId } });
+
+      if(vendor){
+        await this.prisma.vendor.delete({ where: { id: vendor.id } });
+        await this.prisma.vendorAccount.delete({ where: { userId: vendor.userId } });
+      }
+
+      await this.prisma.user.delete({ where: { id: userId } });
+
+      try {
+        await this.emailService.accountClosure({ user: existingUser});
+      } catch (e) {
+        console.log(e.message);
+      }
+
+      return {
+        statusCode: HttpStatus.OK,
+        data: true,
+        message: 'User Deleted',
       };
     } catch (err) {
       console.log(err);

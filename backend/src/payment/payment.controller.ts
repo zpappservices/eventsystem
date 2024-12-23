@@ -30,6 +30,10 @@ export class PaymentController {
   async placeOrder(@Body() dto: OrderDto): Promise<any> {
     return this.paymentService.placeOrder(dto);
   }
+  @Post('/reserve-spot')
+  async rserveSpot(@Body() dto: OrderDto): Promise<any> {
+    return this.paymentService.placeOrder(dto);
+  }
   @Post('/create-subaccount')
   async createSubaccount(@Body() dto: SubaccountDto): Promise<any> {
     return this.paymentService.createSubaccount(dto);

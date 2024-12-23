@@ -41,6 +41,7 @@ export class EmailerService {
     await this.sendMail(payload, 'Password Reset', 'passwordreset');
   }
 
+
   async sendTicketQRCode(data: any) {
     const payload = {
       email: data.transaction.user.email,
@@ -57,5 +58,15 @@ export class EmailerService {
       email_cc: data.transaction.user.email != data.email ? data.email : ""
     };
     const x = await this.sendMail(payload, 'Ticket Details', 'ticket');
+  }
+
+  
+  async accountClosure(data: any) {
+    const payload = {
+      email: data.user.email,
+      firstName: data.user.username,
+      closureDate: format(new Date(), 'yyyy-MM-dd'),
+    };
+    await this.sendMail(payload, 'Confirmation of Your Account Closure', 'accountclosure');
   }
 }

@@ -201,9 +201,14 @@ export class PaymentService {
       async placeOrder(data: OrderDto) {
 
         try{
-          const url = `${this.configService.get('PAYSTACK_PAYMENT_REQUEST')}`
-          //const charge = `${this.configService.get('PAYSTACK_CHARGE')}`
-          //data.percentage_charge = charge
+
+          if(data.totalAmount == '0' ){
+            return {
+              statusCode: HttpStatus.BAD_REQUEST,
+              data: null,
+              message: `Invalid amount.`,
+            };
+          }
 
           // Verify user
           const user = await this.prisma.user.findUnique({ where: { id: data.userId } });
@@ -230,28 +235,8 @@ export class PaymentService {
           // Get event charge
           const chargeSetup = await this.prisma.chargeSetup.findFirst({ where: { id: data.eventId } });
 
-
-          const callBackUrl = `${this.configService.get('PAYSTACK_CALL_BACK')}`
           const batchId = uuidv4();
-          const amount = parseFloat(data.totalAmount) * 100;
-          let charge;
-
-          if(chargeSetup){ charge = await this.GetEventComission(amount, chargeSetup)}
-
-
-          const req = { amount: amount, email: data.email,
-             currency: event.currency, reference: batchId, callback_url: callBackUrl, transaction_charge: charge };
-
-          const res = await this.makeRequest(`${url}`, 'post', req);
-
-          if(!res.status){
-            return {
-              statusCode: HttpStatus.BAD_REQUEST,
-              data: null,
-              message: `Unable to create account`,
-            };
-          } 
-                    
+        
           const  transactionList = await this.buildTransactions(data, event, batchId)
           
           const logTransaction = await this.prisma.eventTransaction.createMany({
@@ -263,16 +248,24 @@ export class PaymentService {
               ticket: t.ticketName,
               userId: t.userId,
               price: t.price,
+              status: PaymentStatusEnum.PAID,
               createdBy: "System",
               createdOn: new Date()
             })),
             skipDuplicates: true, // Skip 'Bobo'
-          })
+          });
+
+          const pending = await this.prisma.eventTransaction.findMany({
+            where: { batchId: batchId},
+            include: { event: true, user: true}
+          });
+
+          const qrcodes = await this.generateQRCodes(pending, data.email);
 
         return {
           statusCode: HttpStatus.CREATED,
-          data: res,
-          message: 'Payment request initialize.',
+          data: logTransaction,
+          message: 'Spot Reserved.',
         };
         }catch(err){
           console.log(err);
