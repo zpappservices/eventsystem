@@ -351,7 +351,7 @@ export class PaymentService {
           const qrcodes = await this.generateQRCodes(pending, data.email);
 
         return {
-          statusCode: HttpStatus.CREATED,
+          statusCode: HttpStatus.OK,
           data: batchId,
           message: 'Spot Reserved.',
         };
