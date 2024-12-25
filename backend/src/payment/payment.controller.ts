@@ -31,7 +31,7 @@ export class PaymentController {
     return this.paymentService.placeOrder(dto);
   }
   @Post('/reserve-spot')
-  async reserveSpot(@Body() dto: OrderDto, @Res() res: Response): Promise<any> {
+  async reserveSpot(@Body() dto: OrderDto): Promise<any> {
     let returnUrl = this.configService.get('RECEIPT_URL')
 
     const result = await this.paymentService.saveSpot(dto);
@@ -42,8 +42,13 @@ export class PaymentController {
     else{
       returnUrl = `${returnUrl}?reference=xxx&success=false`
     }
-    res.redirect(returnUrl);
-    
+
+    return {
+      statusCode: result.statusCode,
+      data: result.data,
+      url: returnUrl,
+      message: 'Operation fail.',
+      }; 
   }
   @Post('/create-subaccount')
   async createSubaccount(@Body() dto: SubaccountDto): Promise<any> {
