@@ -7,6 +7,8 @@ import StyledImage from "@/components/StyledImage";
 import { ButtonLoading } from "@/components/widgets/ButtonLoading";
 import useApiRequest from "@/hooks/useApiRequest";
 import useAuthToken from "@/hooks/useAuthToken";
+import useLoading from "@/hooks/useLoading";
+import { apiRequest } from "@/utils/apiService";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -42,6 +44,8 @@ const payment = () => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(email);
   };
+
+  const { isLoading, startLoading, stopLoading } = useLoading();
 
   const validateForm = () => {
     const newErrors = {};
@@ -111,9 +115,49 @@ const payment = () => {
     await payRequest();
   };
 
+  const reserveSpot = async () => {
+    const payload = {
+      ...form,
+      eventId: id,
+      channel: "free",
+      userId: activeUser,
+      totalAmount: totalCost,
+      email_CC: form.email,
+      tickets: parsedTickets,
+    };
+    startLoading();
+    try {
+      const response = await apiRequest(
+        "post",
+        "payment/reserve-spot",
+        payload,
+        true
+      );
+      const data = response;
+      if (data?.statusCode >= 200 && data?.statusCode < 300) {
+        toast.success("Tickets generated successfully!");
+        router.push(data?.url)
+      } else if (data?.error || data?.message) {
+        toast.error(data?.error || data?.message || "Operation failed!");
+      } else if (data?.statusCode >= 400 && data?.statusCode < 500) {
+        toast.error(data?.error || data?.message || "Operation failed!");
+      }
+    } catch (error) {
+      const msg =
+        error?.response?.data?.message[0] || error?.response?.data?.message;
+      toast.error(msg || "There was an error processing your request");
+    } finally {
+      stopLoading();
+    }
+  };
+
   const handlePay = () => {
     if (validateForm()) {
-      placeOrder();
+      if (totalCost > 0) {
+        placeOrder();
+      } else {
+        reserveSpot();
+      }
     }
   };
 
@@ -138,7 +182,7 @@ const payment = () => {
 
       if (authorization_url) {
         window.location.href = authorization_url;
-      } 
+      }
     } else if (payData?.error || payData?.message) {
       toast.error(
         payData?.error ||
@@ -252,7 +296,7 @@ const payment = () => {
               <ButtonLoading
                 onClick={handlePay}
                 disabled={!isChecked}
-                isLoading={payLoading}
+                isLoading={payLoading || isLoading}
                 className="w-full max-w-none py-3.5 disabled:text-gray-700 disabled:bg-gray-400">
                 PAY NOW
               </ButtonLoading>
