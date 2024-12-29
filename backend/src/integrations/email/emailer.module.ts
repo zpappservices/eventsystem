@@ -20,6 +20,14 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
             
           },
         },
+        // transport: {
+        //   host: 'smtp.gmail.com',
+        //   auth: {
+        //     user: 'hbshofela@gmail.com',
+        //     pass: 'evnbqqaiqwunmkqb',
+        //   },
+        // },
+
         defaults: {
           from: 'no-reply@zafariplus.com',
         },
