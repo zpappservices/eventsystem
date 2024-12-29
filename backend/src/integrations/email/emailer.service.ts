@@ -41,6 +41,19 @@ export class EmailerService {
     await this.sendMail(payload, 'Password Reset', 'passwordreset');
   }
 
+  async vendorOnBoarding(data: any) {
+    const payload = {
+      email: "cs@zafariplus.com",
+      vendoremail: data.user.email,
+      firstName: data.user.firstName,
+      lastName: data.user.lastName,
+      phone: data.user.phone,
+      company: data.user.company,
+      website: data.user.website,
+    };
+    await this.sendMail(payload, 'New Vendor Onboarded', 'vendor');
+  }
+
 
   async sendTicketQRCode(data: any) {
     const payload = {

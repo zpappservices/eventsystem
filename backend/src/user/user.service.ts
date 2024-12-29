@@ -3,10 +3,11 @@ import { PrismaService } from '@/integrations/prisma/prisma.service';
 import { VendorEventDto } from '@/event/dtos/event.dto';
 import { VendorDto } from './dtos/user.dto';
 import { RoleType } from '@prisma/client';
+import { EmailerService } from '@/integrations/email/emailer.service';
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService, private emailService: EmailerService,) {}
 
   async create(user: any): Promise<any> {
     try {
@@ -73,6 +74,14 @@ export class UserService {
   async createVendor(data: VendorDto): Promise<any> {
     try {
       
+      const vendoExist = this.getUserByEmail(data.email);
+      if(vendoExist){
+        return {
+          statusCode: HttpStatus.BAD_REQUEST,
+          data: null,
+          message: `vendor with email:: ${data.email} already exist`,
+        };
+      }
       let vendorCreated: any;
       await this.prisma.$transaction(async (pr) => {
 
@@ -108,6 +117,14 @@ export class UserService {
     }
   
   );
+
+  
+  try {
+    await this.emailService.vendorOnBoarding({ user: vendorCreated });
+  } catch (e) {
+    console.log(e.message);
+  }
+
       return {
         statusCode: HttpStatus.CREATED,
         data: vendorCreated,
