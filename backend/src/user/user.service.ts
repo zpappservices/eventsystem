@@ -74,7 +74,8 @@ export class UserService {
   async createVendor(data: VendorDto): Promise<any> {
     try {
       
-      const vendoExist = this.getUserByEmail(data.email);
+      const vendoExist = await this.prisma.vendor.findFirst({where: { email: data.email}})
+      
       if(vendoExist){
         return {
           statusCode: HttpStatus.BAD_REQUEST,
