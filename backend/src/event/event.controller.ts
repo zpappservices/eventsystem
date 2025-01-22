@@ -14,7 +14,7 @@ export class EventController {
     }
     
   @Get('/getoneevent/:id')
-  async getOneEvent(@Param('id') id: any): Promise<any> {
+  async getOneEvent(@Param('id') id: string): Promise<any> {
     return this.eventService.getOneEvent(id);
   }
 
@@ -36,7 +36,7 @@ export class EventController {
   }
       
   @Get('/geteventbycategory/:id')
-  async getEventByCategory(@Param('id') id: any): Promise<any> {
+  async getEventByCategory(@Param('id') id: string): Promise<any> {
     return this.eventService.getEventByCategory(id);
   }
   
@@ -91,13 +91,13 @@ export class EventController {
     }
         
     @Get('/getoneticket/:id')
-    async getOneTicket(@Param('id') id: any): Promise<any> {
+    async getOneTicket(@Param('id') id: string): Promise<any> {
     const response = await this.eventService.getOneTicket(id);
     return response;
     }
         
     @Get('/getticketbyevent/:id')
-    async getTicketByEvent(@Param('id') id: any): Promise<any> {
+    async getTicketByEvent(@Param('id') id: string): Promise<any> {
     const response = await this.eventService.getTicketByEvent(id);
     return response;
     }
