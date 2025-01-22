@@ -259,7 +259,7 @@ export class UserService {
 
       const account = await this.prisma.vendorAccount.findFirst({ where: { userId: userId } });
 
-      if(!user || !account){
+      if(!user ){// || !account){
         return {
           statusCode: HttpStatus.OK,
           data: null,

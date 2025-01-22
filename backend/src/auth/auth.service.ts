@@ -524,13 +524,13 @@ export class AuthService {
 
       const deleteFirebaseUser = await this.firebaseService.deleteUser(existingUser.accountId);
 
-      if(!deleteFirebaseUser) {
-        return {
-          statusCode: HttpStatus.BAD_REQUEST,
-          data: false,
-          message: `Unable to delete User`,
-        };
-      }
+      // if(!deleteFirebaseUser) {
+      //   return {
+      //     statusCode: HttpStatus.BAD_REQUEST,
+      //     data: false,
+      //     message: `Unable to delete User`,
+      //   };
+      // }
       console.log(`User with id ${userId} deleted from firebase`);
 
       const vendor = await this.prisma.vendor.findFirst({ where: { userId: userId } });

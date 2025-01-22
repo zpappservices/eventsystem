@@ -29,21 +29,21 @@ export class UserController {
   async createVendor(@Body() dto: VendorDto): Promise<any> {
     return await this.userService.createVendor(dto);
   }
-  @Post('/update-vendor/:id')
-  async updateVendor(@Body() dto: VendorDto, @Param() id: string): Promise<any> {
-    return await this.userService.updateVendor(dto, id);
+  @Post('/update-vendor/:Id')
+  async updateVendor(@Body() dto: VendorDto, @Param('Id') Id: string): Promise<any> {
+    return await this.userService.updateVendor(dto, Id);
   } 
-  @Get('/getonevendor/:id')
-  async getOneVendor(@Param('id') id: any): Promise<any> {
-    return this.userService.getOneVendor(id);
+  @Get('/getonevendor/:Id')
+  async getOneVendor(@Param('Id') Id: any): Promise<any> {
+    return this.userService.getOneVendor(Id);
   }
-  @Get('/getvendorbyuserid/:userid')
-  async getVendorBy(@Param('userid') id: any): Promise<any> {
-    return this.userService.getOneVendor(id);
+  @Get('/getvendorbyuserid/:userId')
+  async getVendorBy(@Param('userId') userId: any): Promise<any> {
+    return this.userService.getOneVendor(userId);
   }
-  @Get('/get-vendor-account/:userid')
-  async getVendorAccount(@Param() userid: string): Promise<any> {
-    return this.userService.getVendorAccount(userid);
+  @Get('/get-vendor-account/:userId')
+  async getVendorAccount(@Param('userId') userId: string): Promise<any> {
+    return this.userService.getVendorAccount(userId);
   }
   @Get('/getallvendor')
   async getAllVendor(): Promise<any> {
