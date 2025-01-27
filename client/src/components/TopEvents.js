@@ -38,7 +38,7 @@ const TopEvents = ({ next, isTopEvent = true, loaderClass }) => {
     <div className="w-full" id="topevents">
       <div className={`bg-black px-2 py-3 ${isTopEvent ? "" : "hidden"}`}>
         <p className="text-[20px] leading-normal text-[#FF7F50] font-bold">
-          Top events this week
+          Trending Events
         </p>
       </div>
       <div className="w-full grid grid-cols-1 gap-x-5 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 py-6">
@@ -51,7 +51,8 @@ const TopEvents = ({ next, isTopEvent = true, loaderClass }) => {
               <div className="h-[168px]">
                 <StyledImage
                   src={
-                    item?.image_banner || "https://via.placeholder.com/300x200?text="
+                    item?.image_banner ||
+                    "https://via.placeholder.com/300x200?text="
                   }
                   className="w-full h-full object-cover"
                 />

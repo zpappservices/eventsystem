@@ -13,17 +13,20 @@ const Header = ({ step }) => {
          <div className="absolute inset-0 bg-black bg-opacity-40 rounded-[8px]"></div>{" "}
          <div className="relative z-10 text-center">
            <h1 className="text-white text-2xl sm:text-5xl font-bold leading-tight sm:leading-snug">
-             Discover More Events
+             A Better Way To Discover More Events
            </h1>
            <p className="text-white font-semibold text-lg sm:text-2xl">
              Get your{" "}
              <span className="text-[#FF7F50] text-xl sm:text-3xl">
-               Ticket Now
+               Tickets Now
              </span>
            </p>
-           <p className="text-white text-sm sm:text-lg lg:text-xl">
-             Relax in style with startup comedy shows, music concerts, and
-             more...
+           <p className="text-white text-sm sm:text-lg lg:text-xl mt-3">
+             Zafariplus is an all-in-one ticketing and marketing platform that
+             offers excellent value for both event organisers and people looking
+             for events of all kinds. With Zafariplus ticketing, you can easily
+             create events for free, sell event tickets online and reach your
+             target audience.
            </p>
            <Link href="/events" className="">
              <button className="bg-[#FF7F50] mt-4 text-white px-8 py-3 rounded-full text-lg font-semibold hover:bg-[#FF6347] transition duration-300">
