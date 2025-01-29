@@ -76,7 +76,7 @@ const NavBar = () => {
       } */
     } else {
       items.push({
-        item: "Signin",
+        item: "Sign in to buy",
         id: 3,
         ariaLabel: "Signin",
         onClick: handleLoginClick,
@@ -153,7 +153,7 @@ const NavBar = () => {
                 role="button"
                 className="ms-auto flex justify-center items-center transition-all duration-300 ease-in-out hover:scale-[1.1] hover:opacity-80"
                 onClick={() => router.push("/auth/vendor/signup")}>
-                Register Vendor
+                Create an Event / Log in
               </li>
             )}
           </div>

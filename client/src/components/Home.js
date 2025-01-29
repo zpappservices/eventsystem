@@ -62,13 +62,13 @@ const Home = () => {
       <div className="space-y-10">
         <div className="bg-black px-2 py-3">
           <p className="text-[20px] leading-normal text-[#FF7F50] font-bold">
-            Categories
+            Popular categories
           </p>
         </div>
         <div className="w-full flex items-center justify-center sm:justify-between flex-wrap gap-5">
           {data?.data.length > 0 ? (
             data.data
-              .filter(({ active }) => active)
+              .filter(({ active, name }) => active && name !== "Sport" )
               .map(({ name, description }, index) => (
                 <EventsCard
                   key={index}
