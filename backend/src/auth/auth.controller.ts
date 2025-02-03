@@ -14,17 +14,20 @@ import { AccountClosure, IsLoginDto, SigninDto } from './dtos/signin.dto';
 import { Request, Response } from 'express';
 import { FirebaseAuthGuard } from './guards/firebase.guard';
 import { ActivateAccountDto } from './dtos/email.dto';
-import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
-
+import {
+  ApiBody,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
 @ApiTags('auth')
 @Controller('auth')
 //@UseGuards(FirebaseAuthGuard)
 export class AuthController {
-  constructor(private authService: AuthService
-  ) {}
+  constructor(private authService: AuthService) {}
 
-  
   @Post('/signup')
   @ApiOperation({ summary: 'Create a new user' })
   @ApiBody({ description: 'Payload to signup a user', type: SignupDto })
@@ -36,11 +39,9 @@ export class AuthController {
     const user = await this.authService.signup(signupDto, req);
     return user;
   }
-    
+
   @Post('/singlesignon')
-  async singlesignon(
-    @Body() dto: SingleSignonDto,
-  ): Promise<void> {
+  async singlesignon(@Body() dto: SingleSignonDto): Promise<void> {
     const user = await this.authService.singleSignOn(dto);
     return user;
   }
@@ -57,22 +58,19 @@ export class AuthController {
   @ApiBody({ description: 'Payload to verify email', type: ActivateAccountDto })
   @ApiResponse({ status: 200, description: 'Account activated successfully.' })
   async verifyEmail(
-    @Body() activateAccountDto: ActivateAccountDto
+    @Body() activateAccountDto: ActivateAccountDto,
   ): Promise<any> {
-     return this.authService.activateAccount(activateAccountDto);
+    return this.authService.activateAccount(activateAccountDto);
   }
-  
+
   @Get('/resend-otp')
-  async resendOtp(
-    @Query('email') email: string
-  ): Promise<any> {
-     return this.authService.resendOtp(email);
+  async resendOtp(@Query('email') email: string): Promise<any> {
+    return this.authService.resendOtp(email);
   }
   //@UseGuards(FirebaseAuthGuard)
   @Post('/islogin')
   async isLogin(@Body() req: IsLoginDto): Promise<void> {
     return await this.authService.isLogin(req);
-
   }
   @Post('/signout')
   async signOut(@Body('userId') userId: string) {
@@ -85,7 +83,6 @@ export class AuthController {
 
   @Post('/close-user-account')
   @ApiOperation({ summary: 'Close User Account a new user' })
-
   async closeUserAccount(@Body() dto: AccountClosure) {
     return this.authService.closeUserAccount(dto.userId);
   }
