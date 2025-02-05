@@ -70,7 +70,7 @@ const EventsDetails = ({ id, details }) => {
         <div className="w-full max-w-[551px] mx-auto cursor-pointer">
           <div className="w-full h-[400px] overflow-hidden">
             <StyledImage
-              src={details?.image_banner ?? "/img/event1.svg"}
+              src={details?.image_banner}
               className="w-full h-full rounded-[30px] object-cover"
             />
           </div>
