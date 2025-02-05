@@ -43,6 +43,8 @@ const Event = () => {
         </div>
       </Layout>
     );
+  
+  console.log(event)
 
   return (
     <Layout>
