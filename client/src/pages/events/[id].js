@@ -10,8 +10,10 @@ const Event = () => {
   const { id } = router.query;
 
   useEffect(() => {
-    if (!id) router.push("/");
-  }, [id]);
+    if (router.isReady) {
+      if (!id) router.push("/");
+    }
+  }, [id, router.isReady]);
 
   const { data, error, loading, request } = useApiRequest({
     method: "get",
@@ -26,23 +28,28 @@ const Event = () => {
   };
 
   useEffect(() => {
-    getEvent();
-  }, []);
+    if (router.isReady && id) {
+      getEvent();
+    }
+  }, [id, router.isReady]);
 
   const { data: event = {} } = data || {};
 
-  return (
-    <Layout>
-      {loading ? (
+  if (loading)
+    return (
+      <Layout>
         <div className="h-[200px] flex justify-center items-center">
           <Loader2 className="animate-spin" />
         </div>
-      ) : (
-        event && (
-          <div>
-            <EventsDetails id={id} details={event}/>
-          </div>
-        )
+      </Layout>
+    );
+
+  return (
+    <Layout>
+      {event && (
+        <div>
+          <EventsDetails id={id} details={event} />
+        </div>
       )}
     </Layout>
   );
