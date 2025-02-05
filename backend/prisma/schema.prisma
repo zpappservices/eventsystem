@@ -59,6 +59,7 @@ model Event {
   currency     String?
   isPublished  Boolean?       @default(false)
   active       Boolean        @default(true)
+  platformFee  Boolean        @default(false)
   createdBy    String?
   createdOn    DateTime       @default(now())
   updatedBy    String?

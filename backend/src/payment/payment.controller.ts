@@ -89,7 +89,7 @@ export class PaymentController {
   async chargeSetup(@Body() dto: ChargeSetupDto): Promise<any> {
     return this.paymentService.createChargeSetup(dto);
   }
-  @Get('/get-all-chargesetup/:id')
+  @Get('/get-all-chargesetup')
   async getAllchargeSetup(): Promise<any> {
     return this.paymentService.getAllChargeSetup();
   }

@@ -36,30 +36,27 @@ export class AuthService {
 
       const firebaseUser = await this.firebaseService.signup(email, password);
 
-      if(firebaseUser.statusCode != HttpStatus.OK) {
+      if (firebaseUser.statusCode != HttpStatus.OK) {
         return firebaseUser;
       }
 
-      
-      // Activation Token 
-      var otp = (await Utility.generateRandomNumber(6)).toString()
+      // Activation Token
+      var otp = (await Utility.generateRandomNumber(6)).toString();
 
       let expiryDate = new Date();
-      expiryDate.setTime(expiryDate.getTime() + 10 * 60*1000);
+      expiryDate.setTime(expiryDate.getTime() + 10 * 60 * 1000);
 
-      
       const userDto = {
         accountId: firebaseUser.data.uid,
         isVerified: firebaseUser.data.emailVerified,
-        username: firebaseUser.data.email.split("@")[0],
+        username: firebaseUser.data.email.split('@')[0],
         email: firebaseUser.data.email,
-        provider: "password",
+        provider: 'password',
         passwordResetToken: await Utility.createHashToken(otp),
-        passwordResetExpires:  expiryDate, 
-       
+        passwordResetExpires: expiryDate,
       };
 
-      const created = await this.userService.create(userDto);  
+      const created = await this.userService.create(userDto);
 
       if (!created) {
         return {
@@ -74,7 +71,6 @@ export class AuthService {
       } catch (e) {
         console.log(e.message);
       }
-
 
       return {
         statusCode: HttpStatus.CREATED,
@@ -114,33 +110,34 @@ export class AuthService {
       }
 
       if (existingUser.isVendor) {
-        const vendor = await this.userService.getVendorByUserId(existingUser.userId);
+        const vendor = await this.userService.getVendorByUserId(
+          existingUser.id,
+        );
 
-        if(!vendor){
+        if (!vendor) {
           return {
             statusCode: HttpStatus.BAD_REQUEST,
             data: null,
             message: `Vendor has not been onboarded!`,
           };
         }
-        if(!vendor.data.active){
+        if (!vendor.data.active) {
           return {
             statusCode: HttpStatus.BAD_REQUEST,
             data: null,
             message: `Vendor Account Pending Verification!`,
           };
         }
-        
       }
 
       await this.prisma.user.update({
         where: { id: existingUser.id },
         data: {
           isOnline: true,
-          lastLogin: new Date()
-        }
-      })
-     
+          lastLogin: new Date(),
+        },
+      });
+
       return {
         statusCode: HttpStatus.OK,
         data: { existingUser },
@@ -156,7 +153,6 @@ export class AuthService {
     }
   }
 
-  
   async singleSignOn(dto: SingleSignonDto): Promise<any> {
     try {
       const { email, provider, displayName, uid } = dto;
@@ -164,16 +160,15 @@ export class AuthService {
       const existingUser = await this.userService.getUserByEmail(email);
 
       if (existingUser) {
-
         // update login
         await this.prisma.user.update({
           where: { id: existingUser.id },
           data: {
             isOnline: true,
-            lastLogin: new Date()
-          }
-        })
-       
+            lastLogin: new Date(),
+          },
+        });
+
         return {
           statusCode: HttpStatus.OK,
           data: { existingUser },
@@ -184,13 +179,12 @@ export class AuthService {
       const userDto = {
         accountId: uid,
         isVerified: true,
-        username: email.split("@")[0],
+        username: email.split('@')[0],
         email: email,
         provider: provider,
-       
       };
 
-      const created = await this.userService.create(userDto);  
+      const created = await this.userService.create(userDto);
 
       if (!created) {
         return {
@@ -204,9 +198,9 @@ export class AuthService {
         where: { id: existingUser.id },
         data: {
           isOnline: true,
-          lastLogin: new Date()
-        }
-      })
+          lastLogin: new Date(),
+        },
+      });
 
       try {
         await this.emailService.sendWelcome({ user: created });
@@ -214,7 +208,6 @@ export class AuthService {
         console.log(e.message);
       }
 
-     
       return {
         statusCode: HttpStatus.OK,
         data: { existingUser },
@@ -232,7 +225,6 @@ export class AuthService {
 
   async emailExist(email: string): Promise<any> {
     try {
-
       const existingUser = await this.userService.getUserByEmail(email);
 
       if (!existingUser) {
@@ -257,10 +249,8 @@ export class AuthService {
     }
   }
 
-  
   async activateAccount(dto: ActivateAccountDto): Promise<any> {
     try {
-
       const { email, otp } = dto;
 
       const existingUser = await this.userService.getUserByEmail(email);
@@ -285,7 +275,7 @@ export class AuthService {
 
       let expiryDate = new Date();
 
-      if(expiryDate > existingUser.passwordResetExpires) {
+      if (expiryDate > existingUser.passwordResetExpires) {
         return {
           statusCode: HttpStatus.BAD_REQUEST,
           data: false,
@@ -295,8 +285,8 @@ export class AuthService {
 
       const user = await this.prisma.user.update({
         where: { id: existingUser.id },
-        data: { isVerified: true }
-      })
+        data: { isVerified: true },
+      });
 
       return {
         statusCode: HttpStatus.OK,
@@ -313,10 +303,8 @@ export class AuthService {
     }
   }
 
-  
   async resendOtp(email: string): Promise<any> {
     try {
-
       const existingUser = await this.userService.getUserByEmail(email);
 
       if (!existingUser) {
@@ -327,22 +315,20 @@ export class AuthService {
         };
       }
 
-       
-      // Activation Token 
-      var otp = (await Utility.generateRandomNumber(6)).toString()
+      // Activation Token
+      var otp = (await Utility.generateRandomNumber(6)).toString();
 
       let expiryDate = new Date();
-      expiryDate.setTime(expiryDate.getTime() + 10 * 60*1000);
+      expiryDate.setTime(expiryDate.getTime() + 10 * 60 * 1000);
 
-      
       const user = await this.prisma.user.update({
         where: { id: existingUser.id },
-        data: { 
+        data: {
           passwordResetToken: await Utility.createHashToken(otp),
-          passwordResetExpires:  expiryDate, 
-         }
-      })
-     
+          passwordResetExpires: expiryDate,
+        },
+      });
+
       try {
         await this.emailService.sendActivateAccount({ user, otp });
       } catch (e) {
@@ -364,14 +350,11 @@ export class AuthService {
     }
   }
 
-  
   async isLogin(dto: IsLoginDto): Promise<any> {
     try {
-
-      const { token, userId } = dto
+      const { token, userId } = dto;
 
       const isverify = await this.firebaseService.verifyToken(token);
-
 
       if (!isverify) {
         return {
@@ -415,10 +398,8 @@ export class AuthService {
     }
   }
 
-    
   async signOut(userId: string): Promise<any> {
     try {
-
       const existingUser = await this.userService.getOneUser(userId);
 
       if (!existingUser) {
@@ -429,9 +410,11 @@ export class AuthService {
         };
       }
 
-      const firebaseResponse = await this.firebaseService.signout(existingUser.data.accountId);
+      const firebaseResponse = await this.firebaseService.signout(
+        existingUser.data.accountId,
+      );
 
-      if(!firebaseResponse) {
+      if (!firebaseResponse) {
         return {
           statusCode: HttpStatus.BAD_REQUEST,
           data: false,
@@ -439,14 +422,12 @@ export class AuthService {
         };
       }
 
-
       const user = await this.prisma.user.update({
         where: { id: existingUser.data.id },
-        data: { 
-          isOnline: false
-         }
-      })
-     
+        data: {
+          isOnline: false,
+        },
+      });
 
       return {
         statusCode: HttpStatus.OK,
@@ -463,10 +444,8 @@ export class AuthService {
     }
   }
 
-      
   async forgotPassword(email: string): Promise<any> {
     try {
-
       const existingUser = await this.userService.getUserByEmail(email);
 
       if (!existingUser) {
@@ -477,9 +456,11 @@ export class AuthService {
         };
       }
 
-      const resetLink = await this.firebaseService.sendPasswordResetEmail(email);
+      const resetLink = await this.firebaseService.sendPasswordResetEmail(
+        email,
+      );
 
-      if(!resetLink) {
+      if (!resetLink) {
         return {
           statusCode: HttpStatus.BAD_REQUEST,
           data: false,
@@ -488,7 +469,10 @@ export class AuthService {
       }
 
       try {
-        await this.emailService.sendPasswordReset({ user: existingUser, link: resetLink });
+        await this.emailService.sendPasswordReset({
+          user: existingUser,
+          link: resetLink,
+        });
       } catch (e) {
         console.log(e.message);
       }
@@ -508,11 +492,11 @@ export class AuthService {
     }
   }
 
-        
   async closeUserAccount(userId: string): Promise<any> {
     try {
-
-      const existingUser = await this.prisma.user.findUnique({ where: { id: userId } });
+      const existingUser = await this.prisma.user.findUnique({
+        where: { id: userId },
+      });
 
       if (!existingUser) {
         return {
@@ -522,7 +506,9 @@ export class AuthService {
         };
       }
 
-      const deleteFirebaseUser = await this.firebaseService.deleteUser(existingUser.accountId);
+      const deleteFirebaseUser = await this.firebaseService.deleteUser(
+        existingUser.accountId,
+      );
 
       // if(!deleteFirebaseUser) {
       //   return {
@@ -533,17 +519,21 @@ export class AuthService {
       // }
       console.log(`User with id ${userId} deleted from firebase`);
 
-      const vendor = await this.prisma.vendor.findFirst({ where: { userId: userId } });
+      const vendor = await this.prisma.vendor.findFirst({
+        where: { userId: userId },
+      });
 
-      if(vendor){
+      if (vendor) {
         await this.prisma.vendor.delete({ where: { id: vendor.id } });
-        await this.prisma.vendorAccount.delete({ where: { userId: vendor.userId } });
+        await this.prisma.vendorAccount.delete({
+          where: { userId: vendor.userId },
+        });
       }
 
       await this.prisma.user.delete({ where: { id: userId } });
 
       try {
-        await this.emailService.accountClosure({ user: existingUser});
+        await this.emailService.accountClosure({ user: existingUser });
       } catch (e) {
         console.log(e.message);
       }
@@ -562,5 +552,4 @@ export class AuthService {
       };
     }
   }
-
 }
