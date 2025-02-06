@@ -34,6 +34,7 @@ module.exports = {
         primary200: "#71F9BC",
         primary100: "#BBFCDF",
         sec300: "#F79E5F",
+        sec100: "#FDE8D8",
         accent1000: "#170A01",
         accent900: "#3A1A03",
         accent800: "#703206",

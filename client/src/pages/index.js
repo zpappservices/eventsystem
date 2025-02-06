@@ -3,6 +3,7 @@ import Layout from "@/components/Layout";
 import TopEvents from "@/components/TopEvents";
 import Ads from "@/components/website/Ads";
 import CreateEvent from "@/components/website/CreateEvent";
+import UpcomingEvents from "@/components/website/UpcomingEvents";
 
 const Index = () => {
   return (
@@ -15,6 +16,8 @@ const Index = () => {
         <TopEvents />
 
         <CreateEvent />
+
+        <UpcomingEvents />
       </div>
     </Layout>
   );
