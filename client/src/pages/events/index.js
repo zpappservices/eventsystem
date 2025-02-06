@@ -69,9 +69,9 @@ const Events = () => {
 
   return (
     <Layout isHeader={false}>
-      <div className="w-fit flex items-center justify-center gap-x-5">
+      <div className="w-full flex items-start justify-between gap-x-5">
         <p
-          className="flex items-center gap-x-2 text-[18px] font-medium cursor-pointer mt-5"
+          className="flex items-center gap-x-2 text-[18px] font-medium cursor-pointer"
           onClick={goBack}>
           <img src="/img/return.svg" />
           Back

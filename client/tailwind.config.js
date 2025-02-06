@@ -9,6 +9,9 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: ["Inter", "san-serif"],
+      screens: {
+        md2: "962px",
+      },
       colors: {
         softCream: "#F7F7F7",
         primary: "#068A4F",
@@ -25,7 +28,7 @@ module.exports = {
         primary600: "#057040",
         primary500: "#068A4F",
         primary400: "#09D278",
-        primary300: "##2DF69B",
+        primary300: "#2DF69B",
         primary200: "#71F9BC",
         primary100: "#BBFCDF",
         accent1000: "#170A01",

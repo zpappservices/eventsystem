@@ -8,6 +8,11 @@ import LogOut from "./auth/LogOut";
 import { FiLogOut } from "react-icons/fi";
 import StyledImage from "./StyledImage";
 import { BiCaretDown } from "react-icons/bi";
+import Search from "./ui/Search";
+import { FaListUl } from "react-icons/fa";
+import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import { Backdrop } from "@mui/material";
 
 const NavBar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -17,10 +22,13 @@ const NavBar = () => {
   const [navItems, setNavItems] = useState([]);
   const [user, setUser] = useState("");
   const [dropdown, setDropdown] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const { activeUser, token } = useAuthToken();
   const router = useRouter();
+  const pathname = router.pathname;
   const dropdownRef = useRef(null);
+  const bgRef = useRef(null);
 
   const handleLoginClick = () => {
     setIsLoginModal(true);
@@ -110,7 +118,11 @@ const NavBar = () => {
 
   useEffect(() => {
     const handleOutsideClick = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target) &&
+        !event.target.closest("#dynamic-dropdown")
+      ) {
         setDropdown(false);
       }
     };
@@ -126,32 +138,134 @@ const NavBar = () => {
   );
 
   return (
-    <div className="fixed top-0 left-0 z-10 w-full bg-gray-900">
-      <nav className="w-full max-w-[1300px] mx-auto flex py-7 px-5 text-white items-center font-medium text-sm">
-        <ul className="w-full flex items-center justify-between gap-6 cursor-pointer text-white">
-          <Link href="/" className="ms-[40px]">
+    <div className="fixed top-0 left-0 z-10 w-full bg-white drop-shadow-md">
+      <nav className="w-full max-w-[1512px] mx-auto p-5">
+        <ul className="w-full flex items-center justify-between gap-3 sm:gap-6 cursor-pointer text-baseBlack">
+          <Link href="/" className="!z-[1400]">
             <StyledImage
-              src="/img/zafariplus-logo.png"
-              className="w-full max-w-[10px] scale-[12]"
+              src="/img/logo.svg"
+              className="w-full sm:min-w-[150px] max-w-[200px] !z-30"
             />
           </Link>
-          <div className="flex justify-end gap-5 !ms-auto">
-            {navItems?.map((i) => (
-              <li
-                role="button"
-                className={`ms-auto flex justify-center items-center transition-all duration-300 ease-in-out hover:scale-[1.1] hover:opacity-80 ${
-                  i?.item === "Dashboard" ? "hidden sm:flex" : ""
-                }`}
-                key={i.id}
-                aria-label={i.ariaLabel}
-                onClick={i.onClick}>
-                {i.item}
-              </li>
-            ))}
+          <Backdrop
+            id="dynamic-backdrop"
+            sx={{ color: "#fff", zIndex: 1300 }}
+            open={isOpen}
+            onClick={() => setIsOpen(false)}>
+            <div
+              ref={bgRef}
+              className={`flex flex-col md2:hidden ${
+                isOpen ? "left-0" : "left-[-100%]"
+              } absolute top-0 left-0 z-10 shadow-xl px-7 lg:px-[68px] transition-all h-screen w-[75%] sm:w-[50%] bg-white pt-[150px] gap-y-6 gap-x-[70px] items-start text-baseBlack text-[20px] md:text-[21px] leading-[24px]`}>
+              <Link
+                href="/"
+                className={
+                  pathname === "/about" ? "text-baseBlack font-bold" : ""
+                }>
+                Home
+              </Link>
+              <Link
+                href="/events"
+                className={
+                  pathname === "/events" ? "text-baseBlack font-bold" : ""
+                }>
+                Events
+              </Link>
+              <Link
+                href="/"
+                className={
+                  pathname === "/about" ? "text-baseBlack font-bold" : ""
+                }>
+                About us
+              </Link>
+              <Link
+                href="/"
+                className={
+                  pathname === "/contact" ? "text-baseBlack font-bold" : ""
+                }>
+                Contact
+              </Link>
+
+              {navItems?.map((i) => (
+                <p
+                  role="button"
+                  className={`flex md:hidden justify-center items-center transition-all duration-300 ease-in-out hover:scale-[1.1] hover:opacity-80 ${
+                    i?.item === "Dashboard" ? "hidden sm:flex" : ""
+                  }`}
+                  key={i.id}
+                  aria-label={i.ariaLabel}
+                  onClick={i.onClick}>
+                  {i.item}
+                </p>
+              ))}
+
+              {!isLoggedIn && (
+                <li
+                  role="button"
+                  className="flex lg:hidden justify-center items-center transition-all duration-300 ease-in-out hover:scale-[1.1] hover:opacity-80"
+                  onClick={() => router.push("/auth/vendor/signup")}>
+                  Create an Event / Log in
+                </li>
+              )}
+
+              {isLoggedIn && (
+                <div className="flex lg:hidden">
+                  <LogOut>
+                    <FiLogOut className="text-baseBlack" size={20} />
+                  </LogOut>
+                </div>
+              )}
+            </div>
+          </Backdrop>
+          <div className="w-full hidden md2:flex justify-center text-[18px] md:text-[20px] items-center mx-auto gap-6">
+            <Link
+              href="/"
+              className={
+                pathname === "/" ? "text-baseBlack font-bold" : ""
+              }>
+              Home
+            </Link>
+            <Link
+              href="/events"
+              className={
+                pathname === "/events" || pathname.includes("events") ? "text-baseBlack font-bold" : ""
+              }>
+              Events
+            </Link>
+            <Link
+              href="/"
+              className={
+                pathname === "/about" ? "text-baseBlack font-bold" : ""
+              }>
+              About us
+            </Link>
+            <Link
+              href="/"
+              className={
+                pathname === "/contact" ? "text-baseBlack font-bold" : ""
+              }>
+              Contact
+            </Link>
+          </div>
+          <div className="min-w-fit flex justify-end gap-5 !ms-auto">
+            <div className="hidden md:block">
+              {navItems?.map((i) => (
+                <li
+                  role="button"
+                  className={`ms-auto flex justify-center items-center transition-all duration-300 ease-in-out hover:scale-[1.1] hover:opacity-80 ${
+                    i?.item === "Dashboard" ? "hidden sm:flex" : ""
+                  }`}
+                  key={i.id}
+                  aria-label={i.ariaLabel}
+                  onClick={i.onClick}>
+                  {i.item}
+                </li>
+              ))}
+            </div>
             {!isLoggedIn && (
               <li
                 role="button"
-                className="ms-auto flex justify-center items-center transition-all duration-300 ease-in-out hover:scale-[1.1] hover:opacity-80"
+                className="ms-auto hidden lg:flex justify-center items-center transition-all duration-300 ease-in-out hover:scale-[1.1] hover:opacity-80"
                 onClick={() => router.push("/auth/vendor/signup")}>
                 Create an Event / Log in
               </li>
@@ -166,18 +280,19 @@ const NavBar = () => {
                 {user}
               </p>
               <BiCaretDown
-                color="white"
-                className={`duration-200 ${dropdown ? "rotate-180" : ""}`}
+                className={`duration-200 text-baseBlack ${
+                  dropdown ? "rotate-180" : ""
+                }`}
               />
               {dropdown && (
-                <div className="absolute top-7 rounded-[5px] bg-white shadow-xl min-w-full w-fit p-1 text-black space-y-1">
+                <div className="absolute top-7 z-30 rounded-[5px] bg-white shadow-xl min-w-full w-fit p-1 text-black space-y-1">
                   <Link href="/users/tickets">
                     <p className="px-2 py-2 hover:bg-slate-100 rounded-[5px]">
                       My tickets
                     </p>
                   </Link>
                   {hasDashboard && (
-                    <Link href="/dashboard" className="sm:hidden">
+                    <Link href="/dashboard" className="md:hidden">
                       <p className="px-2 py-2 hover:bg-slate-100 rounded-[5px]">
                         Dashboard
                       </p>
@@ -196,10 +311,39 @@ const NavBar = () => {
           )}
           {isLoggedIn && (
             <LogOut>
-              <FiLogOut color="white" size={20} />
+              <FiLogOut className="text-baseBlack" size={20} />
             </LogOut>
           )}
+
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="text-gray-600 focus:outline-none lg:hidden z-[1400]">
+            {isOpen ? (
+              <CloseRoundedIcon
+                style={{
+                  color: isOpen ? "white" : "black",
+                  fontSize: "42px",
+                }}
+              />
+            ) : (
+              <MenuRoundedIcon
+                style={{
+                  color: isOpen ? "white" : "black",
+                  fontSize: "42px",
+                }}
+              />
+            )}
+          </button>
         </ul>
+
+        <div className="flex flex-col sm:flex-row justify-center sm:items-center space-y-3 py-3 sm:py-0 gap-x-10">
+          <div className="min-w-fit flex items-center gap-4">
+            <FaListUl className="text-[20px] sm:text-[24px] text-baseBlack" />
+            All catergories
+          </div>
+
+          <Search />
+        </div>
       </nav>
 
       {/* Login and Sign-Up Modal */}
