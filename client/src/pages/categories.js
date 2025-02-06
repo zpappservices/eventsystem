@@ -24,28 +24,27 @@ const categories = () => {
   if (loading) {
     return (
       <Layout>
-        <div className="h-[400px] w-full flex justify-between items-center">
+        <div className="h-[400px] max-w-[1323px] px-5 w-full flex justify-between items-center">
           <CircularProgress color="#FF7F50" className="mx-auto" />
         </div>
       </Layout>
     );
   }
 
-  // Handle error state
-  if (error) {
+  if (error || data?.length < 1) {
     return (
       <Layout>
-        <div>Error loading data</div>
+        <div className="max-w-[1323px] px-5">Coudld't load data</div>
       </Layout>
     );
   }
 
   return (
     <Layout>
-      <div className="w-full max-w-[1323px] mx-auto flex flex-col gap-5 py-10 sm:pb-20">
+      <div className="w-full max-w-[1323px] px-5 mx-auto flex flex-col gap-5 py-10 sm:pb-20">
         <div className="space-y-10">
           <div className="flex items-center gap-3 justify-between">
-            <p className="text-[20px] leading-normal  font-bold">Categories</p>
+            <p className="text-[20px] leading-normal font-bold">Categories</p>
           </div>
           <div className="w-full grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10">
             {data?.data.length > 0 ? (

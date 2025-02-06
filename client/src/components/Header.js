@@ -5,9 +5,9 @@ import { motion } from "framer-motion";
 
 const Header = ({ step }) => {
   return (
-    <div className="w-full transition-all py-5 sm:py-[100px] px-5 sm:px-[98px] hero overflow-hidden">
+    <div className="w-full transition-all py-20 sm:py-[100px] px-5 sm:px-[98px] hero overflow-hidden">
       <div
-        className="w-full hero-content bg-cover bg-center flex flex-col md:flex-row items-center justify-between"
+        className="w-full hero-content bg-cover bg-center flex flex-col gap-y-20 md:flex-row items-center justify-between"
         style={{ backgroundImage: "url('/path/to/your-image.jpg')" }}>
         <div className="w-full max-w-[608px] space-y-5 text-white">
           <div className="space-y-3">
@@ -36,12 +36,12 @@ const Header = ({ step }) => {
           </div>
 
           <div className="w-full max-w-[507px] !mt-10 flex flex-col sm:flex-row items-center gap-6">
-            <Button size="large" style="flex-1">
+            <Button size="large" style="w-full sm:w-auto flex-1">
               Book Ticket
             </Button>
             <Button
               size="large"
-              style="flex-1"
+              style="w-full sm:w-auto flex-1"
               background="!bg-inherit"
               hover="hover:!bg-primary"
               border="border-1 border-primary"

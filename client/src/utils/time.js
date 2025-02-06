@@ -16,14 +16,11 @@ function convertTo12HourFormat(time24) {
 }
 
 const formatDate = (date) => {
-  // Check if the date exists and is valid
   if (!date || !moment(date, moment.ISO_8601, true).isValid()) {
     return "Invalid date";
   }
 
-  // Format the valid date
-  const stringDate = moment(date).format("dddd, MMMM Do YYYY");
-  return stringDate;
+  return moment(date).format("MMM D"); 
 };
 
 export { convertTo12HourFormat, formatDate };

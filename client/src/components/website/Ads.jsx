@@ -4,7 +4,7 @@ import Button from "../widgets/Button";
 
 const Ads = () => {
   return (
-    <div className="bg-sec300 py-4 sm:px-[70px] ">
+    <div className="px-5 max-w-[1512px] bg-sec300 py-4 sm:px-[70px]">
       <div className="flex flex-wrap gap-6 items-center">
         <div>
           <StyledImage src="/img/ad-image.png" />

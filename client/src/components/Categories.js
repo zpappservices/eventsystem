@@ -5,6 +5,7 @@ import { CircularProgress } from "@mui/material";
 import Button from "./widgets/Button";
 import { categoryImages } from "@/mock/categoryImages";
 import Link from "next/link";
+import CategoryCardSkeleton from "./categories/CategoryCardSkeleton";
 
 const Categories = () => {
   const { data, error, loading, request } = useApiRequest({
@@ -23,19 +24,27 @@ const Categories = () => {
   // Handle loading state
   if (loading) {
     return (
-      <div className="h-[400px] w-full flex justify-between items-center">
-        <CircularProgress color="#FF7F50" className="mx-auto" />
+      <div className="w-full max-w-[1323px] px-5 flex items-center justify-center sm:justify-between flex-wrap gap-5">
+        <div className="w-full grid grid-cols-1 gap-x-5 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 py-6">
+          {["", "", "", "", "", "", "", "", "", "", ""]?.map((item, index) => (
+            <CategoryCardSkeleton key={index} />
+          ))}
+        </div>
       </div>
     );
   }
 
   // Handle error state
-  if (error) {
-    return <div>Error loading data</div>;
+  if (error || data?.length < 1) {
+    return (
+      <div className="max-w-[1323px] px-5 text-center mx-auto">
+        Couldn't load data
+      </div>
+    );
   }
 
   return (
-    <div className="w-full max-w-[1323px] mx-auto flex flex-col gap-5">
+    <div className="w-full max-w-[1323px] px-5 mx-auto flex flex-col gap-5">
       <div className="space-y-10">
         <div className="py-3 flex items-center gap-3 justify-between">
           <p className="text-[20px] leading-normal  font-bold">

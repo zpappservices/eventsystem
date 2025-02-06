@@ -19,6 +19,7 @@ module.exports = {
         baseWhite: "#fafafa",
         baseBlack: "#0a0a0b",
         accent: "#F58634",
+        sec: "#F58634",
         success: "#1FCA59",
         warning: "#ffda24",
         error: "#CA1F29",
