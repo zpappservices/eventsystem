@@ -2,10 +2,10 @@ const Button = ({
   size = "medium",
   children,
   style,
-  background = "bg-baseBlack",
+  background = "bg-primary",
   text = "text-baseWhite",
   border = "border-primary",
-  hover = "hover:bg-baseBlack/90",
+  hover = "hover:bg-primary/90",
   outline,
   textButton,
   isLoading = false,
@@ -27,7 +27,7 @@ const Button = ({
 
   return (
     <button
-      className={`btn min-h-fit h-fit normal-case relative rounded-[8px] transition-all duration-300 ease-in-out flex items-center justify-center font-semibold ${
+      className={`btn hover:scale-[1.02] active:hover:scale-[1.05] min-h-fit h-fit normal-case relative rounded-[8px] transition-all duration-300 ease-in-out flex items-center justify-center font-semibold ${
         isLoading
           ? disabledLoadingStyle
           : "disabled:bg-neutrals200 disabled:text-neutrals500"

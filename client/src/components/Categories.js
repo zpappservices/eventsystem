@@ -1,8 +1,8 @@
 import useApiRequest from "@/hooks/useApiRequest";
 import EventsCard from "./EventsCard";
-import TopEvents from "./TopEvents";
 import { useEffect } from "react";
 import { CircularProgress } from "@mui/material";
+import Button from "./widgets/Button";
 
 const categoryImages = {
   Music:
@@ -27,7 +27,7 @@ const categoryImages = {
 const categoryName = "Nightlife"; // This could be a variable
 const imageUrl = categoryImages[categoryName];
 
-const Home = () => {
+const Categories = () => {
   const { data, error, loading, request } = useApiRequest({
     method: "get",
     url: "setup/getallcategory",
@@ -56,19 +56,26 @@ const Home = () => {
   }
 
   return (
-    <div className="w-full flex flex-col gap-5">
-      <TopEvents />
-
+    <div className="w-full max-w-[1323px] mx-auto flex flex-col gap-5">
       <div className="space-y-10">
-        <div className="bg-black px-2 py-3">
-          <p className="text-[20px] leading-normal text-[#FF7F50] font-bold">
-            Popular categories
+        <div className="py-3 flex items-center gap-3 justify-between">
+          <p className="text-[20px] leading-normal  font-bold">
+            Trending Category
           </p>
+
+          <Button
+            background="bg-baseBlack"
+            style="!font-normal"
+            text="text-white text-[14px]"
+            hover="hover:bg-baseBlack/90 hover:text-white">
+            See more
+          </Button>
         </div>
         <div className="w-full flex items-center justify-center sm:justify-between flex-wrap gap-5">
           {data?.data.length > 0 ? (
             data.data
-              .filter(({ active, name }) => active && name !== "Sport" )
+              .filter(({ active, name }) => active && name !== "Sport")
+              .slice(0, 4)
               .map(({ name, description }, index) => (
                 <EventsCard
                   key={index}
@@ -82,12 +89,8 @@ const Home = () => {
           )}
         </div>
       </div>
-
-      <div className="w-full max-w-[390] text-[24px] font-bold">
-        Here we know how to make you enjoy in style
-      </div>
     </div>
   );
 };
 
-export default Home;
+export default Categories;
