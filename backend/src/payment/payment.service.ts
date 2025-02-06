@@ -233,7 +233,7 @@ export class PaymentService {
       }
 
       const url = `${this.configService.get('PAYSTACK_PAYMENT_REQUEST')}`;
-      //const charge = `${this.configService.get('PAYSTACK_CHARGE')}`
+      let charge = +`${this.configService.get('PAYSTACK_CHARGE')}`;
       //data.percentage_charge = charge
 
       // Verify user
@@ -252,6 +252,7 @@ export class PaymentService {
       // Verify event
       const event = await this.prisma.event.findUnique({
         where: { id: data.eventId },
+        include: { user: true },
       });
 
       if (!event) {
@@ -259,6 +260,19 @@ export class PaymentService {
           statusCode: HttpStatus.BAD_REQUEST,
           data: null,
           message: `Event with id ${data.eventId} is in-valid.`,
+        };
+      }
+
+      // Vendor account
+      const subaccount = await this.prisma.vendorAccount.findFirst({
+        where: { userId: event.userId },
+      });
+
+      if (!subaccount) {
+        return {
+          statusCode: HttpStatus.BAD_REQUEST,
+          data: null,
+          message: `No account found for Vendor with id ${event.userId}.`,
         };
       }
 
@@ -270,37 +284,62 @@ export class PaymentService {
       const callBackUrl = `${this.configService.get('PAYSTACK_CALL_BACK')}`;
       const batchId = uuidv4();
       const amount = parseFloat(data.totalAmount) * 100;
-      let charge;
-
+      //let charge;
+      let payload;
       if (chargeSetup) {
         charge = await this.GetEventComission(amount, chargeSetup);
+
+        payload = {
+          email: data.email,
+          amount: amount,
+          currency: event.currency,
+          reference: batchId,
+          callback_url: callBackUrl,
+          bearer: 'subaccount',
+          split: {
+            type: chargeSetup.type,
+            currency: event.currency,
+            subaccounts: [
+              {
+                subaccount: subaccount.accountId,
+                share: charge, // 70% to merchant
+              },
+            ],
+            primary_share: 100 - charge, // 30% to platform
+          },
+        };
+      } else {
+        payload = {
+          email: data.email,
+          amount: amount,
+          currency: event.currency,
+          reference: batchId,
+          callback_url: callBackUrl,
+          bearer: 'subaccount',
+          split: {
+            type: 'percentage',
+            currency: event.currency,
+            subaccounts: [
+              {
+                subaccount: subaccount.accountId,
+                share: 100 - charge, // 70% to merchant
+              },
+            ],
+            primary_share: charge, // 30% to platform
+          },
+        };
       }
 
-      const req = {
-        amount: amount,
-        email: data.email,
-        currency: event.currency,
-        reference: batchId,
-        callback_url: callBackUrl,
-        transaction_charge: charge,
-      };
-
-      // const params = JSON.stringify({
-      //   email: data.email,
+      // const req = {
       //   amount: amount,
-      //   split: {
-      //     type: 'percentage',
-      //     bearer_type: 'subaccount',
-      //     subaccounts: [
-      //       {
-      //         subaccount: 'ACCT_pwwualwty4nhq9d',
-      //         share: 6000,
-      //       },
-      //     ],
-      //   },
-      // });
+      //   email: data.email,
+      //   currency: event.currency,
+      //   reference: batchId,
+      //   callback_url: callBackUrl,
+      //   transaction_charge: charge,
+      // };
 
-      const res = await this.makeRequest(`${url}`, 'post', req);
+      const res = await this.makeRequest(`${url}`, 'post', payload);
 
       if (!res.status) {
         return {
