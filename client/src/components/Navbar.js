@@ -13,6 +13,7 @@ import { FaListUl } from "react-icons/fa";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import { Backdrop } from "@mui/material";
+import AllCategoriesDropdown from "./categories/AllCategoriesDropdown";
 
 const NavBar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -220,15 +221,15 @@ const NavBar = () => {
           <div className="w-full hidden md2:flex justify-center text-[18px] md:text-[20px] items-center mx-auto gap-6">
             <Link
               href="/"
-              className={
-                pathname === "/" ? "text-baseBlack font-bold" : ""
-              }>
+              className={pathname === "/" ? "text-baseBlack font-bold" : ""}>
               Home
             </Link>
             <Link
               href="/events"
               className={
-                pathname === "/events" || pathname.includes("events") ? "text-baseBlack font-bold" : ""
+                pathname === "/events" || pathname.includes("events")
+                  ? "text-baseBlack font-bold"
+                  : ""
               }>
               Events
             </Link>
@@ -337,10 +338,7 @@ const NavBar = () => {
         </ul>
 
         <div className="flex flex-col sm:flex-row justify-center sm:items-center space-y-3 py-3 sm:py-0 gap-x-10">
-          <div className="min-w-fit flex items-center gap-4">
-            <FaListUl className="text-[20px] sm:text-[24px] text-baseBlack" />
-            All catergories
-          </div>
+          <AllCategoriesDropdown />
 
           <Search />
         </div>
