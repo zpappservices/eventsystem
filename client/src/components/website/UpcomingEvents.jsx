@@ -9,7 +9,7 @@ const UpcomingEvents = () => {
         <p className="text-[20px] leading-normal  font-bold">Upcoming Events</p>
       </div>
 
-      <div className="w-full flex flex-col md:flex-row gap-5 lg:gap-[140px]">
+      <div className="w-full flex flex-col lg:flex-row gap-10 xl:gap-[140px]">
         <UpcomingEventsList />
 
         <ProductAds />

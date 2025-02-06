@@ -33,17 +33,16 @@ const UpcomingEventCard = ({ data }) => {
         </p>
       </div>
 
-      <div className="py-3 px-5 rounded-[10px] bg-baseBlack flex-1 flex gap-5 justify-between items-center">
+      <div className="py-3 px-5 rounded-[10px] bg-baseBlack flex-1 flex flex-col sm:flex-row gap-5 justify-between sm:items-center">
         <div>
-          <div className="flex items-center gap-1">
-            <p className="text-[14px] max-w-[] sm:text-[16px] leading-normal text-white font-bold">
-              {data?.title}
-            </p>
-            <RiSendPlaneFill className="bg-primary text-white p-0.5 cursor-pointer text-[22px] rounded-[5px]" />
-          </div>
+          <p className="text-[14px] capitalize sm:text-[16px] leading-normal text-white font-bold">
+            {data?.title}
+
+            <RiSendPlaneFill className="bg-primary text-white p-0.5 cursor-pointer inline-block ms-2.5 text-[22px] rounded-[5px]" />
+          </p>
           <div className="flex items-center gap-1">
             <TfiLocationPin className="text-white text-[14px] sm:text-[16px] -ms-0.5" />
-            <p className="text-[14px] sm:text-[16px] leading-normal text-white font-medium">
+            <p className="text-[14px] capitalize sm:text-[16px] leading-normal text-white font-medium">
               {data?.location}
             </p>
           </div>
@@ -53,7 +52,7 @@ const UpcomingEventCard = ({ data }) => {
           </p> */}
         </div>
 
-        <div className="space-y-1">
+        <div className="w-full sm:w-auto space-y-1">
           <Button
             size="small"
             style="w-full py-2 px-5 flex-1 !font-normal"
