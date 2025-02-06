@@ -38,6 +38,9 @@ const EventsDetails = ({ id, details }) => {
     0
   );
 
+  const platformFee = details?.platformFee ? totalCost * 0.015 : 0;
+  const finalTotalCost = totalCost + platformFee;
+
   const handleClick = () => {
     if (!activeUser && !activeUser) {
       toast.info("Please sign in to proceed with the purchase.");
@@ -49,7 +52,7 @@ const EventsDetails = ({ id, details }) => {
       tickets: JSON.stringify(tickets),
       eventDetails: JSON.stringify({
         totalQuantity: totalQuantity,
-        totalCost: `${totalCost}`,
+        totalCost: `${finalTotalCost.toFixed(2)}`,
         eventName: details?.title,
         banner: details?.image_banner,
         currency: details?.currency,
@@ -70,7 +73,7 @@ const EventsDetails = ({ id, details }) => {
         <div className="w-full max-w-[551px] mx-auto cursor-pointer">
           <div className="w-full h-[400px] overflow-hidden">
             <StyledImage
-              src={details?.image_banner ?? "/img/event1.svg"}
+              src={details?.image_banner}
               className="w-full h-full rounded-[30px] object-cover"
             />
           </div>

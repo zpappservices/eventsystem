@@ -5,7 +5,7 @@ import { formatDate } from "@/utils/time";
 import { CircularProgress } from "@mui/material";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import NativeSelect from "../components/widgets/NativeSelect";
+import NativeSelect from "@/components/widgets/NativeSelect";
 import { apiRequest } from "@/utils/apiService";
 import useLoading from "@/hooks/useLoading";
 
@@ -48,9 +48,12 @@ const Events = () => {
 
   if (loading) {
     return (
-      <div className="h-[200px] w-full flex justify-between items-center">
-        <CircularProgress color="#FF7F50" className="mx-auto" />
-      </div>
+      <Layout isHeader={false}>
+        {" "}
+        <div className="h-[200px] w-full flex justify-between items-center">
+          <CircularProgress color="#FF7F50" className="mx-auto" />
+        </div>
+      </Layout>
     );
   }
 
@@ -89,7 +92,7 @@ const Events = () => {
             <div
               key={item.id}
               className="w-full max-w-[249px] mx-auto cursor-pointer bg-gray-50 shadow-[0_10px_15px_-3px_rgba(0,0,0,0.1)] rounded-[10px] overflow-hidden"
-              onClick={() => router.push(`/${item?.id}`)}>
+              onClick={() => router.push(`events/${item?.id}`)}>
               <div className="h-[168px]">
                 <StyledImage
                   src={item?.image_banner || "/img/event1.svg"}
@@ -98,10 +101,10 @@ const Events = () => {
               </div>
 
               <div className="py-2 px-3 pb-3">
-                <p className="text-lg text-black font-semibold">
+                <p className="text-lg text-black font-semibold overflow-hidden text-ellipsis whitespace-nowrap">
                   {item?.title}
                 </p>
-                <p className="font-inter text-xs font-medium bg-[#FF7F50] w-fit rounded-[8px] px-1.5 text-white">
+                <p className="font-inter text-xs font-medium bg-[#FF7F50] w-fit rounded-[8px] px-1.5 text-white overflow-hidden text-ellipsis whitespace-nowrap">
                   {item?.category}
                 </p>
                 <p className="text-xs mt-1 font-medium text-black text-ellipsis">
