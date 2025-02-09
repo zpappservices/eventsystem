@@ -35,16 +35,16 @@ const OrganizersCard = ({ data }) => {
         </div>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-2">
         <div className="flex items-center gap-2.5">
-          <BsFillCalendar2CheckFill className="text-[24px] text-primary" />
-          <p className="text-[18px] text-baseBlack sm:leading-[24px]">
+          <BsFillCalendar2CheckFill className="text-[20px] text-primary" />
+          <p className="text-[14px] sm:text-[16px] text-baseBlack sm:leading-[24px]">
             {data.stats.eventsHosted} Events
           </p>
         </div>
         <div className="flex items-center gap-2.5">
-          <FaRegCheckCircle className="text-[24px] text-primary" />
-          <p className="text-[18px] text-baseBlack sm:leading-[24px]">
+          <FaRegCheckCircle className="text-[20px] text-primary" />
+          <p className="text-[14px] sm:text-[16px] text-baseBlack sm:leading-[24px]">
             {data.stats.ticketsSold} Tickets sold
           </p>
         </div>

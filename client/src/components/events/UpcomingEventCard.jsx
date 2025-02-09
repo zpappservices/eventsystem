@@ -3,9 +3,16 @@ import { TfiLocationPin } from "react-icons/tfi";
 import Button from "../widgets/Button";
 import moment from "moment";
 import { RiSendPlaneFill } from "react-icons/ri";
+import DynamicModal from "../widgets/DynamicModal";
+import { useModal } from "@/hooks/useModal";
+import Share from "../website/Share";
+import { useRouter } from "next/router";
 
 const UpcomingEventCard = ({ data }) => {
   const [date, setDate] = useState(null);
+
+  const { openModal, closeModal, isOpen } = useModal();
+  const router = useRouter();
 
   const getMonthAndDay = (date) => {
     if (!date || !moment(date, moment.ISO_8601, true).isValid()) {
@@ -21,6 +28,10 @@ const UpcomingEventCard = ({ data }) => {
   useEffect(() => {
     setDate(getMonthAndDay(data?.StartDate));
   }, [data]);
+
+  const getEventUrl = (id) => `https://ticket.zafariplus.com/events/${id}`;
+
+  const eventUrl = getEventUrl(data?.id);
 
   return (
     <div className="flex gap-5 md:gap-[38px]">
@@ -38,7 +49,10 @@ const UpcomingEventCard = ({ data }) => {
           <p className="text-[14px] capitalize sm:text-[16px] leading-normal text-white font-bold">
             {data?.title}
 
-            <RiSendPlaneFill className="bg-primary text-white p-0.5 cursor-pointer inline-block ms-2.5 text-[22px] rounded-[5px]" />
+            <RiSendPlaneFill
+              onClick={openModal}
+              className="bg-primary text-white p-0.5 cursor-pointer inline-block ms-2.5 text-[22px] rounded-[5px]"
+            />
           </p>
           <div className="flex items-center gap-1">
             <TfiLocationPin className="text-white text-[14px] sm:text-[16px] -ms-0.5" />
@@ -71,6 +85,14 @@ const UpcomingEventCard = ({ data }) => {
           </Button>
         </div>
       </div>
+
+      <DynamicModal open={isOpen} onClose={closeModal}>
+        <Share
+          url={eventUrl}
+          text={data?.description}
+          closeModal={closeModal}
+        />
+      </DynamicModal>
     </div>
   );
 };

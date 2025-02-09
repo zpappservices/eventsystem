@@ -138,6 +138,8 @@ const NavBar = () => {
     (navItem) => navItem?.item === "Dashboard"
   );
 
+  const isHome = router.pathname === "/";
+
   return (
     <div className="fixed top-0 left-0 z-10 w-full bg-white drop-shadow-md">
       <nav className="w-full max-w-[1512px] mx-auto p-5">
@@ -337,11 +339,13 @@ const NavBar = () => {
           </button>
         </ul>
 
-        <div className="flex flex-col sm:flex-row justify-center sm:items-center space-y-3 py-3 sm:py-0 gap-x-10">
-          <AllCategoriesDropdown />
+        {isHome && (
+          <div className="flex flex-col sm:flex-row justify-center sm:items-center space-y-3 py-3 sm:py-0 gap-x-10">
+            <AllCategoriesDropdown />
 
-          <Search />
-        </div>
+            <Search />
+          </div>
+        )}
       </nav>
 
       {/* Login and Sign-Up Modal */}

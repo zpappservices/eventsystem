@@ -24,7 +24,7 @@ const Categories = () => {
   // Handle loading state
   if (loading) {
     return (
-      <div className="w-full max-w-[1323px] px-5 flex items-center justify-center sm:justify-between flex-wrap gap-5">
+      <div className="w-full max-w-[1323px] mx-auto px-5 flex items-center justify-center sm:justify-between flex-wrap gap-5">
         <div className="w-full grid grid-cols-1 gap-x-5 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 py-6">
           {["", "", "", "", "", "", "", "", "", "", ""]?.map((item, index) => (
             <CategoryCardSkeleton key={index} />

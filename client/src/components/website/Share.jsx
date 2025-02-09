@@ -2,30 +2,25 @@ import React, { useState } from "react";
 import CopyClipboardButton from "./CopyClipboardButton";
 import Link from "next/link";
 import Button from "../widgets/Button";
-import Confetti from "../ui/Confetti";
+import { FaWhatsapp } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
+import { RiFacebookFill } from "react-icons/ri";
+import { MdAlternateEmail } from "react-icons/md";
 
 const Share = ({ closeModal, text, url }) => {
   const [successMessage, setSuccessMessage] = useState(false);
 
   const shareUrl = url;
-  const twitterText = "";
-  const facebookText = "";
-  const instagramText = "";
-  const whatsappText = ``;
+  const twitterText = url;
+  const facebookText = url;
+  const instagramText = url;
+  const whatsappText = url;
   const whatsappShareLink = `https://api.whatsapp.com/send?text=${encodeURIComponent(
     whatsappText
   )}`;
 
   return (
     <div className="max-w-[576px] max-h-[95vh] overflow-y-auto bg-white rounded-[40px] w-full flex flex-col items-center p-5 sm:p-10 gap-y-[20px] mx-auto md:mx-0 relative">
-      <div>
-        <h1 className="text-primary font-bold text-lg sm:text-[29.17px] text-center sm:leading-[50px]">
-          Congratulations!!!
-        </h1>
-        <p className="text-[14px] text-center leading-[24px] text-baseBlack font-medium">
-          You will be notified when we launch
-        </p>
-      </div>
       <div className="w-full border-[#E7E7E7] border flex flex-col items-center gap-y-[40px] rounded-[16px] py-8 p-2 z-10 relative">
         <p className="sm:text-[16px] text-[13px] sm:leading-[20px] text-baseBlack">
           Share with
@@ -36,10 +31,7 @@ const Share = ({ closeModal, text, url }) => {
             target="_blank"
             rel="noopener noreferrer"
             className="flex flex-col items-center gap-y-2">
-            <img
-              src="/images/whatsapp-share.svg"
-              className="w-[35px] sm:w-auto"
-            />
+            <FaWhatsapp className="text-white bg-success500 text-[28px] p-1 cursor-pointer rounded-sm" />
             <p className="text-[13px] sm:text-[14px] text-[#81909D] leading-[11px] text-center">
               Whatsapp
             </p>
@@ -51,10 +43,7 @@ const Share = ({ closeModal, text, url }) => {
             target="_blank"
             rel="noopener noreferrer"
             className="flex flex-col items-center gap-y-2">
-            <img
-              src="/images/facebook-share.svg"
-              className="w-[35px] sm:w-auto"
-            />
+            <RiFacebookFill className="text-white bg-[#1877F2] text-[28px] p-0.5 cursor-pointer rounded-sm" />
             <p className="text-[13px] sm:text-[14px] text-[#81909D] leading-[11px] text-center">
               Facebook
             </p>
@@ -66,10 +55,7 @@ const Share = ({ closeModal, text, url }) => {
             target="_blank"
             rel="noopener noreferrer"
             className="flex flex-col items-center gap-y-2">
-            <img
-              src="/images/twitter-share.svg"
-              className="w-[35px] sm:w-auto"
-            />
+            <FaXTwitter className="text-white bg-baseBlack text-[28px] p-1 cursor-pointer rounded-sm" />
             <p className="text-[13px] sm:text-[14px] text-[#81909D] leading-[11px]">
               Twitter
             </p>
@@ -81,7 +67,7 @@ const Share = ({ closeModal, text, url }) => {
             target="_blank"
             rel="noopener noreferrer"
             className="flex flex-col items-center gap-y-2">
-            <img src="/images/email-share.svg" className="w-[35px] sm:w-auto" />
+            <MdAlternateEmail className="text-neutrals800 bg-neutrals200 text-[28px] p-1 cursor-pointer rounded-sm" />
             <p className="text-[13px] sm:text-[14px] text-[#81909D] leading-[11px]">
               E-mail
             </p>
@@ -124,7 +110,6 @@ const Share = ({ closeModal, text, url }) => {
         onClick={closeModal}>
         Close
       </Button>
-      <Confetti isSuccess={true} />
     </div>
   );
 };
