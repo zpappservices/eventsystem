@@ -4,9 +4,11 @@ import StyledImage from "../StyledImage";
 import { convertTo12HourFormat, formatDate } from "@/utils/time";
 
 const TicketDetails = ({ data, event }) => {
+    console.log(data)
+    console.log(event);
   return (
-    <div className="w-full max-w-[250px] max-h-[95vh] overflow-y-auto xl:max-w-[744px] mx-auto rounded-md bg-white">
-      <div className="py-[33px]">
+    <div className="w-full max-h-[95vh] overflow-y-auto max-w-[744px] mx-auto rounded-md bg-white">
+      <div className="py-[33px] px-5">
         <div className="h-[345px] max-w-[484px] mx-auto shadow-[0px_7px_13px_-3px_rgba(0,_0,_0,_0.1)] rounded-[10px] overflow-hidden">
           <StyledImage
             src={
@@ -37,7 +39,7 @@ const TicketDetails = ({ data, event }) => {
             <p className="font-bold text-[16px]">Ejiro Daniel</p>
           </div>
           <div className="flex-1">
-            <p className="text-[14px]">Catergory:</p>
+            <p className="text-[14px]">Category:</p>
             <p className="font-bold text-[16px]">{data?.ticket}</p>
           </div>
         </div>

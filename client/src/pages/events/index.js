@@ -51,7 +51,7 @@ const Events = () => {
 
   if (loading) {
     return (
-      <Layout isHeader={false}>
+      <Layout isHeader={false} container="w-full max-w-[1512px] px-5">
         <div className="w-full grid grid-cols-1 gap-x-5 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 py-6">
           {["", "", "", "", "", "", "", "", "", "", ""]?.map((item, index) => (
             <EventCardSkeleton key={index} />
@@ -63,7 +63,7 @@ const Events = () => {
 
   if (error) {
     return (
-      <Layout>
+      <Layout isHeader={false} container="w-full max-w-[1512px] px-5">
         <div>Error loading data</div>
       </Layout>
     );
@@ -76,7 +76,7 @@ const Events = () => {
   };
 
   return (
-    <Layout isHeader={false}>
+    <Layout isHeader={false} container="w-full max-w-[1512px] px-5">
       <div className="w-full flex items-start justify-between gap-x-5">
         <p
           className="flex items-center gap-x-2 text-[18px] font-medium cursor-pointer"
