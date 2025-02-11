@@ -9,12 +9,17 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: ["Inter", "san-serif"],
+      screens: {
+        md2: "962px",
+      },
       colors: {
+        white: "#ffffff",
         softCream: "#F7F7F7",
         primary: "#068A4F",
         baseWhite: "#fafafa",
         baseBlack: "#0a0a0b",
         accent: "#F58634",
+        sec: "#F58634",
         success: "#1FCA59",
         warning: "#ffda24",
         error: "#CA1F29",
@@ -25,9 +30,11 @@ module.exports = {
         primary600: "#057040",
         primary500: "#068A4F",
         primary400: "#09D278",
-        primary300: "##2DF69B",
+        primary300: "#2DF69B",
         primary200: "#71F9BC",
         primary100: "#BBFCDF",
+        sec300: "#F79E5F",
+        sec100: "#FDE8D8",
         accent1000: "#170A01",
         accent900: "#3A1A03",
         accent800: "#703206",
@@ -66,6 +73,15 @@ module.exports = {
         error200: "#F09EA3",
         error100: "#F8CED1",
         grey900: "#1C2122",
+      },
+      keyframes: {
+        pulseScale: {
+          "0%, 100%": { transform: "scale(1)" },
+          "50%": { transform: "scale(1.1)" },
+        },
+      },
+      animation: {
+        pulseScale: "pulseScale 5s infinite",
       },
       borderRadius: {
         lg: "var(--radius)",

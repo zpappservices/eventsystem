@@ -2,13 +2,24 @@ import React from "react";
 import Header from "./Header";
 import NavBar from "./Navbar";
 import Footer from "./website/Footer";
+import { useRouter } from "next/router";
 
-const Layout = ({ children, isHeader = true, isFooter = true }) => {
+const Layout = ({ children, container, isHeader = true, isFooter = true }) => {
+  const router = useRouter();
+  const isHome = router.pathname === "/";
   return (
-    <div className="w-full mx-auto flex flex-col gap-5 selection:bg-orange-600 selection:text-black">
+    <div className="w-full mx-auto selection:bg-orange-600 selection:text-black">
       <NavBar />
-      <div className="w-full max-w-[1300px] min-h-screen mx-auto space-y-4 mt-24 px-5">
-        {isHeader && <Header />}
+
+      {isHome && (
+        <div className="mt-[220px] sm:mt-[170px]">
+          <Header />
+        </div>
+      )}
+      <div
+        className={`w-full ${container} min-h-screen mx-auto ${
+          !isHome ? "mt-[120px]" : "py-10"
+        }`}>
         {children}
       </div>
       {isFooter && <Footer />}

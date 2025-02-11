@@ -3,8 +3,6 @@ import { ButtonLoading } from "../widgets/ButtonLoading";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/config/firebase";
 import useAuthToken from "@/hooks/useAuthToken";
-import useApiRequest from "@/hooks/useApiRequest";
-import axios from "axios";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import { apiRequest } from "@/utils/apiService";

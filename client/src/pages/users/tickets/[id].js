@@ -5,9 +5,8 @@ import useApiRequest from "@/hooks/useApiRequest";
 import useAuthToken from "@/hooks/useAuthToken";
 import { Loader } from "lucide-react";
 import React, { useEffect } from "react";
-import QRCode from "react-qr-code";
 
-const tickets = () => {
+const eventTickets = () => {
   const { activeUser } = useAuthToken();
   const { data, error, loading, request } = useApiRequest({
     method: "get",
@@ -36,12 +35,8 @@ const tickets = () => {
         </p>
         <div className="space-y-10 py-10">
           {tickets?.length > 0 &&
-            tickets?.map(({ transaction, eventName }, index) => (
-              <TicketTable
-                tickets={transaction}
-                key={index}
-                event={eventName}
-              />
+            tickets?.map(({ transaction }, index) => (
+              <TicketTable tickets={transaction} key={index} />
             ))}
         </div>
         {tickets?.length < 1 && !loading && !error && (
@@ -59,4 +54,4 @@ const tickets = () => {
   );
 };
 
-export default tickets;
+export default eventTickets;

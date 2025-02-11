@@ -1,24 +1,14 @@
 import { useRouter } from "next/router";
 import CustomAccordion from "./Accordion";
-import BreadCrumb from "./BreadCrumb";
 import Button from "./Button";
 import Quantity from "./Quantity";
 import StyledImage from "./StyledImage";
-import { useTicketContext } from "@/context/TicketContext";
 import { toast } from "react-toastify";
 import { convertTo12HourFormat, formatDate } from "@/utils/time";
-import moment from "moment";
 import { MdAccessTime, MdLocationPin } from "react-icons/md";
 import { BsCalendar2Date } from "react-icons/bs";
-import { createTicketContext } from "@/utils/ticket";
 import { useState } from "react";
 import useAuthToken from "@/hooks/useAuthToken";
-
-const eventDetails = {
-  name: "Night of a Thousand Laughs",
-  image: "/img/event1.svg",
-  date: "November 19th, 2024",
-};
 
 const EventsDetails = ({ id, details }) => {
   const event = details?.EventTicket;
