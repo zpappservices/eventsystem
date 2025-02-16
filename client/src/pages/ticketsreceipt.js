@@ -66,7 +66,7 @@ const ticketsreceipt = () => {
 
   return (
     <PrivateRoute>
-      <Layout isHeader={false}>
+      <Layout isHeader={false} container="max-w-[1312px] mx-auto px-5">
         <div className="w-full bg-black p-5 text-white rounded-md">
           <p className="text-xl sm:text-[40px] font-bold text-center leading-snug">
             Online Tickets
