@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import useApiRequest from "@/hooks/useApiRequest";
 import UpcomingEventCard from "../events/UpcomingEventCard";
 import UpcomingEventCardSkeleton from "../events/UpcomingEventSkeleton";
@@ -10,6 +10,9 @@ const UpcomingEventsList = () => {
     url: "event/getallevent",
   });
 
+  const [displayedEvents, setDisplayedEvents] = useState([]);
+  const [visibleCount, setVisibleCount] = useState(3);
+
   const getAllEvents = async () => {
     await request();
   };
@@ -17,6 +20,19 @@ const UpcomingEventsList = () => {
   useEffect(() => {
     getAllEvents();
   }, []);
+
+  useEffect(() => {
+    if (data?.data) {
+      const filteredEvents = data.data.filter(
+        (item) => new Date() < new Date(item?.EndDate) && item?.active
+      );
+      setDisplayedEvents(filteredEvents.slice(0, visibleCount));
+    }
+  }, [data, visibleCount]);
+
+  const loadMore = () => {
+    setVisibleCount((prevCount) => prevCount + 3); 
+  };
 
   if (loading) {
     return (
@@ -30,24 +46,24 @@ const UpcomingEventsList = () => {
 
   if (error || data?.length < 1) {
     return (
-      <div className="w-full max-w-[722px] text-center">
-        Couldn't load data
-      </div>
+      <div className="w-full max-w-[722px] text-center">Couldn't load data</div>
     );
   }
-  const events = data?.data;
+
   return (
     <div className="w-full max-w-[722px] space-y-10">
       <div className="w-full flex flex-col gap-[32px]">
-        {events?.length > 0 &&
-          events
-            .filter(
-              (item) => new Date() < new Date(item?.EndDate) && item?.active
-            )
-            .map((item) => <UpcomingEventCard data={item} key={item?.id} />)}
+        {displayedEvents?.length > 0 &&
+          displayedEvents?.map((item) => (
+            <UpcomingEventCard data={item} key={item?.id} />
+          ))}
       </div>
 
-      <Button style="mx-auto !px-5 !font-normal">Load more...</Button>
+      {displayedEvents?.length < data?.data?.length && (
+        <Button style="mx-auto !px-5 !font-normal" onClick={loadMore}>
+          Load more...
+        </Button>
+      )}
     </div>
   );
 };

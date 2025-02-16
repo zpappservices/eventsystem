@@ -175,14 +175,14 @@ const NavBar = () => {
                 Events
               </Link>
               <Link
-                href="/"
+                href="/about"
                 className={
                   pathname === "/about" ? "text-baseBlack font-bold" : ""
                 }>
                 About us
               </Link>
               <Link
-                href="/"
+                href="/contact"
                 className={
                   pathname === "/contact" ? "text-baseBlack font-bold" : ""
                 }>
@@ -220,7 +220,7 @@ const NavBar = () => {
               )}
             </div>
           </Backdrop>
-          <div className="w-full hidden md2:flex justify-center text-[18px] md:text-[20px] items-center mx-auto gap-6">
+          <div className="w-full hidden md2:flex justify-center text-[18px] md:text-[19px] items-center mx-auto gap-6">
             <Link
               href="/"
               className={pathname === "/" ? "text-baseBlack font-bold" : ""}>
@@ -236,14 +236,14 @@ const NavBar = () => {
               Events
             </Link>
             <Link
-              href="/"
+              href="/about"
               className={
                 pathname === "/about" ? "text-baseBlack font-bold" : ""
               }>
               About us
             </Link>
             <Link
-              href="/"
+              href="/contact"
               className={
                 pathname === "/contact" ? "text-baseBlack font-bold" : ""
               }>

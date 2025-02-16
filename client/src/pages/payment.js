@@ -9,6 +9,7 @@ import useApiRequest from "@/hooks/useApiRequest";
 import useAuthToken from "@/hooks/useAuthToken";
 import useLoading from "@/hooks/useLoading";
 import { apiRequest } from "@/utils/apiService";
+import { checkComplete } from "@/utils/validation";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -20,9 +21,11 @@ const payment = () => {
     firstName: "",
     lastName: "",
     email: "",
+    phone: ""
   });
   const [errors, setErrors] = useState({});
   const [isChecked, setIsChecked] = useState(false);
+  const [isComplete, setIsComplete] = useState(false);
 
   const router = useRouter();
   const { activeUser } = useAuthToken();
@@ -93,6 +96,8 @@ const payment = () => {
     firstName: form.firstName,
     lastName: form.lastName,
     email: form.email,
+    email_CC: form.email,
+    phone: form.phone,
     channel: "paystack",
     totalAmount: totalCost,
     tickets: parsedTickets,
@@ -125,6 +130,7 @@ const payment = () => {
       email_CC: form.email,
       tickets: parsedTickets,
     };
+
     startLoading();
     try {
       const response = await apiRequest(
@@ -204,8 +210,14 @@ const payment = () => {
     }
   }, [payError]);
 
+  useEffect(() => {
+    const isFormValid = isChecked && checkComplete(form)
+    setIsComplete(isFormValid);
+  }, [form, isChecked])
+  
+
   return (
-    <Layout>
+    <Layout container="max-w-[1312px] mx-auto px-5">
       <div className="w-full flex flex-col gap-6">
         <div className="w-full flex flex-col md:flex-row justify-between gap-6">
           <div className="w-full max-w-[518px] cursor-pointer rounded-lg flex flex-col gap-2">
@@ -295,7 +307,7 @@ const payment = () => {
               </label>
               <ButtonLoading
                 onClick={handlePay}
-                disabled={!isChecked}
+                disabled={!isComplete}
                 isLoading={payLoading || isLoading}
                 className="w-full max-w-none py-3.5 disabled:text-gray-700 disabled:bg-gray-400">
                 PAY NOW

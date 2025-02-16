@@ -39,4 +39,18 @@ const validateTicket = (form, setError) => {
   return Object.keys(newError).length === 0;
 };
 
-export { validateContact, validateTicket };
+const checkComplete = (fields) => {
+  let isValid = true;
+
+  Object.keys(fields).forEach((field) => {
+    const value = fields[field];
+
+    if (typeof value === "string" && value.trim().length < 1) {
+      isValid = false;
+    }
+  });
+
+  return isValid;
+};
+
+export { validateContact, validateTicket, checkComplete };

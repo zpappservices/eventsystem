@@ -43,11 +43,9 @@ const Event = () => {
         </div>
       </Layout>
     );
-  
-  console.log(event)
 
   return (
-    <Layout>
+    <Layout container="max-w-[1512px] mx-auto px-5 2xl:px-0">
       {event && (
         <div>
           <EventsDetails id={id} details={event} />

@@ -6,9 +6,7 @@ import { motion } from "framer-motion";
 const Header = ({ step }) => {
   return (
     <div className="w-full transition-all py-20 sm:py-[100px] px-5 sm:px-[98px] hero overflow-hidden">
-      <div
-        className="w-full hero-content bg-cover bg-center flex flex-col gap-y-20 md:flex-row items-center justify-between"
-        style={{ backgroundImage: "url('/path/to/your-image.jpg')" }}>
+      <div className="w-full max-w-[1512px] mx-auto hero-content bg-cover bg-center flex flex-col gap-y-20 md:flex-row items-center justify-between">
         <div className="w-full max-w-[608px] space-y-5 text-white">
           <div className="space-y-3">
             <p className="text-[18px] sm:text-[20px] font-bold sm:leading-[24px]">

@@ -91,7 +91,7 @@ const EventsDetails = ({ id, details }) => {
             <p className="text-[20px] font-semibold leading-snug">
               {details?.title}
             </p>
-            {totalInStock > 0 ? (
+            {/* {totalInStock > 0 ? (
               <p className="text-[#1FCA59] text-[16px] leading-snug">
                 In stock {totalInStock} tickets
               </p>
@@ -99,7 +99,7 @@ const EventsDetails = ({ id, details }) => {
               <p className="text-red-600 text-[16px] leading-snug">
                 In stock {totalInStock} tickets
               </p>
-            )}
+            )} */}
           </div>
           <div className="w-full flex flex-col gap-2  border-b-2 border-gray-400 pb-2.5">
             {event?.map(({ price, name, quantity }, index) => (
