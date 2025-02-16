@@ -18,7 +18,7 @@ const Layout = ({ children, container, isHeader = true, isFooter = true }) => {
       )}
       <div
         className={`w-full ${container} min-h-screen mx-auto ${
-          !isHome ? "mt-[120px]" : "py-10"
+          !isHome ? "mt-[120px]" : "pb-10"
         }`}>
         {children}
       </div>

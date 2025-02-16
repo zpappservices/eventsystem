@@ -220,7 +220,7 @@ const NavBar = () => {
               )}
             </div>
           </Backdrop>
-          <div className="w-full hidden md2:flex justify-center text-[18px] md:text-[20px] items-center mx-auto gap-6">
+          <div className="w-full hidden md2:flex justify-center text-[18px] md:text-[19px] items-center mx-auto gap-6">
             <Link
               href="/"
               className={pathname === "/" ? "text-baseBlack font-bold" : ""}>

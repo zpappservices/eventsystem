@@ -7,6 +7,7 @@ import DynamicModal from "../widgets/DynamicModal";
 import { useModal } from "@/hooks/useModal";
 import Share from "../website/Share";
 import { useRouter } from "next/router";
+import { LuUpload } from "react-icons/lu";
 
 const UpcomingEventCard = ({ data }) => {
   const [date, setDate] = useState(null);
@@ -48,11 +49,6 @@ const UpcomingEventCard = ({ data }) => {
         <div>
           <p className="text-[14px] capitalize sm:text-[16px] leading-normal text-white font-bold">
             {data?.title}
-
-            <RiSendPlaneFill
-              onClick={openModal}
-              className="bg-primary text-white p-0.5 cursor-pointer inline-block ms-2.5 text-[22px] rounded-[5px]"
-            />
           </p>
           <div className="flex items-center gap-1">
             <TfiLocationPin className="text-white text-[14px] sm:text-[16px] -ms-0.5" />
@@ -74,12 +70,13 @@ const UpcomingEventCard = ({ data }) => {
             hover="hover:!bg-primary"
             border="border-1 border-primary"
             outline={true}
-            onClick={() => router.push(`/events/${data?.id}`)}>
-            View details
+            onClick={openModal}>
+            Share
+            <LuUpload className="text-white p-0.5 cursor-pointer inline-block ms-2.5 text-[22px] rounded-[5px]" />
           </Button>
           <Button
             size="small"
-            style="w-full py-2 px-5 flex-1 !font-normal"
+            style="w-full py-2 !px-5 flex-1 !font-normal"
             onClick={() => router.push(`/events/${data?.id}`)}>
             Book Now
           </Button>
