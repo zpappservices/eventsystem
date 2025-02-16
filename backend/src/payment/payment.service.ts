@@ -213,6 +213,11 @@ export class PaymentService {
           ticketId: `Tic-${uuidv4()}`,
           ticketName: t.name,
           price: t.amount,
+          firstName: data.firstName,
+          lastName: data.lastName,
+          email: data.email,
+          email_CC: data.email_CC,
+          phone: data.phone,
         };
 
         transactionList.push(ticket);
@@ -364,10 +369,15 @@ export class PaymentService {
           ticket: t.ticketName,
           userId: t.userId,
           price: t.price,
+          firstName: t.firstName,
+          lastName: t.lastName,
+          email: t.email,
+          email_CC: t.email_CC,
+          phone: t.phone,
           createdBy: 'System',
           createdOn: new Date(),
         })),
-        skipDuplicates: true, // Skip 'Bobo'
+        //skipDuplicates: true, // Skip 'Bobo'
       });
 
       return {
@@ -433,6 +443,11 @@ export class PaymentService {
           ticket: t.ticketName,
           userId: t.userId,
           price: t.price,
+          firstName: t.firstName,
+          lastName: t.lastName,
+          email: t.email,
+          email_CC: t.email_CC,
+          phone: t.phone,
           status: PaymentStatusEnum.PAID,
           createdBy: 'System',
           createdOn: new Date(),

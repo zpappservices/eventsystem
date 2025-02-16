@@ -159,6 +159,11 @@ model EventTransaction {
   status    PaymentStatus @default(PENDING)
   checkIn   Boolean?      @default(false)
   active    Boolean       @default(true)
+  firstName String?
+  lastName  String?
+  email     String?
+  email_CC  String?
+  phone     String?
   createdBy String?
   createdOn DateTime      @default(now())
   updatedBy String?
