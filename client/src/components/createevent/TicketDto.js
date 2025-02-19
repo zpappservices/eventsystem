@@ -179,6 +179,8 @@ const TicketDto = ({ handleBack, handleReset }) => {
     }
   }, [UploadError]);
 
+  console.log(form)
+
   return (
     <>
       <div className="p-4">
@@ -230,16 +232,18 @@ const TicketDto = ({ handleBack, handleReset }) => {
             </div>
 
             <div className="mb-3 flex gap-5">
-              <TextField
-                label="Price"
-                type="number"
-                name="price"
-                value={form.price}
-                onChange={handleInputChange}
-                className="flex-1"
-                color="warning"
-                disabled={form.type === "free"}
-              />
+              {form.type !== "Free" && (
+                <TextField
+                  label="Price"
+                  type="number"
+                  name="price"
+                  value={form.price}
+                  onChange={handleInputChange}
+                  className="flex-1"
+                  color="warning"
+                  disabled={form.type === "free"}
+                />
+              )}
 
               <TextField
                 label="Quantity"
@@ -274,7 +278,12 @@ const TicketDto = ({ handleBack, handleReset }) => {
                 <FaClipboardList />
                 {`${ticket.name} (${ticket.type})=> `}
                 <span>{`Price of tickets $(${ticket.price}) - Number of tickets: (${ticket.quantity})`}</span>
-                <MdDelete size={18} color="red" className="cursor-pointer" onClick={() => deleteTicket(index)}/>
+                <MdDelete
+                  size={18}
+                  color="red"
+                  className="cursor-pointer"
+                  onClick={() => deleteTicket(index)}
+                />
               </div>
             ))}
           </ul>

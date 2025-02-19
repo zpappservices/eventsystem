@@ -4,6 +4,7 @@ import ContactSales from "./ContactSales";
 import { ImWhatsapp } from "react-icons/im";
 import { TfiEmail } from "react-icons/tfi";
 import StyledImage from "../StyledImage";
+import { useRouter } from "next/router";
 
 const Card = ({ icon, heading, text, action, actionText }) => {
   return (
@@ -15,7 +16,9 @@ const Card = ({ icon, heading, text, action, actionText }) => {
 
       <p className="text-[10px] leading-normal text-baseBlack ">{text}</p>
 
-      <p className="text-primary text-[10px] leading-normal mt-auto">
+      <p
+        className="text-primary text-[10px] leading-normal mt-auto cursor-pointer"
+        onClick={action}>
         {actionText}
       </p>
     </div>
@@ -23,6 +26,16 @@ const Card = ({ icon, heading, text, action, actionText }) => {
 };
 
 const Contact = () => {
+  const router = useRouter();
+
+  const handleWhatsAppClick = () => {
+    const phoneNumber = "+2349032335845";
+    const message = "Hello, I have a question about ZafariPlus.";
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
+      message
+    )}`;
+    window.open(whatsappUrl, "_blank");
+  };
   return (
     <div className="max-w-[1067px] mx-auto py-10 md:pt-[137px]">
       <div className="flex flex-col items-center md:items-start md:flex-row gap-x-[201px] gap-y-10 relative">
@@ -39,13 +52,17 @@ const Contact = () => {
           heading={"Chat with us"}
           text="Chat with us directly to get in touch quickly"
           actionText="Send a message"
+          action={handleWhatsAppClick}
         />
 
         <Card
           icon={<TfiEmail size={19} className="text-baseBlack" />}
           heading={"Send us an email"}
-          text="Reach us at Cs@zafariplus.com"
+          text="Reach us at cs@zafariplus.com"
           actionText="Email us"
+          action={() => {
+            router.push("mailto:cs@zafariplus.com");
+          }}
         />
 
         <Card

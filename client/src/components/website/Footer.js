@@ -16,6 +16,11 @@ const Footer = () => {
             UELA
           </p>
         </Link>
+        <Link
+          href="/about"
+          className="text-baseWhite text-[16px] font-semibold leading-normal">
+          About us
+        </Link>
       </div>
       <div className="w-full  text-center ">
         <p className="">&copy; {year} zafariplusticket All Rights Reserved.</p>

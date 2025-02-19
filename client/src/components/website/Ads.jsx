@@ -6,16 +6,24 @@ const Ads = () => {
   return (
     <div className="bg-sec300">
       <div className="px-5 max-w-[1512px] mx-auto py-4 sm:px-[70px]">
-        <div className="flex flex-wrap gap-6 items-center">
-          <div>
-            <StyledImage src="/img/ad-image.png" />
+        <div className="w-full flex flex-wrap gap-6 items-center">
+          <div className="w-full max-w-[180px] h-[106px]">
+            <StyledImage
+              src="/img/ad-image.png"
+              className="w-full h-full object-cover"
+            />
           </div>
-          <div className="text-[18px] sm:text-[20px]">
-            <p>Powered by the Kingdom Hotel</p>
-            <p>Be the first to know when your favorite artists play nearby</p>
+          <div className="text-[16px] sm:text-[18px] max-w-[722px]">
+            <p>
+              3Ways Properties Your Partner in Real Estate Management and
+              Investment in Lagos
+            </p>
+            <p className="text-[14px] sm:text-[16px]">
+              Experience the Difference in Real Estate Investment
+            </p>
           </div>
 
-          <Button>Subscribe</Button>
+          <Button style="ms-auto w-full max-w-[223px]">Subscribe</Button>
         </div>
       </div>
     </div>
