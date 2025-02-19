@@ -1,9 +1,26 @@
 import { GoDotFill } from "react-icons/go";
 import Button from "./widgets/Button";
 import StyledImage from "./StyledImage";
-import { motion } from "framer-motion";
+import { getEvents } from "@/apis/eventsServices";
+import { useEffect, useState } from "react";
 
-const Header = ({ step }) => {
+const Header = () => {
+  const [image, setImage] = useState("/img/hero-4.png");
+
+  const getEventImage = async () => {
+    const { data, success } = await getEvents();
+
+    if (success) {
+      const lastItem = data.length - 1;
+      setImage(data[lastItem]?.image_banner);
+    } else {
+    }
+  };
+
+  useEffect(() => {
+    getEventImage();
+  }, []);
+
   return (
     <div className="w-full transition-all py-20 sm:py-[100px] px-5 sm:px-[98px] hero overflow-hidden">
       <div className="w-full max-w-[1512px] mx-auto hero-content bg-cover bg-center flex flex-col gap-y-20 md:flex-row items-center justify-between">
@@ -74,7 +91,7 @@ const Header = ({ step }) => {
           <div className="flex items-center">
             <div className="max-w-[191px] h-[169px] mx-auto relative">
               <StyledImage
-                src="/img/hero-4.png"
+                src={image}
                 className="w-full h-full object-cover animate-pulseScale"
               />
               <StyledImage
