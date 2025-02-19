@@ -36,7 +36,7 @@ const payment = () => {
   const parsedTickets = tickets ? JSON.parse(tickets) : null;
   const parsedEvents = eventDetails ? JSON.parse(eventDetails) : null;
 
-  const { totalQuantity, totalCost, eventName, banner, currency } =
+  const { totalQuantity, totalCost, eventName, banner, currency, platformFee } =
     parsedEvents || {};
 
   const handleCheckboxToggle = () => {
@@ -249,6 +249,10 @@ const payment = () => {
               <div className="flex justify-between items-center gap-2">
                 <p className="text-[16px] leading-snug">Number of ticket(s):</p>
                 <p className="text-[16px] leading-snug">{totalQuantity}</p>
+              </div>
+              <div className="flex justify-between items-center gap-2">
+                <p className="text-[16px] leading-snug">Service Fee:</p>
+                <p className="text-[16px] leading-snug">{platformFee}</p>
               </div>
               {parsedTickets?.length > 0 &&
                 parsedTickets?.map(({ name, amount, quantity }, index) => (
