@@ -161,13 +161,6 @@ const NavBar = () => {
                 isOpen ? "left-0" : "left-[-100%]"
               } absolute top-0 left-0 z-10 shadow-xl px-7 lg:px-[68px] transition-all h-screen w-[75%] sm:w-[50%] bg-white pt-[150px] gap-y-6 gap-x-[70px] items-start text-baseBlack text-[20px] md:text-[21px] leading-[24px]`}>
               <Link
-                href="/"
-                className={
-                  pathname === "/about" ? "text-baseBlack font-bold" : ""
-                }>
-                Home
-              </Link>
-              <Link
                 href="/events"
                 className={
                   pathname === "/events" ? "text-baseBlack font-bold" : ""
@@ -175,18 +168,26 @@ const NavBar = () => {
                 Events
               </Link>
               <Link
-                href="/about"
-                className={
-                  pathname === "/about" ? "text-baseBlack font-bold" : ""
-                }>
-                About us
+                href="/"
+                className={pathname === "" ? "text-baseBlack font-bold" : ""}>
+                Concerts
+              </Link>
+              <Link
+                href="/"
+                className={pathname === "" ? "text-baseBlack font-bold" : ""}>
+                Sports
+              </Link>
+              <Link
+                href="/"
+                className={pathname === "" ? "text-baseBlack font-bold" : ""}>
+                Theater & Comedy
               </Link>
               <Link
                 href="/contact"
                 className={
                   pathname === "/contact" ? "text-baseBlack font-bold" : ""
                 }>
-                Contact
+                Help Center
               </Link>
 
               {navItems?.map((i) => (
@@ -222,11 +223,6 @@ const NavBar = () => {
           </Backdrop>
           <div className="w-full hidden md2:flex justify-center text-[18px] md:text-[19px] items-center mx-auto gap-6">
             <Link
-              href="/"
-              className={pathname === "/" ? "text-baseBlack font-bold" : ""}>
-              Home
-            </Link>
-            <Link
               href="/events"
               className={
                 pathname === "/events" || pathname.includes("events")
@@ -236,18 +232,26 @@ const NavBar = () => {
               Events
             </Link>
             <Link
-              href="/about"
-              className={
-                pathname === "/about" ? "text-baseBlack font-bold" : ""
-              }>
-              About us
+              href="/"
+              className={pathname === "" ? "text-baseBlack font-bold" : ""}>
+              Concerts
+            </Link>
+            <Link
+              href="/"
+              className={pathname === "" ? "text-baseBlack font-bold" : ""}>
+              Sports
+            </Link>
+            <Link
+              href="/"
+              className={pathname === "" ? "text-baseBlack font-bold" : ""}>
+              Theater & Comedy
             </Link>
             <Link
               href="/contact"
               className={
                 pathname === "/contact" ? "text-baseBlack font-bold" : ""
               }>
-              Contact
+              Help Center
             </Link>
           </div>
           <div className="min-w-fit flex justify-end gap-5 !ms-auto">
