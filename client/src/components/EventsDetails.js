@@ -46,6 +46,7 @@ const EventsDetails = ({ id, details }) => {
         eventName: details?.title,
         banner: details?.image_banner,
         currency: details?.currency,
+        platformFee: platformFee
       }),
     };
 
