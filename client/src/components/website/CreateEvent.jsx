@@ -7,11 +7,11 @@ const CreateEvent = () => {
     <div className="bg-baseBlack py-[35px] !my-36  px-3.5 flex flex-col md:flex-row items-center justify-center gap-10">
       <div className="w-full max-w-[450px] sm:max-w-[500px] relative">
         <StyledImage
-          src="/img/create-event.svg"
+          src="/img/create-event.png"
           className="w-full h-[150px] opacity-0"
         />
         <div className="!absolute md:w-[400px] lg:w-[495px] -top-[100px] left-0">
-          <StyledImage src="/img/create-event.svg" className="w-full h-full" />
+          <StyledImage src="/img/create-event.png" className="w-full h-full" />
         </div>
       </div>
 
