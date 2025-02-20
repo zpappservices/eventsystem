@@ -8,6 +8,7 @@ const PlaceAdvert = () => {
       <div className="w-full max-w-[417px] aspect-video h-[284px]">
         <StyledImage src="/img/ads-image.png" className="h-full object-cover" />
       </div>
+      <p className="text-[14px] leading-[16px] !mt-1 text-center">Advertisement</p>
     </div>
   );
 };

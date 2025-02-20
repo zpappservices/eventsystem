@@ -36,7 +36,9 @@ const TopOrganizers = () => {
   };
   return (
     <div className="bg-neutrals100/50 p-5 rounded-[10px] space-y-5">
-      <p className="text-[20px] leading-[28px] text-center font-bold underline underline-offset-[5px]">Top Organizers</p>
+      <p className="text-[20px] leading-[28px] text-center font-bold underline underline-offset-[5px]">
+        Top Organizers
+      </p>
       <div className="p-[50px] bg-sec100 rounded-[10px] max-w-[355px] mx-auto">
         <Slider {...settings}>
           {mockOrganizers.map((organizer) => (
@@ -48,4 +50,15 @@ const TopOrganizers = () => {
   );
 };
 
-export default TopOrganizers;
+const UpcomingEvent = () => {
+  return (
+    <div className="bg-neutrals100/50 p-5 rounded-[10px] space-y-5">
+      <p className="text-[20px] leading-[28px] text-center font-bold underline underline-offset-[5px]">
+        Top Organizers
+      </p>
+      <img src="/img/upcoming-event.png" className="w-full object-cover" />
+    </div>
+  );
+};
+
+export default UpcomingEvent;

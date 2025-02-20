@@ -159,7 +159,7 @@ const NavBar = () => {
               ref={bgRef}
               className={`flex flex-col md2:hidden ${
                 isOpen ? "left-0" : "left-[-100%]"
-              } absolute top-0 left-0 z-10 shadow-xl px-7 lg:px-[68px] transition-all h-screen w-[75%] sm:w-[50%] bg-white pt-[150px] gap-y-6 gap-x-[70px] items-start text-baseBlack text-[20px] md:text-[21px] leading-[24px]`}>
+              } absolute top-0 left-0 z-10 shadow-xl px-7 lg:px-[68px] transition-all h-screen w-[75%] sm:w-[50%] bg-white pt-[150px] gap-y-6 gap-x-[70px] items-start text-baseBlack text-[16px] md:text-[18px] leading-[24px]`}>
               <Link
                 href="/events"
                 className={
@@ -172,11 +172,11 @@ const NavBar = () => {
                 className={pathname === "" ? "text-baseBlack font-bold" : ""}>
                 Concerts
               </Link>
-              <Link
+              {/* <Link
                 href="/"
                 className={pathname === "" ? "text-baseBlack font-bold" : ""}>
                 Sports
-              </Link>
+              </Link> */}
               <Link
                 href="/"
                 className={pathname === "" ? "text-baseBlack font-bold" : ""}>
@@ -221,7 +221,7 @@ const NavBar = () => {
               )}
             </div>
           </Backdrop>
-          <div className="w-full hidden md2:flex justify-center text-[18px] md:text-[19px] items-center mx-auto gap-6">
+          <div className="w-full hidden md2:flex justify-center text-[16px] md:text-[16px] items-center mx-auto gap-6">
             <Link
               href="/events"
               className={
@@ -236,11 +236,11 @@ const NavBar = () => {
               className={pathname === "" ? "text-baseBlack font-bold" : ""}>
               Concerts
             </Link>
-            <Link
+            {/* <Link
               href="/"
               className={pathname === "" ? "text-baseBlack font-bold" : ""}>
               Sports
-            </Link>
+            </Link> */}
             <Link
               href="/"
               className={pathname === "" ? "text-baseBlack font-bold" : ""}>
