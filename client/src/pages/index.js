@@ -1,13 +1,24 @@
-import { useState } from "react";
-import Home from "@/components/Home";
-import EventsDetails from "@/components/EventsDetails";
-import Header from "@/components/Header";
+import Categories from "@/components/Categories";
 import Layout from "@/components/Layout";
+import TopEvents from "@/components/TopEvents";
+import Ads from "@/components/website/Ads";
+import CreateEvent from "@/components/website/CreateEvent";
+import UpcomingEvents from "@/components/website/UpcomingEvents";
 
 const Index = () => {
   return (
     <Layout>
-      <Home />
+      <div className="space-y-16">
+        <Ads />
+
+        <Categories />
+
+        <TopEvents />
+
+        <CreateEvent />
+
+        <UpcomingEvents />
+      </div>
     </Layout>
   );
 };

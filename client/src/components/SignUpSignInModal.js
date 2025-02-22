@@ -33,7 +33,7 @@ const SignUpSignInModal = ({ isLoginModal, setIsLoginModal, setIsModalOpen }) =>
 
   return (
     <>
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+      <div className="fixed min-h-screen inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
         <div className="flex flex-col bg-white rounded-lg p-9 w-11/12 sm:w-[29rem] relative">
           <button
             type="button"

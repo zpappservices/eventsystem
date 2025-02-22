@@ -1,24 +1,27 @@
 import Layout from "@/components/Layout";
-import StyledImage from "@/components/StyledImage";
 import useApiRequest from "@/hooks/useApiRequest";
-import { formatDate } from "@/utils/time";
-import { CircularProgress } from "@mui/material";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import NativeSelect from "@/components/widgets/NativeSelect";
 import { apiRequest } from "@/utils/apiService";
 import useLoading from "@/hooks/useLoading";
+import EventCard from "@/components/events/EventCard";
+import EventCardSkeleton from "@/components/events/EventCardSkeleton";
+import OptionsInput from "@/components/widgets/OptionsInput";
 
 const Events = () => {
   const router = useRouter();
-  const [filter, setFilter] = useState(null); // null means no filter
+  const [filter, setFilter] = useState(null);
   const [categories, setCategories] = useState([]);
 
   const { isLoading, startLoading, stopLoading } = useLoading();
 
+  const handleSelect = (name, value) => {
+    setFilter(value);
+  };
+
   const { data, error, loading, request } = useApiRequest({
     method: "get",
-    url: filter ? `event/geteventbycategory/${filter}` : "event/getallevent", // Dynamically change the endpoint based on the filter
+    url: filter ? `event/geteventbycategory/${filter}` : "event/getallevent",
   });
 
   const getCategories = async () => {
@@ -43,22 +46,27 @@ const Events = () => {
   }, []);
 
   useEffect(() => {
-    getAllEvents(); // Fetch events whenever filter changes or the component is mounted
+    getAllEvents();
   }, [filter]);
 
   if (loading) {
     return (
-      <Layout isHeader={false}>
-        {" "}
-        <div className="h-[200px] w-full flex justify-between items-center">
-          <CircularProgress color="#FF7F50" className="mx-auto" />
+      <Layout isHeader={false} container="w-full max-w-[1512px] mx-auto px-5">
+        <div className="w-full grid grid-cols-1 gap-x-5 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 py-6">
+          {["", "", "", "", "", "", "", "", "", "", ""]?.map((_, index) => (
+            <EventCardSkeleton key={index} />
+          ))}
         </div>
       </Layout>
     );
   }
 
   if (error) {
-    return <div>Error loading data</div>;
+    return (
+      <Layout isHeader={false} container="w-full max-w-[1512px] mx-auto px-5">
+        <div>Error loading data</div>
+      </Layout>
+    );
   }
 
   const events = data?.data;
@@ -68,52 +76,31 @@ const Events = () => {
   };
 
   return (
-    <Layout isHeader={false}>
-      <div className="w-fit flex items-center justify-center gap-x-5">
+    <Layout isHeader={false} container="w-full max-w-[1512px] mx-auto px-5">
+      <div className="w-full flex items-start justify-between gap-x-5">
         <p
-          className="flex items-center gap-x-2 text-[18px] font-medium cursor-pointer mt-5"
+          className="flex items-center gap-x-2 text-[18px] font-medium cursor-pointer"
           onClick={goBack}>
           <img src="/img/return.svg" />
           Back
         </p>
-        <NativeSelect
-          options={categories?.map((category) => category.name)}
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)} // Set the selected category's id as filter
-          selectedOption={filter}
+
+        <OptionsInput
           name="filter"
-          label="Select category"
-          placeholder="Select category"
+          value={filter}
+          onChange={handleSelect}
+          placeholder={"Select category"}
+          options={categories?.map((category) => category.name)}
+          container="w-full max-w-[240px]"
         />
       </div>
       <div className="w-full grid grid-cols-1 gap-x-5 md:gap-x-7 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 py-6">
         {events?.length > 0 &&
-          events?.map((item) => (
-            <div
-              key={item.id}
-              className="w-full max-w-[249px] mx-auto cursor-pointer bg-gray-50 shadow-[0_10px_15px_-3px_rgba(0,0,0,0.1)] rounded-[10px] overflow-hidden"
-              onClick={() => router.push(`events/${item?.id}`)}>
-              <div className="h-[168px]">
-                <StyledImage
-                  src={item?.image_banner || "/img/event1.svg"}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-
-              <div className="py-2 px-3 pb-3">
-                <p className="text-lg text-black font-semibold overflow-hidden text-ellipsis whitespace-nowrap">
-                  {item?.title}
-                </p>
-                <p className="font-inter text-xs font-medium bg-[#FF7F50] w-fit rounded-[8px] px-1.5 text-white overflow-hidden text-ellipsis whitespace-nowrap">
-                  {item?.category}
-                </p>
-                <p className="text-xs mt-1 font-medium text-black text-ellipsis">
-                  <span className="mr-0.5">🗓️</span>
-                  {formatDate(item?.StartDate)}
-                </p>
-              </div>
-            </div>
-          ))}
+          events
+            .filter(
+              (item) => new Date() < new Date(item?.EndDate) && item?.active
+            )
+            .map((item) => <EventCard data={item} key={item?.id} />)}
       </div>
       {events?.length < 1 && (
         <div className="flex items-center justify-center h-[200px]">

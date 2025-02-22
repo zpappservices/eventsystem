@@ -1,24 +1,14 @@
 import { useRouter } from "next/router";
 import CustomAccordion from "./Accordion";
-import BreadCrumb from "./BreadCrumb";
 import Button from "./Button";
 import Quantity from "./Quantity";
 import StyledImage from "./StyledImage";
-import { useTicketContext } from "@/context/TicketContext";
 import { toast } from "react-toastify";
 import { convertTo12HourFormat, formatDate } from "@/utils/time";
-import moment from "moment";
 import { MdAccessTime, MdLocationPin } from "react-icons/md";
 import { BsCalendar2Date } from "react-icons/bs";
-import { createTicketContext } from "@/utils/ticket";
 import { useState } from "react";
 import useAuthToken from "@/hooks/useAuthToken";
-
-const eventDetails = {
-  name: "Night of a Thousand Laughs",
-  image: "/img/event1.svg",
-  date: "November 19th, 2024",
-};
 
 const EventsDetails = ({ id, details }) => {
   const event = details?.EventTicket;
@@ -56,6 +46,7 @@ const EventsDetails = ({ id, details }) => {
         eventName: details?.title,
         banner: details?.image_banner,
         currency: details?.currency,
+        platformFee: platformFee
       }),
     };
 
@@ -101,7 +92,7 @@ const EventsDetails = ({ id, details }) => {
             <p className="text-[20px] font-semibold leading-snug">
               {details?.title}
             </p>
-            {totalInStock > 0 ? (
+            {/* {totalInStock > 0 ? (
               <p className="text-[#1FCA59] text-[16px] leading-snug">
                 In stock {totalInStock} tickets
               </p>
@@ -109,7 +100,7 @@ const EventsDetails = ({ id, details }) => {
               <p className="text-red-600 text-[16px] leading-snug">
                 In stock {totalInStock} tickets
               </p>
-            )}
+            )} */}
           </div>
           <div className="w-full flex flex-col gap-2  border-b-2 border-gray-400 pb-2.5">
             {event?.map(({ price, name, quantity }, index) => (
