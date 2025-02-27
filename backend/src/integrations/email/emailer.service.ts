@@ -6,13 +6,13 @@ import { format } from 'date-fns';
 export class EmailerService {
   constructor(private mailerService: MailerService) {}
 
-  async sendMail(data: any, subject: string, template: string ) {
+  async sendMail(data: any, subject: string, template: string) {
     return this.mailerService.sendMail({
       to: data.email,
       cc: data.email_cc!,
       subject: subject,
       template: template,
-      context: data
+      context: data,
     });
   }
 
@@ -43,7 +43,7 @@ export class EmailerService {
 
   async vendorOnBoarding(data: any) {
     const payload = {
-      email: "cs@zafariplus.com",
+      email: 'cs@zafariplus.com',
       vendoremail: data.user.email,
       firstName: data.user.firstName,
       lastName: data.user.lastName,
@@ -54,6 +54,16 @@ export class EmailerService {
     await this.sendMail(payload, 'New Vendor Onboarded', 'vendor');
   }
 
+  async newUserNotify(data: any) {
+    const payload = {
+      email: 'cs@zafariplus.com',
+      useremail: data.user.email,
+      firstName: data.user.firstName,
+      lastName: data.user.lastName,
+      phone: data.user.phone,
+    };
+    await this.sendMail(payload, 'New User Registered', 'newuser');
+  }
 
   async sendTicketQRCode(data: any) {
     const payload = {
@@ -68,18 +78,21 @@ export class EmailerService {
       date: format(data.transaction.event.StartDate, 'MMM dd, yyyy'),
       time: data.transaction.event.StartTime,
       location: data.transaction.event.location,
-      email_cc: data.transaction.user.email != data.email ? data.email : ""
+      email_cc: data.transaction.user.email != data.email ? data.email : '',
     };
     const x = await this.sendMail(payload, 'Ticket Details', 'ticket');
   }
 
-  
   async accountClosure(data: any) {
     const payload = {
       email: data.user.email,
       firstName: data.user.username,
       closureDate: format(new Date(), 'yyyy-MM-dd'),
     };
-    await this.sendMail(payload, 'Confirmation of Your Account Closure', 'accountclosure');
+    await this.sendMail(
+      payload,
+      'Confirmation of Your Account Closure',
+      'accountclosure',
+    );
   }
 }

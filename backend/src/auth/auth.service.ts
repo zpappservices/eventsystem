@@ -288,6 +288,12 @@ export class AuthService {
         data: { isVerified: true },
       });
 
+      try {
+        await this.emailService.newUserNotify({ user: user });
+      } catch (e) {
+        console.log(e.message);
+      }
+
       return {
         statusCode: HttpStatus.OK,
         data: true,
