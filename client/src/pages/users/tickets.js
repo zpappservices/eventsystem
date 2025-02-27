@@ -26,8 +26,6 @@ const tickets = () => {
   }, []);
 
   const { data: tickets = [] } = data || {};
-
-  console.log(tickets);
   return (
     <PrivateRoute>
       <Layout isHeader={false} container="px-5 max-w-[1512px]">
