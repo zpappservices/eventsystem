@@ -164,6 +164,7 @@ model EventTransaction {
   email     String?
   email_CC  String?
   phone     String?
+  ticketUrl String?
   createdBy String?
   createdOn DateTime      @default(now())
   updatedBy String?
