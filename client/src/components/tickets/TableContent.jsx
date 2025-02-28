@@ -20,6 +20,8 @@ const TableContent = ({ data, isLastItem }) => {
     status,
     checkIn,
     active,
+    lastName,
+    firstName,
   } = data || {};
 
   const { isOpen, closeModal, openModal } = useModal();
@@ -46,7 +48,8 @@ const TableContent = ({ data, isLastItem }) => {
 
   return (
     <tr
-      className={`text-[14px] text-baseBlack ${isLastItem ? "" : "border-b"}`}>
+      className={`text-[14px] text-baseBlack ${isLastItem ? "" : "border-b"}`}
+    >
       <th className="px-2 py-3.5">{ticket}</th>
       <th className="px-2 py-3.5">{price}</th>
       <th className="px-2 py-3.5">
@@ -58,16 +61,26 @@ const TableContent = ({ data, isLastItem }) => {
         <p
           className={`text-baseBlack text-center rounded-sm p-2 ${
             status !== "PENDING" ? "bg-primary200" : "bg-sec300"
-          }`}>
+          }`}
+        >
           {status}
         </p>
       </td>
       <td>
-        <FaEye className="text-[18px] text-baseBlack text-center mx-auto cursor-pointer" onClick={openModal} />
+        <FaEye
+          className="text-[18px] text-baseBlack text-center mx-auto cursor-pointer"
+          onClick={openModal}
+        />
       </td>
 
       <DynamicModal open={isOpen} onClose={closeModal}>
-        <TicketDetails data={data} event={event} />
+        <TicketDetails
+          data={data}
+          event={event}
+          name={
+            firstName || lastName ? `${firstName} ${lastName}`.trim() : "N/A"
+          }
+        />
       </DynamicModal>
     </tr>
   );

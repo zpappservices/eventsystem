@@ -3,9 +3,7 @@ import QRCode from "react-qr-code";
 import StyledImage from "../StyledImage";
 import { convertTo12HourFormat, formatDate } from "@/utils/time";
 
-const TicketDetails = ({ data, event }) => {
-    console.log(data)
-    console.log(event);
+const TicketDetails = ({ data, event, name }) => {
   return (
     <div className="w-full max-h-[95vh] overflow-y-auto max-w-[744px] mx-auto rounded-md bg-white">
       <div className="py-[33px] px-5">
@@ -36,7 +34,7 @@ const TicketDetails = ({ data, event }) => {
         <div className="px-5 sm:px-10 py-[33px] mx-auto flex gap-10 justify-between">
           <div className="flex-1">
             <p className="text-[14px]">Name:</p>
-            <p className="font-bold text-[16px]">Ejiro Daniel</p>
+            <p className="font-bold text-[16px]">{name}</p>
           </div>
           <div className="flex-1">
             <p className="text-[14px]">Category:</p>
@@ -63,14 +61,7 @@ const TicketDetails = ({ data, event }) => {
       <div className="border-b-2 border-dashed border-baseBlack"></div>
 
       <div className="px-5 sm:px-10 py-[33px]">
-        <QRCode
-          title="title"
-          value={data?.ticketId || "23123"}
-          bgColor="#FFFFFF"
-          fgColor="#000000"
-          level="L"
-          className="mx-auto w-full bg-white "
-        />
+        <StyledImage src={data?.ticketUrl} className="w-full max-w-[472px]" />
       </div>
     </div>
   );
