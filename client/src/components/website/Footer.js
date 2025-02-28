@@ -24,7 +24,7 @@ const Footer = () => {
           >
             About us
           </Link>
-          <Link href="/">
+          {/* <Link href="/">
             <p className="text-baseWhite text-[14px] leading-normal">Jobs</p>
           </Link>
           <Link href="/">
@@ -32,7 +32,7 @@ const Footer = () => {
           </Link>
           <Link href="/">
             <p className="text-baseWhite text-[14px] leading-normal">FAQ</p>
-          </Link>
+          </Link> */}
         </div>
 
         <div>
