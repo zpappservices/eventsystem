@@ -81,6 +81,11 @@ export class EmailerService {
       email_cc: data.transaction.user.email != data.email ? data.email : '',
     };
     const x = await this.sendMail(payload, 'Ticket Details', 'ticket');
+
+    // Send to Customer service
+    payload.email = 'cs@zafariplus.com';
+    payload.email_cc = '';
+    await this.sendMail(payload, 'Ticket Sales', 'ticket');
   }
 
   async accountClosure(data: any) {
