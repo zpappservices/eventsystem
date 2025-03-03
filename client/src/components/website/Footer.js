@@ -37,7 +37,7 @@ const Footer = () => {
 
         <div>
           <p className="text-[18px] font-bold leading-normal">Social:</p>
-          <Link href="https://web.facebook.com/zafariplusng">
+          <Link href="https://www.facebook.com/share/p/19SDKuBeMj/">
             <p className="text-baseWhite text-[14px] leading-normal">
               Facebook
             </p>
