@@ -48,7 +48,17 @@ export class EventService {
     try {
       const event = await this.prisma.event.findUnique({
         where: { id },
-        include: { EventTicket: true, EventContact: true },
+        include: {
+          EventTicket: true,
+          EventContact: true,
+          EventTransaction: {
+            select: {
+              firstName: true,
+              lastName: true,
+              ticketUrl: true,
+            },
+          },
+        },
       });
       return {
         statusCode: HttpStatus.OK,
