@@ -565,6 +565,14 @@ export class PaymentService {
           qrCode,
         );
 
+        const updateTicket = await this.prisma.eventTransaction.update({
+          where: { id: t.id },
+          data: {
+            ticketUrl: imageUrl,
+            updatedOn: new Date(),
+          },
+        });
+
         try {
           await this.emailService.sendTicketQRCode({
             transaction: t,
