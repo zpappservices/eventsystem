@@ -60,8 +60,35 @@ const TicketDetails = ({ data, event, name }) => {
 
       <div className="border-b-2 border-dashed border-baseBlack"></div>
 
-      <div className="px-5 sm:px-10 py-[33px]">
-        <StyledImage src={data?.ticketUrl} className="w-full max-w-[472px]" />
+      <div className="mt-5">
+        <div className="text-center">
+          <p className="my-1 text-base">
+            ID: <strong>{data?.id}</strong>
+          </p>
+          <p className="my-1 text-base">
+            Date:{" "}
+            <strong>
+              {formatDate(event?.StartDate)} - {formatDate(event?.EndDate)}
+            </strong>
+          </p>
+          <p className="my-1 text-base">
+            Time:{" "}
+            <strong>
+              {convertTo12HourFormat(event?.StartTime)} - {""}
+              {convertTo12HourFormat(event?.EndTime)}
+            </strong>
+          </p>
+          <p className="my-1 text-base">
+            Venue: <strong>{event?.location}</strong>
+          </p>
+          <p className="my-1 text-base">
+            Ticket Type: <strong>{data?.ticket}</strong>
+          </p>
+        </div>
+
+        <div className="px-5 sm:px-10 py-[33px]">
+          <StyledImage src={data?.ticketUrl} className="w-full max-w-[472px]" />
+        </div>
       </div>
     </div>
   );
