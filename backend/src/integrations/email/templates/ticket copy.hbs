@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Ticket</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f4f4f4; color: #333; line-height: 1.6;">
+    <table align="center" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #fff; margin: 20px auto; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
+        <!-- Header -->
+        <tr>
+            <td style="background: linear-gradient(135deg, #673ab7, #1a73e8); text-align: center; padding: 20px; color: #fff;">
+                <h1 style="margin: 0; font-size: 24px;">{{event}}</h1>
+            </td>
+        </tr>
+        <!-- Body -->
+        <tr>
+            <td style="padding: 20px;">
+                <table width="100%" cellpadding="0" cellspacing="0">
+                  <!-- Personalized Greeting -->
+                    <tr>
+                        <td style="text-align: left; padding-bottom: 20px;">
+                            <p style="margin: 0; font-size: 16px;">Dear <strong>{{username}}</strong>,</p>
+                            <p style="margin: 0; font-size: 16px; margin-top: 10px;">
+                                Thank you for registering for our event! Below are your ticket details:
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center;">
+                           <p style="margin: 5px 0; font-size: 16px;"> ID: <strong>{{id}}</strong></p>
+                            <p style="margin: 5px 0; font-size: 16px;">Date: <strong>{{date}}</strong></p>
+                            <p style="margin: 5px 0; font-size: 16px;">Time: <strong>{{time}}</strong></p>
+                            <p style="margin: 5px 0; font-size: 16px;">Venue: <strong>{{location}}</strong></p>
+                            
+                            <p style="margin: 5px 0; font-size: 16px;">Ticket Type: <strong>{{type}}</strong></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center; padding: 20px 0;">
+                            <img src={{qrCode}}
+                                 alt="QR Code" 
+                                 width="150" 
+                                 height="150" 
+                                 style="border: none;">
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <!-- Footer -->
+        <tr>
+            <td style="background-color: #f7f7f7; padding: 10px; text-align: center; font-size: 14px; color: #666; border-top: 1px solid #ddd;">
+                <p style="margin: 0;">Scan the QR code to verify your ticket at the entrance.</p>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
