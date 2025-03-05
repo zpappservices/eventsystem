@@ -68,21 +68,24 @@ export class EmailerService {
   async sendTicketQRCode(data: any) {
     const payload = {
       email: data.transaction.user.email,
-      //email: "hbshofela@gmail.com",
       username: data.transaction.user.username,
       qrCode: data.imageUrl,
       id: data.transaction.id,
+      image_banner: data.transaction.event.image_banner,
       amount: data.transaction.price,
       type: data.transaction.ticket,
       event: data.transaction.eventName,
+      category: data.transaction.event.category,
       date: format(data.transaction.event.StartDate, 'MMM dd, yyyy'),
-      time: data.transaction.event.StartTime,
+      //endDate: format(data.transaction.event.EndDate, 'MMM dd, yyyy'),
+      time: this.convertToAmPm(data.transaction.event.StartTime),
+      endTime: this.convertToAmPm(data.transaction.event.EndTime),
       location: data.transaction.event.location,
       email_cc: data.transaction.user.email != data.email ? data.email : '',
     };
     const x = await this.sendMail(payload, 'Ticket Details', 'ticket');
 
-    // Send to Customer service
+    //Send to Customer service
     payload.email = 'cs@zafariplus.com';
     payload.email_cc = '';
     await this.sendMail(payload, 'Ticket Sales', 'ticket');
@@ -99,5 +102,12 @@ export class EmailerService {
       'Confirmation of Your Account Closure',
       'accountclosure',
     );
+  }
+
+  convertToAmPm(time: string): string {
+    const [hours, minutes] = time.split(':').map(Number);
+    const period = hours >= 12 ? 'PM' : 'AM';
+    const formattedHours = hours % 12 || 12; // Convert 0 to 12 for midnight
+    return `${formattedHours}:${minutes.toString().padStart(2, '0')} ${period}`;
   }
 }

@@ -130,7 +130,7 @@ const TicketDto = ({ handleBack, handleReset }) => {
   useEffect(() => {
     if (data?.statusCode >= 200 && data?.statusCode < 300) {
       toast.success(data?.message || "Event Created successfully!");
-      const { id } = data?.data || {}
+      const { id } = data?.data || {};
       setImageData({
         image: base64Image,
         eventId: id,
@@ -160,15 +160,21 @@ const TicketDto = ({ handleBack, handleReset }) => {
 
   useEffect(() => {
     if (uploadData?.statusCode >= 200 && uploadData?.statusCode < 300) {
-      toast.success(uploadData?.message || "Event banner uploaded successfully!");
+      toast.success(
+        uploadData?.message || "Event banner uploaded successfully!"
+      );
       handleReset(setFormData);
     } else if (uploadData?.error || uploadData?.message) {
       toast.error(
-        uploadData?.error || uploadData?.message || "Couldn't Post Event! Try again later."
+        uploadData?.error ||
+          uploadData?.message ||
+          "Couldn't Post Event! Try again later."
       );
     } else if (uploadData?.statusCode >= 400 && uploadData?.statusCode < 500) {
       toast.error(
-        uploadData?.error || uploadData?.message || "Couldn't Post Event! Try again later."
+        uploadData?.error ||
+          uploadData?.message ||
+          "Couldn't Post Event! Try again later."
       );
     }
   }, [uploadData]);
@@ -179,7 +185,13 @@ const TicketDto = ({ handleBack, handleReset }) => {
     }
   }, [UploadError]);
 
-  console.log(form)
+  useEffect(() => {
+    if (form.type.toLowerCase() === "free") {
+      setForm({ ...form, price: "0" });
+    } else {
+      setForm({ ...form, price: "" });
+    }
+  }, [form.type]);
 
   return (
     <>
@@ -187,7 +199,8 @@ const TicketDto = ({ handleBack, handleReset }) => {
         {!showForm && (
           <button
             className="bg-[#FF7F50] hover:bg-[#FFB26F] text-white px-4 py-2 rounded transition-all duration-300 ease-in-out hover:scale-[1.1]"
-            onClick={() => setShowForm(true)}>
+            onClick={() => setShowForm(true)}
+          >
             Add Ticket
           </button>
         )}
@@ -204,7 +217,8 @@ const TicketDto = ({ handleBack, handleReset }) => {
                   name="type"
                   value={form.type}
                   onChange={handleInputChange}
-                  color="warning">
+                  color="warning"
+                >
                   <MenuItem value="Free">Free</MenuItem>
                   <MenuItem value="Paid">Paid</MenuItem>
                 </TextField>
@@ -259,12 +273,14 @@ const TicketDto = ({ handleBack, handleReset }) => {
             <div className="flex space-x-5">
               <button
                 className="bg-[#62825D] hover:bg-[#B1C29E] text-white px-4 py-2 rounded transition-all duration-300 ease-in-out hover:scale-[1.1]"
-                onClick={handleConfirm}>
+                onClick={handleConfirm}
+              >
                 Confirm
               </button>
               <button
                 className="bg-[#FF7F50] hover:bg-[#FFB26F] text-white px-4 py-2 rounded transition-all duration-300 ease-in-out hover:scale-[1.1]"
-                onClick={handleCancel}>
+                onClick={handleCancel}
+              >
                 Cancel
               </button>
             </div>

@@ -26,14 +26,13 @@ const tickets = () => {
   }, []);
 
   const { data: tickets = [] } = data || {};
-
-  console.log(tickets);
   return (
     <PrivateRoute>
       <Layout isHeader={false} container="px-5 max-w-[1512px]">
         <p className="text-[17px] sm:text-[20px] font-semibold leading-normal">
-          My Tickets
+          Latest Ticket
         </p>
+        <p className="text-[14px] sm:text-[16px] text-baseBlack">Your most recent account ticket</p>
         <div className="space-y-10 py-10">
           {tickets?.length > 0 &&
             tickets?.map(({ transaction, eventName }, index) => (
