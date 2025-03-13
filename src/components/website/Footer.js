@@ -7,9 +7,7 @@ const Footer = () => {
   const handleWhatsAppClick = () => {
     const phoneNumber = "+2349032335845";
     const message = "Hello, I have a question about ZafariPlus.";
-    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
-      message
-    )}`;
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, "_blank");
   };
   return (
@@ -18,10 +16,7 @@ const Footer = () => {
         <div>
           <p className="text-[18px] font-bold leading-normal">Resources:</p>
 
-          <Link
-            href="/about"
-            className="text-baseWhite text-[14px] leading-normal"
-          >
+          <Link href="/about" className="text-baseWhite text-[14px] leading-normal">
             About us
           </Link>
           {/* <Link href="/">
@@ -38,14 +33,10 @@ const Footer = () => {
         <div>
           <p className="text-[18px] font-bold leading-normal">Social:</p>
           <Link href="https://web.facebook.com/zafariplusng">
-            <p className="text-baseWhite text-[14px] leading-normal">
-              Facebook
-            </p>
+            <p className="text-baseWhite text-[14px] leading-normal">Facebook</p>
           </Link>
           <Link href="https://www.instagram.com/zafariplusafrika/">
-            <p className="text-baseWhite text-[14px] leading-normal">
-              Instagram
-            </p>
+            <p className="text-baseWhite text-[14px] leading-normal">Instagram</p>
           </Link>
           <Link
             href="https://x.com/zafariplus"
@@ -59,11 +50,9 @@ const Footer = () => {
         <div>
           <p className="text-[18px] font-bold leading-normal">Support:</p>
           <Link href="/">
-            <p className="text-baseWhite text-[14px] leading-normal">
-              Sell Tickets
-            </p>
+            <p className="text-baseWhite text-[14px] leading-normal">Sell Tickets</p>
           </Link>
-          <Link href="/">
+          <Link href="/faqs">
             <p className="text-baseWhite text-[14px] leading-normal">FAQs</p>
           </Link>
           <p
@@ -73,28 +62,20 @@ const Footer = () => {
             Chat with Agent Zafari
           </p>
           <Link href="/contact">
-            <p className="text-baseWhite text-[14px] leading-normal">
-              Contact us
-            </p>
+            <p className="text-baseWhite text-[14px] leading-normal">Contact us</p>
           </Link>
-          <Link
-            href="/terms"
-            className="text-baseWhite text-[14px] leading-normal"
-          >
+          <Link href="/terms" className="text-baseWhite text-[14px] leading-normal">
             Terms & Privacy
           </Link>
-          <Link
-            href="/useragreement"
-            className="text-baseWhite text-[14px] leading-normal"
-          >
+          <Link href="/useragreement" className="text-baseWhite text-[14px] leading-normal">
             User agreement
           </Link>
         </div>
       </div>
       <div className="w-full text-center ">
         <p className="text-[14px] sm:text-[16px]">
-          &copy; {year} Zafariplus LTD, All Rights Reserved ZAFARIPLUS is not
-          responsible for the content of external sites.
+          &copy; {year} Zafariplus LTD, All Rights Reserved ZAFARIPLUS is not responsible for the
+          content of external sites.
         </p>
       </div>
     </div>

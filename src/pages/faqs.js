@@ -1,11 +1,11 @@
 import Layout from "@/components/Layout";
-import Faqs from "@/components/website/Faqs";
+import Faqs from "@/components/website/FAQs/Faqs";
 import React from "react";
 
 const faqs = () => {
   return (
     <div>
-      <Layout container="max-w-[1319px] mx-auto ">
+      <Layout container="mx-auto mt-[163px] pb-0 mb-[64px] flex flex-col justify-center items-center ">
         <Faqs />
       </Layout>
     </div>
