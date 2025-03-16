@@ -61,14 +61,7 @@ const TicketDetails = ({ data, event, name }) => {
       <div className="border-b-2 border-dashed border-baseBlack"></div>
 
       <div className="px-5 sm:px-10 py-[33px]">
-        <QRCode
-          title="title"
-          value={data?.ticketId || "23123"}
-          bgColor="#FFFFFF"
-          fgColor="#000000"
-          level="L"
-          className="mx-auto w-full bg-white "
-        />
+        <StyledImage src={data?.ticketUrl} className="w-full max-w-[472px]" />
       </div>
     </div>
   );

@@ -7,9 +7,13 @@ const Footer = () => {
   const handleWhatsAppClick = () => {
     const phoneNumber = "+2349032335845";
     const message = "Hello, I have a question about ZafariPlus.";
+<<<<<<< HEAD
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
       message
     )}`;
+=======
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+>>>>>>> 7f54e2d4cfbadae9cbd909d6eaf7c2140ca3be19
     window.open(whatsappUrl, "_blank");
   };
   return (
@@ -18,6 +22,7 @@ const Footer = () => {
         <div>
           <p className="text-[18px] font-bold leading-normal">Resources:</p>
 
+<<<<<<< HEAD
           <Link
             href="/about"
             className="text-baseWhite text-[14px] leading-normal"
@@ -25,6 +30,12 @@ const Footer = () => {
             About us
           </Link>
           <Link href="/">
+=======
+          <Link href="/about" className="text-baseWhite text-[14px] leading-normal">
+            About us
+          </Link>
+          {/* <Link href="/">
+>>>>>>> 7f54e2d4cfbadae9cbd909d6eaf7c2140ca3be19
             <p className="text-baseWhite text-[14px] leading-normal">Jobs</p>
           </Link>
           <Link href="/">
@@ -32,12 +43,17 @@ const Footer = () => {
           </Link>
           <Link href="/">
             <p className="text-baseWhite text-[14px] leading-normal">FAQ</p>
+<<<<<<< HEAD
           </Link>
+=======
+          </Link> */}
+>>>>>>> 7f54e2d4cfbadae9cbd909d6eaf7c2140ca3be19
         </div>
 
         <div>
           <p className="text-[18px] font-bold leading-normal">Social:</p>
           <Link href="https://web.facebook.com/zafariplusng">
+<<<<<<< HEAD
             <p className="text-baseWhite text-[14px] leading-normal">
               Facebook
             </p>
@@ -46,6 +62,12 @@ const Footer = () => {
             <p className="text-baseWhite text-[14px] leading-normal">
               Instagram
             </p>
+=======
+            <p className="text-baseWhite text-[14px] leading-normal">Facebook</p>
+          </Link>
+          <Link href="https://www.instagram.com/zafariplusafrika/">
+            <p className="text-baseWhite text-[14px] leading-normal">Instagram</p>
+>>>>>>> 7f54e2d4cfbadae9cbd909d6eaf7c2140ca3be19
           </Link>
           <Link
             href="https://x.com/zafariplus"
@@ -59,11 +81,17 @@ const Footer = () => {
         <div>
           <p className="text-[18px] font-bold leading-normal">Support:</p>
           <Link href="/">
+<<<<<<< HEAD
             <p className="text-baseWhite text-[14px] leading-normal">
               Sell Tickets
             </p>
           </Link>
           <Link href="/">
+=======
+            <p className="text-baseWhite text-[14px] leading-normal">Sell Tickets</p>
+          </Link>
+          <Link href="/faqs">
+>>>>>>> 7f54e2d4cfbadae9cbd909d6eaf7c2140ca3be19
             <p className="text-baseWhite text-[14px] leading-normal">FAQs</p>
           </Link>
           <p
@@ -73,6 +101,7 @@ const Footer = () => {
             Chat with Agent Zafari
           </p>
           <Link href="/contact">
+<<<<<<< HEAD
             <p className="text-baseWhite text-[14px] leading-normal">
               Contact us
             </p>
@@ -87,14 +116,27 @@ const Footer = () => {
             href="/useragreement"
             className="text-baseWhite text-[14px] leading-normal"
           >
+=======
+            <p className="text-baseWhite text-[14px] leading-normal">Contact us</p>
+          </Link>
+          <Link href="/terms" className="text-baseWhite text-[14px] leading-normal">
+            Terms & Privacy
+          </Link>
+          <Link href="/useragreement" className="text-baseWhite text-[14px] leading-normal">
+>>>>>>> 7f54e2d4cfbadae9cbd909d6eaf7c2140ca3be19
             User agreement
           </Link>
         </div>
       </div>
       <div className="w-full text-center ">
         <p className="text-[14px] sm:text-[16px]">
+<<<<<<< HEAD
           &copy; {year} Zafariplus LTD, All Rights Reserved ZAFARIPLUS is not
           responsible for the content of external sites.
+=======
+          &copy; {year} Zafariplus LTD, All Rights Reserved ZAFARIPLUS is not responsible for the
+          content of external sites.
+>>>>>>> 7f54e2d4cfbadae9cbd909d6eaf7c2140ca3be19
         </p>
       </div>
     </div>
