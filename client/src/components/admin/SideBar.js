@@ -1,7 +1,5 @@
-import { IoMenuOutline } from "react-icons/io5";
 import Link from "next/link";
-import { LuCalendarDays } from "react-icons/lu";
-import { FaAddressCard, FaMoneyBills } from "react-icons/fa6";
+import { FaAddressCard } from "react-icons/fa6";
 import { usePathname } from "next/navigation";
 import { useModal } from "@/hooks/useModal";
 import { useRouter } from "next/router";
@@ -13,8 +11,14 @@ import useAuthToken from "@/hooks/useAuthToken";
 import { apiRequest } from "@/utils/apiService";
 import { toast } from "react-toastify";
 import SideDopdown from "./SideDopdown";
-import { FaUser, FaUserFriends, FaUsersCog } from "react-icons/fa";
+import { FaUser, FaUserFriends } from "react-icons/fa";
 import { useState } from "react";
+import { BsCalendarCheckFill } from "react-icons/bs";
+import { TbCalendarTime, TbLogout2 } from "react-icons/tb";
+import { LuCalendarClock, LuListChecks } from "react-icons/lu";
+import { AiOutlineQrcode } from "react-icons/ai";
+import { RiSettings5Fill } from "react-icons/ri";
+import { IoLanguage } from "react-icons/io5";
 
 const style = {
   position: "absolute",
@@ -128,6 +132,80 @@ const SideBar = ({ isOpen, toggleMenu, showModal }) => {
               isExpanded={expandedMenuId === "customers"}
               onToggle={handleToggleMenu}
             />
+
+            <SideDopdown
+              menuItem={{
+                id: "events",
+                name: "Events",
+                icon: BsCalendarCheckFill,
+                path: "/admin/waiting-list",
+                hasSubMenu: true,
+                active: "waiting-list, allevents",
+                subItems: [
+                  {
+                    name: "Waiting List",
+                    icon: LuCalendarClock,
+                    path: "/admin/waiting-list",
+                    active: "waiting-list",
+                  },
+                  {
+                    name: "All Events",
+                    icon: LuListChecks,
+                    path: "/admin/allevents",
+                    active: "allevents",
+                  },
+                ],
+              }}
+              isExpanded={expandedMenuId === "events"}
+              onToggle={handleToggleMenu}
+            />
+
+            <SideDopdown
+              menuItem={{
+                id: "qr-codes",
+                name: "QR Codes",
+                icon: AiOutlineQrcode,
+                path: "/admin/qr-codes",
+                hasSubMenu: false,
+                active: "qr-codes",
+                subItems: [],
+              }}
+              isExpanded={expandedMenuId === "qr-codes"}
+              onToggle={handleToggleMenu}
+            />
+
+            <SideDopdown
+              menuItem={{
+                id: "settings",
+                name: "Settings",
+                icon: RiSettings5Fill,
+                path: "/admin/settings",
+                hasSubMenu: false,
+                active: "settings",
+                subItems: [],
+              }}
+              isExpanded={expandedMenuId === "settings"}
+              onToggle={handleToggleMenu}
+            />
+
+            <SideDopdown
+              menuItem={{
+                id: "language",
+                name: "Language",
+                icon: IoLanguage,
+                path: "/admin/language",
+                hasSubMenu: false,
+                active: "language",
+                subItems: [],
+              }}
+              isExpanded={expandedMenuId === "language"}
+              onToggle={handleToggleMenu}
+            />
+
+            <div className="py-3 flex items-center gap-6 text-error text-xl cursor-pointer">
+              <TbLogout2 className="text-[25px]" />
+              Logout
+            </div>
           </ul>
         </div>
       </div>

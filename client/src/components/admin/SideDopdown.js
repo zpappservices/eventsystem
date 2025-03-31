@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React from "react";
 import { BiBarChartAlt2 } from "react-icons/bi";
 import { BsFillCaretRightFill, BsFillTicketFill } from "react-icons/bs";
 import { GoHomeFill } from "react-icons/go";
@@ -43,27 +43,24 @@ const SideDopdown = ({
   const isActive = () => {
     return menuItem.active.split(/,\s*/).some((item) => {
       if (item === "admin") {
-        // Check for exact "/admin" or starts with "/admin/"
-        return (
-          router.pathname === "/admin"
-        );
+        return router.pathname === "/admin";
       } else {
-        // Normal check for other items (analytics, tickets, etc.)
         return router.pathname.includes(item);
       }
     });
   };
-  console.log(router.pathname, menuItem.path, isActive);
 
   const isSubItemActive = (index) => {
     const subItem = menuItem.subItems[index];
-    return (
-      router.pathname.includes(subItem.active) &&
-      router.pathname === subItem.active
-    );
+    return router.pathname === subItem.path;
   };
 
   const handleToggle = () => {
+    if (!menuItem.hasSubMenu) {
+      router.push(menuItem.path);
+      return;
+    }
+    
     if (isActive()) {
       onToggle(menuItem.id);
     } else {
@@ -76,7 +73,7 @@ const SideDopdown = ({
         <div className="mt-2.5">
           {
             <menuItem.icon
-              className={`text-[32px] rounded-[10px] p-1 ${
+              className={`text-[32px] rounded-[10px] p-1.5 ${
                 isActive()
                   ? "bg-primary text-white"
                   : "bg-inherit text-neutrals600"
@@ -99,30 +96,35 @@ const SideDopdown = ({
           >
             {menuItem.name}
 
-            <BsFillCaretRightFill
-              className={`transition-all duration-300 ${
-                isActive() ? "text-white" : "text-neutrals600"
-              } ${isExpanded ? "rotate-90" : ""}`}
-            />
+            {menuItem.hasSubMenu && (
+              <BsFillCaretRightFill
+                className={`transition-all duration-300 ${
+                  isActive() ? "text-white" : "text-neutrals600"
+                } ${isExpanded ? "rotate-90" : ""}`}
+              />
+            )}
           </div>
-          <motion.div
-            initial={{ height: 0 }}
-            animate={isExpanded ? { height: "auto" } : { height: 0 }}
-            exit={{ height: 0 }}
-            transition={{ duration: 0.4, ease: "easeInOut" }}
-            className="w-full overflow-hidden"
-          >
-            {menuItem.subItems?.map((item, index) => (
-              <div
-                className={`p-2 px-3 flex items-center gap-3 ${
-                  isSubItemActive(index) ? "text-primary" : "text-neutrals600"
-                }`}
-              >
-                <div>{<item.icon />}</div>
-                <p>{item.name}</p>
-              </div>
-            ))}
-          </motion.div>
+          {menuItem.hasSubMenu && (
+            <motion.div
+              initial={{ height: 0 }}
+              animate={isExpanded ? { height: "auto" } : { height: 0 }}
+              exit={{ height: 0 }}
+              transition={{ duration: 0.4, ease: "easeInOut" }}
+              className="w-full overflow-hidden"
+            >
+              {menuItem.subItems?.map((item, index) => (
+                <div
+                  className={`p-2 px-3 flex items-center gap-3 ${
+                    isSubItemActive(index) ? "text-primary" : "text-neutrals600"
+                  }`}
+                  onClick={() => router.push(item.path)}
+                >
+                  <div>{<item.icon />}</div>
+                  <p>{item.name}</p>
+                </div>
+              ))}
+            </motion.div>
+          )}
         </div>
       </div>
     </div>
