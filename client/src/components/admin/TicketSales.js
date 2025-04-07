@@ -68,7 +68,7 @@ const TicketSales = () => {
             <span>{ticket.title}</span>
             <span>{ticket.percentage}%</span>
           </div>
-          <div className="w-full h-2 mt-1 bg-green-100 rounded-full overflow-hidden flex gap-1">
+          <div className="w-full h-2 mt-1 bg-white rounded-full overflow-hidden flex gap-1">
             <div
               className={`h-full bg-[#068a4f] rounded-full transition-all duration-700 ease-in-out`}
               style={{
@@ -80,14 +80,16 @@ const TicketSales = () => {
             ></div>
 
             <div
-              className="h-full bg-orange-400 rounded-full transition-all duration-700 ease-in-out"
+              className="h-full flex justify-end bg-green-100 rounded-full transition-all duration-700 ease-in-out"
               style={{
                 width: animate ? `${100 - ticket.percentage}%` : "100%",
                 transitionDelay: `${index * 100}ms`,
               }}
               onMouseMove={(e) => handleMouseMove(e, "remaining", 100 - ticket.percentage)}
               onMouseLeave={hideTooltip}
-            ></div>
+            >
+              <div className="w-[7px] h-full bg-[#068a4f] rounded-full"></div>
+            </div>
           </div>
         </div>
       ))}
