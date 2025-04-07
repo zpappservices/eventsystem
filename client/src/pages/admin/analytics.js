@@ -1,6 +1,9 @@
 import Layout from "@/components/admin/Layout";
 import SalesRevenue from "@/components/admin/SalesRevenue";
 import StatCard from "@/components/admin/StatCard";
+import TicketSales from "@/components/admin/TicketSales";
+import TopEventPage from "@/components/admin/TopEventPage";
+import UsersProfileChart from "@/components/admin/UsersProfile";
 import React from "react";
 
 const analytics = () => {
@@ -47,30 +50,34 @@ const analytics = () => {
               Dashboard <span className="font-normal text-neutrals600">/ Analytics</span>
             </p>
 
-            <div className="w-full">
-              <div className="flex flex-wrap gap-5">
-                {stats.map((stat) => (
-                  <StatCard
-                    key={stat.id}
-                    title={stat.title}
-                    value={stat.value}
-                    percentage={stat.percentage}
-                    percentageType={stat.percentageType}
-                    trend={stat.trend}
-                  />
-                ))}
-              </div>
-
-              <div className="flex flex-row gap-2 mt-2">
-                <div className="w-full px-1">
-                  <SalesRevenue />
+            <div className="w-full flex flex-wrap gap-5">
+              <div className="w-full xl:w-3/5">
+                <div className="flex flex-wrap gap-5">
+                  {stats.map((stat) => (
+                    <StatCard
+                      key={stat.id}
+                      title={stat.title}
+                      value={stat.value}
+                      percentage={stat.percentage}
+                      percentageType={stat.percentageType}
+                      trend={stat.trend}
+                    />
+                  ))}
                 </div>
-                <div className="w-full px-1">6</div>
+
+                <div className="flex flex-wrap items-center gap-2 mt-2">
+                  <div className=" px-1">
+                    <SalesRevenue />
+                  </div>
+                  <div className=" px-1">
+                    <TicketSales />
+                  </div>
+                </div>
               </div>
 
               <div className="flex flex-col gap-2 mt-2">
-                <div>7</div>
-                <div>8</div>
+                <UsersProfileChart />
+                <TopEventPage />
               </div>
             </div>
           </div>
