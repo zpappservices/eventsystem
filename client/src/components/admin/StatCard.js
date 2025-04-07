@@ -12,7 +12,7 @@ const StatCard = ({ title, value, percentage, percentageType, trend }) => {
 
       <div className="flex flex-col gap-[6px]">
         <p className="text-baseBlack text-sm font-bold">{value}</p>
-        <p className="flex items-center gap-2 text-[10px] font-normal text-neutrals500">
+        <p className="flex items-center justify-between gap-2 text-[10px] font-normal text-neutrals500">
           <span className={`text-${trend === "down" ? "red" : "green"}-500 font-bold inline-flex`}>
             {trend === "down" ? (
               <FaArrowDown className="self-center" />
