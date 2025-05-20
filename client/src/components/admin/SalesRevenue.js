@@ -12,18 +12,18 @@ import {
 import OptionsInput from "../widgets/OptionsInput";
 
 const data = [
-  { name: "Jan", goods: 3500, services: 1500 },
-  { name: "Feb", goods: 2300, services: 800 },
-  { name: "Mar", goods: 4000, services: 2000 },
-  { name: "Apr", goods: 5800, services: 3800 },
-  { name: "May", goods: 4200, services: 2200 },
-  { name: "Jun", goods: 4800, services: 2500 },
-  { name: "Jul", goods: 3500, services: 3000 },
-  { name: "Aug", goods: 5500, services: 4000 },
-  { name: "Sep", goods: 4200, services: 2200 },
-  { name: "Oct", goods: 4800, services: 2500 },
-  { name: "Nov", goods: 3500, services: 3000 },
-  { name: "Dec", goods: 5500, services: 4000 },
+  { name: "Jan", sales: 3500 },
+  { name: "Feb", sales: 2300 },
+  { name: "Mar", sales: 4000 },
+  { name: "Apr", sales: 5800 },
+  { name: "May", sales: 4200 },
+  { name: "Jun", sales: 4800 },
+  { name: "Jul", sales: 3500 },
+  { name: "Aug", sales: 5500 },
+  { name: "Sep", sales: 4200 },
+  { name: "Oct", sales: 4800 },
+  { name: "Nov", sales: 3500 },
+  { name: "Dec", sales: 5500 },
 ];
 
 const SalesRevenue = () => {
@@ -69,9 +69,7 @@ const SalesRevenue = () => {
               { label: "2 Years ago", value: "2 Years ago" },
               { label: "3 Years ago", value: "3 Years ago" },
             ]}
-            openIcon={
-              <FaSortDown className="text-[18px] text-baseBlack -mt-2" />
-            }
+            openIcon={<FaSortDown className="text-[18px] text-baseBlack -mt-2" />}
             style="rounded-[8px] !py- !px-2.5 !border-none"
             onChange={handleYearChange}
           />
@@ -95,21 +93,9 @@ const SalesRevenue = () => {
 
       <div className="h-[300px]">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart
-            data={data}
-            margin={{ top: 5, right:0, left: 0, bottom: 5 }}
-          >
-            <CartesianGrid
-              strokeDasharray="3 3"
-              stroke="#F0F0F0"
-              vertical={false}
-            />
-            <XAxis
-              dataKey="name"
-              axisLine={false}
-              tickLine={false}
-              tick={{ fill: "#666" }}
-            />
+          <LineChart data={data} margin={{ top: 5, right: 0, left: 0, bottom: 5 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#F0F0F0" vertical={false} />
+            <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: "#666" }} />
             <YAxis
               axisLine={false}
               tickLine={false}
@@ -119,7 +105,7 @@ const SalesRevenue = () => {
             <Tooltip content={<CustomTooltip />} />
             <Line
               type="monotone"
-              dataKey="goods"
+              dataKey="sales"
               stroke="#068a4f"
               strokeWidth={2}
               dot={false}

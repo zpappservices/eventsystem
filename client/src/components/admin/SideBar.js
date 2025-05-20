@@ -59,13 +59,7 @@ const SideBar = ({ isOpen, toggleMenu, showModal }) => {
   const signOut = async () => {
     startLoading();
     try {
-      const response = await apiRequest(
-        "post",
-        "auth/signout",
-        { userId: activeUser },
-        true,
-        null
-      );
+      const response = await apiRequest("post", "auth/signout", { userId: activeUser }, true, null);
 
       const data = response;
       if (data?.statusCode >= 200 && data?.statusCode < 300) {
@@ -89,8 +83,8 @@ const SideBar = ({ isOpen, toggleMenu, showModal }) => {
     <>
       <div
         className={`${
-          isOpen ? "translate-x-0" : "translate-x-[-100%] md:translate-x-0"
-        } w-[260px] md:w-[350px] h-screen text-[14px] border-r divide-dashed border-neutrals100 border-dashed transition-all duration-300 fixed md:static z-30 pt-[95px] md:pt-0 top-0 left-0 md:left-auto overflow-y-auto md:overflow-y-hidden`}
+          isOpen ? "translate-x-0 bg-white " : " translate-x-[-100%] md:translate-x-0"
+        } w-[260px] md:w-[350px] h-screen text-[14px] border-r divide-dashed border-neutrals100 border-dashed transition-all duration-300 fixed z-50 pt-[95px] md:pt-5 top-0 left-0 md:left-auto overflow-y-auto md:overflow-y-hidden`}
       >
         <div className="flex flex-col gap-y-[180px]">
           <ul className="text-[#A5D4B8] flex flex-col text-[16px] px-5 space-y-5">
@@ -101,10 +95,7 @@ const SideBar = ({ isOpen, toggleMenu, showModal }) => {
               />
             </Link>
 
-            <SideDopdown
-              isExpanded={expandedMenuId === "dashboard"}
-              onToggle={handleToggleMenu}
-            />
+            <SideDopdown isExpanded={expandedMenuId === "dashboard"} onToggle={handleToggleMenu} />
 
             <SideDopdown
               menuItem={{
@@ -219,9 +210,7 @@ const SideBar = ({ isOpen, toggleMenu, showModal }) => {
           <div className="w-full  rounded-[15px] p-6 sm:px-[30px]">
             <div className="bg-white rounded-lg p-6 w-96 space-y-7 mx-auto">
               <div className="flex flex-col gap-5 items-center">
-                <p className="text-[25px] font-bold text-gray-800 font-inter">
-                  Logout
-                </p>
+                <p className="text-[25px] font-bold text-gray-800 font-inter">Logout</p>
                 <div>
                   <StyledImage src="/img/logout.svg" />
                 </div>
