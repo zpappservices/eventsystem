@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  FaCalendarPlus,
-  FaTicketAlt,
-  FaRegBell,
-} from "react-icons/fa";
+import { FaCalendarPlus, FaTicketAlt, FaRegBell } from "react-icons/fa";
 import { PiCalendarCheckLight, PiUserLight } from "react-icons/pi";
 
 const NotifyCard = ({ type, message, time, isRead }) => {
@@ -76,8 +72,6 @@ const NotificationsList = () => {
 
   return (
     <div className="w-full space-y-3">
-      <p className="text-xl">Notifications</p>
-
       <div className="space-y-2">
         {notifications.map((notification) => (
           <NotifyCard
