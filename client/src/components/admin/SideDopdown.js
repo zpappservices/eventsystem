@@ -118,6 +118,7 @@ const SideDopdown = ({
                     isSubItemActive(index) ? "text-primary" : "text-neutrals600"
                   }`}
                   onClick={() => router.push(item.path)}
+                  key={index}
                 >
                   <div>{<item.icon />}</div>
                   <p>{item.name}</p>
