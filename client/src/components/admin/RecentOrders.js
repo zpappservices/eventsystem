@@ -49,7 +49,7 @@ const RecentOrders = () => {
   ];
 
   return (
-    <div className="rounded-xl shadow max-w-[527px] w-full">
+    <div className="rounded-xl max-w-[527px] w-full">
       <div className="p-4">
         <h2 className="text-xl font-bold">Recent Orders</h2>
       </div>

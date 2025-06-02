@@ -48,7 +48,7 @@ const tickets = () => {
   ];
   return (
     <Layout>
-      <div className="border-neutrals100 px-5 py-5">
+      <div className="border-neutrals100 max-w-[1190px] w-full px-5 py-5 space-y-10">
         <p className="text-baseBlack font-bold mb-7">
           Dashboard{" "}
           <span className="font-normal text-neutrals600">/ Ticket Report</span>
