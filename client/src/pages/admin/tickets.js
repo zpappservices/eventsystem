@@ -48,27 +48,7 @@ const tickets = () => {
   ];
   return (
     <Layout>
-      <div className="border-neutrals100 max-w-[1190px] w-full px-5 py-5 space-y-10">
-        <p className="text-baseBlack font-bold mb-7">
-          Dashboard{" "}
-          <span className="font-normal text-neutrals600">/ Ticket Report</span>
-        </p>
-
-        <div className="flex flex-wrap gap-5">
-          {stats.map((stat) => (
-            <StatCard
-              key={stat.id}
-              title={stat.title}
-              value={stat.value}
-              percentage={stat.percentage}
-              percentageType={stat.percentageType}
-              trend={stat.trend}
-            />
-          ))}
-        </div>
-
-        <TicketReport />
-      </div>
+      T
     </Layout>
   );
 };

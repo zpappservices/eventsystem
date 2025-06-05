@@ -3,151 +3,166 @@ import Layout from "@/components/admin/Layout";
 import Search from "@/components/admin/Search";
 import DropdownPagination from "@/components/widgets/DropdownPagination";
 import usePagination from "@/hooks/usePagination";
-import { formatCurrencyWithoutDecimal } from "@/utils/conversions";
-import { MoreVertical } from "lucide-react";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
+import { IoIosCloseCircleOutline } from "react-icons/io";
+import { MdCheckCircle, MdOutlineCheckCircle, MdVerified } from "react-icons/md";
+
+// Move organizers data outside the component to prevent recreation on each render
+const organizersData = [
+  {
+    organizerName: "Shadow Empire",
+    contactName: "Mebradu Ejiro",
+    email: "praisedesign08@gmail.com",
+    phoneNumber: "+234-7014579856",
+    status: "Pending",
+    documentSubmitted: true,
+  },
+  {
+    organizerName: "Tech Innovators Hub",
+    contactName: "Adebayo Johnson",
+    email: "adebayo.johnson@techhub.ng",
+    phoneNumber: "+234-8023456789",
+    status: "Approved",
+    documentSubmitted: true,
+  },
+  {
+    organizerName: "Creative Minds Collective",
+    contactName: "Sarah Williams",
+    email: "sarah.w@creativeminds.com",
+    phoneNumber: "+234-9087654321",
+    status: "Pending",
+    documentSubmitted: false,
+  },
+  {
+    organizerName: "Digital Solutions Ltd",
+    contactName: "Michael Chen",
+    email: "m.chen@digitalsolutions.com",
+    phoneNumber: "+234-7098765432",
+    status: "Approved",
+    documentSubmitted: true,
+  },
+  {
+    organizerName: "Green Earth Initiative",
+    contactName: "Fatima Abdullah",
+    email: "fatima@greenearth.org",
+    phoneNumber: "+234-8134567890",
+    status: "De-activated",
+    documentSubmitted: true,
+  },
+  {
+    organizerName: "Urban Development Corp",
+    contactName: "David Thompson",
+    email: "d.thompson@urbancorp.ng",
+    phoneNumber: "+234-7045678901",
+    status: "Pending",
+    documentSubmitted: true,
+  },
+  {
+    organizerName: "Healthcare Plus",
+    contactName: "Dr. Amina Hassan",
+    email: "amina.hassan@healthplus.com",
+    phoneNumber: "+234-8156789012",
+    status: "Approved",
+    documentSubmitted: true,
+  },
+  {
+    organizerName: "EduTech Africa",
+    contactName: "James Okafor",
+    email: "j.okafor@edutechafrica.org",
+    phoneNumber: "+234-9067890123",
+    status: "Pending",
+    documentSubmitted: false,
+  },
+  {
+    organizerName: "Financial Services Pro",
+    contactName: "Elizabeth Ademu",
+    email: "liz.ademu@finpro.ng",
+    phoneNumber: "+234-7078901234",
+    status: "Approved",
+    documentSubmitted: true,
+  },
+  {
+    organizerName: "Agro Business Network",
+    contactName: "Ibrahim Musa",
+    email: "ibrahim@agrobusiness.net",
+    phoneNumber: "+234-8189012345",
+    status: "De-activated",
+    documentSubmitted: true,
+  },
+  {
+    organizerName: "Media & Entertainment Co",
+    contactName: "Grace Okolie",
+    email: "grace@mediaent.com",
+    phoneNumber: "+234-9090123456",
+    status: "Pending",
+    documentSubmitted: true,
+  },
+  {
+    organizerName: "Sports Academy Lagos",
+    contactName: "Chidi Okonkwo",
+    email: "chidi@sportsacademy.ng",
+    phoneNumber: "+234-7001234567",
+    status: "Approved",
+    documentSubmitted: true,
+  },{
+    organizerName: "Shadow Empire",
+    contactName: "Mebradu Ejiro",
+    email: "praisedesign08@gmail.com",
+    phoneNumber: "+234-7014579856",
+    status: "Pending",
+    documentSubmitted: true,
+  },
+  {
+    organizerName: "Tech Innovators Hub",
+    contactName: "Adebayo Johnson",
+    email: "adebayo.johnson@techhub.ng",
+    phoneNumber: "+234-8023456789",
+    status: "Approved",
+    documentSubmitted: true,
+  },
+  {
+    organizerName: "Creative Minds Collective",
+    contactName: "Sarah Williams",
+    email: "sarah.w@creativeminds.com",
+    phoneNumber: "+234-9087654321",
+    status: "Pending",
+    documentSubmitted: false,
+  },
+  {
+    organizerName: "Digital Solutions Ltd",
+    contactName: "Michael Chen",
+    email: "m.chen@digitalsolutions.com",
+    phoneNumber: "+234-7098765432",
+    status: "Approved",
+    documentSubmitted: true,
+  },
+];
 
 const organizers = () => {
-  const [filter, setFilter] = useState("All");
+  const [filter, setFilter] = useState("Pending");
   const [query, setQuery] = useState("");
   const [date, setDate] = useState("");
-  const users = [
-    {
-      name: "Ejiro Ejiro",
-      email: "Mebradu89@gmail.com",
-      tickets_bought: 28,
-      last_login: "12 hours ago",
-      subscription: "Active",
-      date_registered: "01/01/2025",
-      total_paid: 742.58,
-    },
-    {
-      name: "Ejiro Ejiro",
-      email: "Mebradu89@gmail.com",
-      tickets_bought: 28,
-      last_login: "12 hours ago",
-      subscription: "Active",
-      date_registered: "01/01/2025",
-      total_paid: 742.58,
-    },
-    {
-      name: "Ejiro Ejiro",
-      email: "Mebradu89@gmail.com",
-      tickets_bought: 28,
-      last_login: "12 hours ago",
-      subscription: "Active",
-      date_registered: "01/01/2025",
-      total_paid: 742.58,
-    },
-    {
-      name: "Ejiro Ejiro",
-      email: "Mebradu89@gmail.com",
-      tickets_bought: 28,
-      last_login: "12 hours ago",
-      subscription: "Active",
-      date_registered: "01/01/2025",
-      total_paid: 742.58,
-    },
-    {
-      name: "Ejiro Ejiro",
-      email: "Mebradu89@gmail.com",
-      tickets_bought: 28,
-      last_login: "12 hours ago",
-      subscription: "Inactive",
-      date_registered: "01/01/2025",
-      total_paid: 742.58,
-    },
-    {
-      name: "Ejiro Ejiro",
-      email: "Mebradu89@gmail.com",
-      tickets_bought: 28,
-      last_login: "12 hours ago",
-      subscription: "Active",
-      date_registered: "01/01/2025",
-      total_paid: 742.58,
-    },
-    {
-      name: "Ejiro Ejiro",
-      email: "Mebradu89@gmail.com",
-      tickets_bought: 28,
-      last_login: "12 hours ago",
-      subscription: "Active",
-      date_registered: "01/01/2025",
-      total_paid: 742.58,
-    },
-    {
-      name: "Ejiro Ejiro",
-      email: "Mebradu89@gmail.com",
-      tickets_bought: 28,
-      last_login: "12 hours ago",
-      subscription: "Active",
-      date_registered: "01/01/2025",
-      total_paid: 742.58,
-    },
-    {
-      name: "Ejiro Ejiro",
-      email: "Mebradu89@gmail.com",
-      tickets_bought: 28,
-      last_login: "12 hours ago",
-      subscription: "Inactive",
-      date_registered: "01/01/2025",
-      total_paid: 742.58,
-    },
-    {
-      name: "Ejiro Ejiro",
-      email: "Mebradu89@gmail.com",
-      tickets_bought: 28,
-      last_login: "12 hours ago",
-      subscription: "Active",
-      date_registered: "01/01/2025",
-      total_paid: 742.58,
-    },
-    {
-      name: "Ejiro Ejiro",
-      email: "Mebradu89@gmail.com",
-      tickets_bought: 28,
-      last_login: "12 hours ago",
-      subscription: "Active",
-      date_registered: "01/01/2025",
-      total_paid: 742.58,
-    },
-    {
-      name: "Ejiro Ejiro",
-      email: "Mebradu89@gmail.com",
-      tickets_bought: 28,
-      last_login: "12 hours ago",
-      subscription: "Inactive",
-      date_registered: "01/01/2025",
-      total_paid: 742.58,
-    },
-    {
-      name: "Ejiro Ejiro",
-      email: "Mebradu89@gmail.com",
-      tickets_bought: 28,
-      last_login: "12 hours ago",
-      subscription: "Active",
-      date_registered: "01/01/2025",
-      total_paid: 742.58,
-    },
-  ];
 
-  const summary = users?.reduce(
-    (acc, user) => {
-      if (user.subscription === "Active") {
-        acc.active += 1;
-      } else if (user.subscription === "Inactive") {
-        acc.inactive += 1;
-      }
-      acc.total += 1;
-      return acc;
-    },
-    { active: 0, inactive: 0, total: 0 }
-  );
+  const summary = useMemo(() => {
+    return organizersData?.reduce(
+      (acc, user) => {
+        if (user.status === "Approved") {
+          acc.approved += 1;
+        } else if (user.status === "Pending") {
+          acc.pending += 1;
+        } else if (user.status === "De-activated") {
+          acc.deactivated += 1;
+        }
+        return acc;
+      },
+      { approved: 0, pending: 0, deactivated: 0 }
+    );
+  }, []); // Empty dependency array since organizersData is static
 
-  const filteredUsers = users?.filter((user) => {
-    if (filter === "All") return true;
-    return user.subscription === filter;
-  });
+  const filteredUsers = useMemo(() => {
+    if (filter === "All") return organizersData;
+    return organizersData.filter((user) => user.status === filter);
+  }, [filter]); // Only depend on filter, not the organizers array
 
   const {
     currentPage,
@@ -168,7 +183,7 @@ const organizers = () => {
 
         <div className="flex items-center flex-wrap gap-5">
           <div className="flex items-center border-b border-neutrals100">
-            {["All", "Active", "Inactive"]?.map((item, index) => (
+            {["Pending", "Approved", "De-activated"]?.map((item, index) => (
               <div
                 className={`border-b text-xs sm:text-sm px-5 py-3 relative cursor-pointer duration-500 transition-all ${
                   item === filter ? "text-primary" : ""
@@ -177,8 +192,9 @@ const organizers = () => {
                 onClick={() => setFilter(item)}
               >
                 {item} (
-                {summary?.[item.toLowerCase()]?.toLocaleString() ??
-                  summary.total?.toLocaleString()}
+                {item === "De-activated"
+                  ? summary.deactivated?.toLocaleString()
+                  : summary?.[item.toLowerCase()]?.toLocaleString()}
                 )
                 <div
                   className={`border-2 rounded-lg absolute -bottom-[3px] left-0 w-full transition-opacity ${
@@ -205,52 +221,65 @@ const organizers = () => {
             <thead className="bg-neutrals100">
               <tr>
                 <th className="py-3 px-2 text-left text-neutrals600 text-sm font-semibold">
-                  Name
+                  Organizer Name
+                </th>
+                <th className="py-3 px-2 text-left text-neutrals600 text-sm font-semibold">
+                  Contact Name
                 </th>
                 <th className="py-3 px-2 text-left text-neutrals600 text-sm font-semibold">
                   Email
                 </th>
                 <th className="py-3 px-2 text-left text-neutrals600 text-sm font-semibold">
-                  Tickets Bought
+                  Phone Number
                 </th>
                 <th className="py-3 px-2 text-left text-neutrals600 text-sm font-semibold">
-                  Last Login
+                  Status
                 </th>
                 <th className="py-3 px-2 text-left text-neutrals600 text-sm font-semibold">
-                  Subscription
+                  Document Submitted
                 </th>
                 <th className="py-3 px-2 text-left text-neutrals600 text-sm font-semibold">
-                  Date Reg
-                </th>
-                <th className="py-3 px-2 text-left text-neutrals600 text-sm font-semibold">
-                  Total Paid
-                </th>
-                <th className="py-3 px-2 text-left text-neutrals600 text-sm font-semibold">
-                  <button className="inline-flex items-center justify-center text-gray-400 hover:text-gray-500">
-                    <MoreVertical size={18} />
-                  </button>
+                  Actions
                 </th>
               </tr>
             </thead>
             <tbody>
-              {paginatedData.map((user, index) => (
+              {paginatedData?.map((user, index) => (
                 <tr
                   key={index}
                   className="border-b border-gray-100 last:border-0"
                 >
-                  <td className="py-4 px-2 text-xs">{user?.name}</td>
-                  <td className="py-4 px-2 text-xs">{user?.email}</td>
-                  <td className="py-4 px-2 text-xs">{user?.last_login}</td>
-                  <td className="py-4 px-2 text-xs">{user?.tickets_bought}</td>
-                  <td className="py-4 px-2 text-xs">{user?.subscription}</td>
-                  <td className="py-4 px-2 text-xs">{user?.date_registered}</td>
+                  <td className="py-4 px-2 text-xs">{user?.organizerName}</td>
                   <td className="py-4 px-2 text-xs">
-                    {formatCurrencyWithoutDecimal(user?.total_paid)}
+                    {user?.contactName}
+                    {user?.status === "Approved" && (
+                      <MdVerified className="text-success text2xl" />
+                    )}
                   </td>
-                  <td className="py-3 px-2 text-left text-neutrals600 text-sm font-semibold">
-                    <button className="inline-flex items-center justify-center text-neutrals600">
-                      <MoreVertical size={18} />
-                    </button>
+                  <td className="py-4 px-2 text-xs">{user?.email}</td>
+                  <td className="py-4 px-2 text-xs">{user?.phoneNumber}</td>
+                  <td className="py-4 px-2 text-xs">
+                    <span
+                      className={`px-2 py-2 rounded text-xs font-semibold ${
+                        user?.status === "Approved"
+                          ? "bg-green-100 text-green-800"
+                          : user?.status === "Pending"
+                          ? "bg-warning100 text-warning500"
+                          : "bg-red-100 text-red-800"
+                      }`}
+                    >
+                      {user?.status}
+                    </span>
+                  </td>
+                  <td className="py-4 px-2 text-xs">
+                    {user?.documentSubmitted ? "Yes" : "No"}
+                  </td>
+                  <td className="py-3 px-2 text-left text-neutrals600 text-sm font-semibold flex items-center gap-2">
+                    <MdOutlineCheckCircle className="text-success text-2xl cursor-pointer" />
+
+                    <IoIosCloseCircleOutline className="text-error text-2xl cursor-pointer" />
+
+                    <img className="w-[24px]" src="/img/view-user.svg" />
                   </td>
                 </tr>
               ))}

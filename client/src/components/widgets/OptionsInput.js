@@ -25,6 +25,7 @@ const OptionsInput = ({
   disabled,
   startIcon,
   index = 0,
+  regularLabel = false,
   ...props
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -67,9 +68,17 @@ const OptionsInput = ({
       className={`flex flex-col gap-1.5 relative ${container}`}
       ref={selectRef}
     >
-      <p className="absolute -top-2 bg-white px-1 z-10 left-3 text-[14px] leading-[16px] text-neutrals700">
-        {label}
-      </p>
+      {!regularLabel && (
+        <p className="absolute -top-2 bg-white px-1 z-10 left-3 text-[14px] leading-[16px] text-neutrals700">
+          {label}
+        </p>
+      )}
+
+      {regularLabel && (
+        <p className=" bg-white px-1 text-[14px] leading-[16px] text-black">
+          {label}
+        </p>
+      )}
       <div
         className={`relative ${inputClass} flex items-center gap-2.5 justify-between cursor-pointer`}
         onClick={!disabled ? toggleDropdown : () => {}}

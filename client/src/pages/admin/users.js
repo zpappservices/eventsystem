@@ -233,7 +233,7 @@ const users = () => {
               </tr>
             </thead>
             <tbody>
-              {paginatedData.map((user, index) => (
+              {paginatedData?.map((user, index) => (
                 <tr
                   key={index}
                   className="border-b border-gray-100 last:border-0"

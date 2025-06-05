@@ -1,17 +1,9 @@
 import Layout from "@/components/admin/Layout";
-import AdminDashboardTheme from "@/components/admin/settings/AdminDashboardTheme";
-import Currency from "@/components/admin/settings/Currency";
-import DateTimeFormat from "@/components/admin/settings/DateTimeFormat";
-import Notifications from "@/components/admin/settings/Notifications";
-import SystemLanguage from "@/components/admin/settings/SystemLanguage";
-import TimeZone from "@/components/admin/settings/TimeZone";
-import UserSignUp from "@/components/admin/settings/UserSignUp";
-import UserTheme from "@/components/admin/settings/UserTheme";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/router";
 import React from "react";
 
-const settings = () => {
+const SecuritySettings = () => {
   const pathname = usePathname();
   const { push } = useRouter();
   return (
@@ -54,35 +46,9 @@ const settings = () => {
             </div>
           ))}
         </div>
-
-        <div className="sm:border border-neutrals100 rounded-lg sm:p-5 space-y-5">
-          <p className="font-bold text-lg sm:text-xl text-black">General</p>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 sm:gap-10">
-            <div className="space-y-5">
-              <SystemLanguage />
-
-              <AdminDashboardTheme />
-
-              <TimeZone />
-
-              <Currency />
-            </div>
-
-            <div className="space-y-5">
-              <UserSignUp />
-
-              <UserTheme />
-
-              <DateTimeFormat />
-
-              <Notifications />
-            </div>
-          </div>
-        </div>
       </div>
     </Layout>
   );
 };
 
-export default settings;
+export default SecuritySettings;
