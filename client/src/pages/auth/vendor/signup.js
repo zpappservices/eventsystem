@@ -43,10 +43,10 @@ const SignUp = () => {
       return;
     }
 
-    if (password !== confirmPassword) {
+    /* if (password !== confirmPassword) {
       setErrorMessage("Passwords do not match!");
       return;
-    }
+    } */
 
     await request();
   };
