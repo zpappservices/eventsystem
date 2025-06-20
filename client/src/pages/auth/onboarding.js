@@ -6,6 +6,8 @@ import OnboardingHeader from "@/components/auth/OnboardingHeader";
 import PrivateRoute from "@/components/dashboard/PrivateRoute";
 import OnboardingLayout from "@/components/auth/OnboardingLayout";
 import { useRouter } from "next/router";
+import Link from "next/link";
+import StyledImage from "@/components/StyledImage";
 
 const onboarding = () => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -14,19 +16,19 @@ const onboarding = () => {
   const router = useRouter();
 
   const goBack = () => {
-    router.push("/auth/vendor/signup");
+    router.back();
   };
 
   return (
     <>
       <div className="min-h-screen flex justify-center items-center">
         <div className="w-full max-w-[600px] flex flex-col gap-10 py-20 relative">
-          <p
-            className="absolute left-0 top-10 flex items-center gap-x-2 text-[18px] font-medium cursor-pointer mr-auto mb-5"
-            onClick={goBack}>
-            <img src="/img/return.svg" />
-            Back
-          </p>
+          <Link href="/" className="!z-[1400] mx-auto">
+            <StyledImage
+              src="/img/logo.svg"
+              className="w-full sm:min-w-[150px] max-w-[200px] !z-30 mx-auto"
+            />
+          </Link>
           <div className="max-w-[370px] mx-auto text-black">
             <p className="text-center text-[22px] font-medium leading-[30px]">
               Let’s create something spectacular

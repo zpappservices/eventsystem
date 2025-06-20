@@ -18,8 +18,8 @@ const Button = ({
 }) => {
   const sizeClasses = {
     small: "py-1 px-[11px] text-[14px] leading-[21px]",
-    medium: "py-4 px-[18px]",
-    large: "py-5 px-[21px]",
+    medium: "py-3 px-[18px]",
+    large: "py-4 px-[21px]",
   };
 
   const outlineClass = outline
