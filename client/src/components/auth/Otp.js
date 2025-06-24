@@ -65,7 +65,7 @@ const OtpForm = ({ onOtpChange, error }) => {
                      : digit
                      ? "border-primary"
                      : "border-outlineGrey"
-               } bg-[#F7F7F7] rounded-[3px] border-[1.5px] transition-all duration-300 text-center outline-none placeholder:text-primary text-primary text-[18px] font-bold placeholder:text-[18px]`}
+               } bg-[#F7F7F7] rounded-[3px] border-[1.5px] transition-all duration-300 text-center outline-none placeholder:text-baseBlack text-baseBlack text-[18px] font-bold placeholder:text-[18px]`}
             />
          ))}
       </div>
