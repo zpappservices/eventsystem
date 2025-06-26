@@ -1,150 +1,24 @@
+import { getOrganizers } from "@/apis/adminOrganizersService";
 import DateSort from "@/components/admin/DateSort";
 import Layout from "@/components/admin/Layout";
+import OrganizerTableContent from "@/components/admin/OrganizerTableContent";
 import Search from "@/components/admin/Search";
 import DropdownPagination from "@/components/widgets/DropdownPagination";
+import useLoading from "@/hooks/useLoading";
 import usePagination from "@/hooks/usePagination";
-import React, { useMemo, useState } from "react";
-import { IoIosCloseCircleOutline } from "react-icons/io";
-import { MdCheckCircle, MdOutlineCheckCircle, MdVerified } from "react-icons/md";
+import React, { useEffect, useMemo, useState } from "react";
+import { toast } from "react-toastify";
 
-// Move organizers data outside the component to prevent recreation on each render
-const organizersData = [
-  {
-    organizerName: "Shadow Empire",
-    contactName: "Mebradu Ejiro",
-    email: "praisedesign08@gmail.com",
-    phoneNumber: "+234-7014579856",
-    status: "Pending",
-    documentSubmitted: true,
-  },
-  {
-    organizerName: "Tech Innovators Hub",
-    contactName: "Adebayo Johnson",
-    email: "adebayo.johnson@techhub.ng",
-    phoneNumber: "+234-8023456789",
-    status: "Approved",
-    documentSubmitted: true,
-  },
-  {
-    organizerName: "Creative Minds Collective",
-    contactName: "Sarah Williams",
-    email: "sarah.w@creativeminds.com",
-    phoneNumber: "+234-9087654321",
-    status: "Pending",
-    documentSubmitted: false,
-  },
-  {
-    organizerName: "Digital Solutions Ltd",
-    contactName: "Michael Chen",
-    email: "m.chen@digitalsolutions.com",
-    phoneNumber: "+234-7098765432",
-    status: "Approved",
-    documentSubmitted: true,
-  },
-  {
-    organizerName: "Green Earth Initiative",
-    contactName: "Fatima Abdullah",
-    email: "fatima@greenearth.org",
-    phoneNumber: "+234-8134567890",
-    status: "De-activated",
-    documentSubmitted: true,
-  },
-  {
-    organizerName: "Urban Development Corp",
-    contactName: "David Thompson",
-    email: "d.thompson@urbancorp.ng",
-    phoneNumber: "+234-7045678901",
-    status: "Pending",
-    documentSubmitted: true,
-  },
-  {
-    organizerName: "Healthcare Plus",
-    contactName: "Dr. Amina Hassan",
-    email: "amina.hassan@healthplus.com",
-    phoneNumber: "+234-8156789012",
-    status: "Approved",
-    documentSubmitted: true,
-  },
-  {
-    organizerName: "EduTech Africa",
-    contactName: "James Okafor",
-    email: "j.okafor@edutechafrica.org",
-    phoneNumber: "+234-9067890123",
-    status: "Pending",
-    documentSubmitted: false,
-  },
-  {
-    organizerName: "Financial Services Pro",
-    contactName: "Elizabeth Ademu",
-    email: "liz.ademu@finpro.ng",
-    phoneNumber: "+234-7078901234",
-    status: "Approved",
-    documentSubmitted: true,
-  },
-  {
-    organizerName: "Agro Business Network",
-    contactName: "Ibrahim Musa",
-    email: "ibrahim@agrobusiness.net",
-    phoneNumber: "+234-8189012345",
-    status: "De-activated",
-    documentSubmitted: true,
-  },
-  {
-    organizerName: "Media & Entertainment Co",
-    contactName: "Grace Okolie",
-    email: "grace@mediaent.com",
-    phoneNumber: "+234-9090123456",
-    status: "Pending",
-    documentSubmitted: true,
-  },
-  {
-    organizerName: "Sports Academy Lagos",
-    contactName: "Chidi Okonkwo",
-    email: "chidi@sportsacademy.ng",
-    phoneNumber: "+234-7001234567",
-    status: "Approved",
-    documentSubmitted: true,
-  },{
-    organizerName: "Shadow Empire",
-    contactName: "Mebradu Ejiro",
-    email: "praisedesign08@gmail.com",
-    phoneNumber: "+234-7014579856",
-    status: "Pending",
-    documentSubmitted: true,
-  },
-  {
-    organizerName: "Tech Innovators Hub",
-    contactName: "Adebayo Johnson",
-    email: "adebayo.johnson@techhub.ng",
-    phoneNumber: "+234-8023456789",
-    status: "Approved",
-    documentSubmitted: true,
-  },
-  {
-    organizerName: "Creative Minds Collective",
-    contactName: "Sarah Williams",
-    email: "sarah.w@creativeminds.com",
-    phoneNumber: "+234-9087654321",
-    status: "Pending",
-    documentSubmitted: false,
-  },
-  {
-    organizerName: "Digital Solutions Ltd",
-    contactName: "Michael Chen",
-    email: "m.chen@digitalsolutions.com",
-    phoneNumber: "+234-7098765432",
-    status: "Approved",
-    documentSubmitted: true,
-  },
-];
-
-const organizers = () => {
+const Organizers = () => {
+  const [data, setData] = useState([]);
   const [filter, setFilter] = useState("Pending");
   const [query, setQuery] = useState("");
   const [date, setDate] = useState("");
 
+  const { isLoading, startLoading, stopLoading } = useLoading(true);
+
   const summary = useMemo(() => {
-    return organizersData?.reduce(
+    return data?.reduce(
       (acc, user) => {
         if (user.status === "Approved") {
           acc.approved += 1;
@@ -157,12 +31,38 @@ const organizers = () => {
       },
       { approved: 0, pending: 0, deactivated: 0 }
     );
-  }, []); // Empty dependency array since organizersData is static
+  }, [data]);
+
+  const getVendors = async () => {
+    const { message, success, data, error } = await getOrganizers(
+      startLoading,
+      stopLoading
+    );
+
+    if (success) {
+      setData(data?.reverse());
+    } else {
+      toast.error(message);
+    }
+  };
 
   const filteredUsers = useMemo(() => {
-    if (filter === "All") return organizersData;
-    return organizersData.filter((user) => user.status === filter);
-  }, [filter]); // Only depend on filter, not the organizers array
+    let result = data;
+
+    if (filter !== "Pending") {
+      result = result?.filter((user) => user?.status === filter);
+    }
+
+    if (query.trim() !== "") {
+      result = result?.filter(
+        (user) =>
+          user?.name?.toLowerCase().includes(query.toLowerCase()) ||
+          user?.email?.toLowerCase().includes(query.toLowerCase())
+      );
+    }
+
+    return result;
+  }, [data, filter, query]);
 
   const {
     currentPage,
@@ -172,6 +72,10 @@ const organizers = () => {
     startIndex,
     endIndex,
   } = usePagination(filteredUsers, 10);
+
+  useEffect(() => {
+    getVendors();
+  }, []);
 
   return (
     <Layout>
@@ -243,51 +147,12 @@ const organizers = () => {
                 </th>
               </tr>
             </thead>
-            <tbody>
-              {paginatedData?.map((user, index) => (
-                <tr
-                  key={index}
-                  className="border-b border-gray-100 last:border-0"
-                >
-                  <td className="py-4 px-2 text-xs">{user?.organizerName}</td>
-                  <td className="py-4 px-2 text-xs">
-                    {user?.contactName}
-                    {user?.status === "Approved" && (
-                      <MdVerified className="text-success text2xl" />
-                    )}
-                  </td>
-                  <td className="py-4 px-2 text-xs">{user?.email}</td>
-                  <td className="py-4 px-2 text-xs">{user?.phoneNumber}</td>
-                  <td className="py-4 px-2 text-xs">
-                    <span
-                      className={`px-2 py-2 rounded text-xs font-semibold ${
-                        user?.status === "Approved"
-                          ? "bg-green-100 text-green-800"
-                          : user?.status === "Pending"
-                          ? "bg-warning100 text-warning500"
-                          : "bg-red-100 text-red-800"
-                      }`}
-                    >
-                      {user?.status}
-                    </span>
-                  </td>
-                  <td className="py-4 px-2 text-xs">
-                    {user?.documentSubmitted ? "Yes" : "No"}
-                  </td>
-                  <td className="py-3 px-2 text-left text-neutrals600 text-sm font-semibold flex items-center gap-2">
-                    <MdOutlineCheckCircle className="text-success text-2xl cursor-pointer" />
 
-                    <IoIosCloseCircleOutline className="text-error text-2xl cursor-pointer" />
-
-                    <img className="w-[24px]" src="/img/view-user.svg" />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
+            <OrganizerTableContent data={paginatedData} loading={isLoading} />
           </table>
         </div>
 
-        {filteredUsers?.length > 10 && (
+        {data?.length > 10 && (
           <div className="mt-12 flex flex-wrap gapx-2 py-3.5 gap-y-5 items-center gap-5">
             <div className="text-[14px] sm:text-[16px] text-baseBlack font-medium leading-normal ms-auto">
               Show
@@ -308,4 +173,4 @@ const organizers = () => {
   );
 };
 
-export default organizers;
+export default Organizers;
