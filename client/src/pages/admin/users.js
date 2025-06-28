@@ -3,151 +3,35 @@ import Layout from "@/components/admin/Layout";
 import Search from "@/components/admin/Search";
 import DropdownPagination from "@/components/widgets/DropdownPagination";
 import usePagination from "@/hooks/usePagination";
+import { users } from "@/mock/users";
 import { formatCurrencyWithoutDecimal } from "@/utils/conversions";
 import { MoreVertical } from "lucide-react";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 
-const users = () => {
+const Users = () => {
   const [filter, setFilter] = useState("All");
   const [query, setQuery] = useState("");
   const [date, setDate] = useState("");
-  const users = [
-    {
-      name: "Ejiro Ejiro",
-      email: "Mebradu89@gmail.com",
-      tickets_bought: 28,
-      last_login: "12 hours ago",
-      subscription: "Active",
-      date_registered: "01/01/2025",
-      total_paid: 742.58,
-    },
-    {
-      name: "Ejiro Ejiro",
-      email: "Mebradu89@gmail.com",
-      tickets_bought: 28,
-      last_login: "12 hours ago",
-      subscription: "Active",
-      date_registered: "01/01/2025",
-      total_paid: 742.58,
-    },
-    {
-      name: "Ejiro Ejiro",
-      email: "Mebradu89@gmail.com",
-      tickets_bought: 28,
-      last_login: "12 hours ago",
-      subscription: "Active",
-      date_registered: "01/01/2025",
-      total_paid: 742.58,
-    },
-    {
-      name: "Ejiro Ejiro",
-      email: "Mebradu89@gmail.com",
-      tickets_bought: 28,
-      last_login: "12 hours ago",
-      subscription: "Active",
-      date_registered: "01/01/2025",
-      total_paid: 742.58,
-    },
-    {
-      name: "Ejiro Ejiro",
-      email: "Mebradu89@gmail.com",
-      tickets_bought: 28,
-      last_login: "12 hours ago",
-      subscription: "Inactive",
-      date_registered: "01/01/2025",
-      total_paid: 742.58,
-    },
-    {
-      name: "Ejiro Ejiro",
-      email: "Mebradu89@gmail.com",
-      tickets_bought: 28,
-      last_login: "12 hours ago",
-      subscription: "Active",
-      date_registered: "01/01/2025",
-      total_paid: 742.58,
-    },
-    {
-      name: "Ejiro Ejiro",
-      email: "Mebradu89@gmail.com",
-      tickets_bought: 28,
-      last_login: "12 hours ago",
-      subscription: "Active",
-      date_registered: "01/01/2025",
-      total_paid: 742.58,
-    },
-    {
-      name: "Ejiro Ejiro",
-      email: "Mebradu89@gmail.com",
-      tickets_bought: 28,
-      last_login: "12 hours ago",
-      subscription: "Active",
-      date_registered: "01/01/2025",
-      total_paid: 742.58,
-    },
-    {
-      name: "Ejiro Ejiro",
-      email: "Mebradu89@gmail.com",
-      tickets_bought: 28,
-      last_login: "12 hours ago",
-      subscription: "Inactive",
-      date_registered: "01/01/2025",
-      total_paid: 742.58,
-    },
-    {
-      name: "Ejiro Ejiro",
-      email: "Mebradu89@gmail.com",
-      tickets_bought: 28,
-      last_login: "12 hours ago",
-      subscription: "Active",
-      date_registered: "01/01/2025",
-      total_paid: 742.58,
-    },
-    {
-      name: "Ejiro Ejiro",
-      email: "Mebradu89@gmail.com",
-      tickets_bought: 28,
-      last_login: "12 hours ago",
-      subscription: "Active",
-      date_registered: "01/01/2025",
-      total_paid: 742.58,
-    },
-    {
-      name: "Ejiro Ejiro",
-      email: "Mebradu89@gmail.com",
-      tickets_bought: 28,
-      last_login: "12 hours ago",
-      subscription: "Inactive",
-      date_registered: "01/01/2025",
-      total_paid: 742.58,
-    },
-    {
-      name: "Ejiro Ejiro",
-      email: "Mebradu89@gmail.com",
-      tickets_bought: 28,
-      last_login: "12 hours ago",
-      subscription: "Active",
-      date_registered: "01/01/2025",
-      total_paid: 742.58,
-    },
-  ];
 
-  const summary = users?.reduce(
-    (acc, user) => {
-      if (user.subscription === "Active") {
-        acc.active += 1;
-      } else if (user.subscription === "Inactive") {
-        acc.inactive += 1;
-      }
-      acc.total += 1;
-      return acc;
-    },
-    { active: 0, inactive: 0, total: 0 }
-  );
+  const summary = useMemo(() => {
+    return users?.reduce(
+      (acc, user) => {
+        if (user.subscription === "Active") {
+          acc.active += 1;
+        } else if (user.subscription === "Inactive") {
+          acc.inactive += 1;
+        }
+        acc.total += 1;
+        return acc;
+      },
+      { active: 0, inactive: 0, total: 0 }
+    );
+  }, [users]);
 
-  const filteredUsers = users?.filter((user) => {
-    if (filter === "All") return true;
-    return user.subscription === filter;
-  });
+  const filteredUsers = useMemo(() => {
+    if (filter === "All") return users;
+    return users.filter((user) => user.subscription === filter);
+  }, [filter, users]);
 
   const {
     currentPage,
@@ -278,4 +162,4 @@ const users = () => {
   );
 };
 
-export default users;
+export default Users;
