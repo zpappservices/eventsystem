@@ -7,7 +7,10 @@ import { EmailerService } from '@/integrations/email/emailer.service';
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService, private emailService: EmailerService,) {}
+  constructor(
+    private prisma: PrismaService,
+    private emailService: EmailerService,
+  ) {}
 
   async create(user: any): Promise<any> {
     try {
@@ -70,13 +73,13 @@ export class UserService {
     }
   }
 
-    
   async createVendor(data: VendorDto): Promise<any> {
     try {
-      
-      const vendoExist = await this.prisma.vendor.findFirst({where: { email: data.email}})
-      
-      if(vendoExist){
+      const vendoExist = await this.prisma.vendor.findFirst({
+        where: { email: data.email },
+      });
+
+      if (vendoExist) {
         return {
           statusCode: HttpStatus.BAD_REQUEST,
           data: null,
@@ -84,9 +87,9 @@ export class UserService {
         };
       }
       let vendorCreated: any;
-      await this.prisma.$transaction(async (pr) => {
-
-        vendorCreated = await this.prisma.vendor.create({
+      await this.prisma.$transaction(
+        async (pr) => {
+          vendorCreated = await this.prisma.vendor.create({
             data: {
               firstName: data.firstName,
               lastName: data.lastName,
@@ -98,7 +101,7 @@ export class UserService {
               photo: data.photo,
               createdOn: new Date(),
               active: false,
-              userId: data.userId
+              userId: data.userId,
             },
           });
 
@@ -106,25 +109,22 @@ export class UserService {
             where: { id: data.userId },
             data: {
               isVendor: true,
-              role: RoleType.VENDOR
-            }
+              role: RoleType.VENDOR,
+            },
           });
-     
-    },
-    {
-      maxWait: 5000, // default: 2000
-      timeout: 10000, // default: 5000      
-      //isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
-    }
-  
-  );
+        },
+        {
+          maxWait: 5000, // default: 2000
+          timeout: 10000, // default: 5000
+          //isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
+        },
+      );
 
-  
-  try {
-    await this.emailService.vendorOnBoarding({ user: vendorCreated });
-  } catch (e) {
-    console.log(e.message);
-  }
+      try {
+        await this.emailService.vendorOnBoarding({ user: vendorCreated });
+      } catch (e) {
+        console.log(e.message);
+      }
 
       return {
         statusCode: HttpStatus.CREATED,
@@ -141,11 +141,10 @@ export class UserService {
     }
   }
 
-      
   async updateVendor(data: VendorDto, id: string): Promise<any> {
     try {
       const created = await this.prisma.vendor.update({
-        where: { id},
+        where: { id },
         data: {
           firstName: data.firstName,
           lastName: data.lastName,
@@ -157,7 +156,7 @@ export class UserService {
           photo: data.photo,
           createdOn: new Date(),
           active: true,
-          userId: data.userId
+          userId: data.userId,
         },
       });
       return {
@@ -175,7 +174,6 @@ export class UserService {
     }
   }
 
-  
   async getAllVendors(): Promise<any> {
     try {
       const users = await this.prisma.vendor.findMany();
@@ -215,7 +213,9 @@ export class UserService {
 
   async getVendorAccount(userId: any): Promise<any> {
     try {
-      const account = await this.prisma.vendorAccount.findFirst({ where: { userId: userId } });
+      const account = await this.prisma.vendorAccount.findFirst({
+        where: { userId: userId },
+      });
 
       return {
         statusCode: HttpStatus.OK,
@@ -234,7 +234,9 @@ export class UserService {
 
   async getVendorByUserId(userId: any): Promise<any> {
     try {
-      const user = await this.prisma.vendor.findFirst({ where: { userId: userId } });
+      const user = await this.prisma.vendor.findFirst({
+        where: { userId: userId },
+      });
 
       return {
         statusCode: HttpStatus.OK,
@@ -251,29 +253,39 @@ export class UserService {
     }
   }
 
-  
   async verifyVendor(userId: any): Promise<any> {
     try {
+      const user = await this.prisma.vendor.findFirst({
+        where: { userId: userId },
+      });
 
-      const user = await this.prisma.vendor.findFirst({ where: { userId: userId } });
+      // const account = await this.prisma.vendorAccount.findFirst({
+      //   where: { userId: userId },
+      // });
 
-      const account = await this.prisma.vendorAccount.findFirst({ where: { userId: userId } });
-
-      if(!user ){// || !account){
+      if (!user) {
         return {
-          statusCode: HttpStatus.OK,
+          statusCode: HttpStatus.BAD_REQUEST,
           data: null,
           message: 'Onboarding or account information not completed',
         };
       }
 
-      const update = await this.prisma.vendor.update({ 
+      const update = await this.prisma.vendor.update({
         where: { id: user.id },
         data: {
-          active: true
-        }
-
+          active: true,
+        },
       });
+
+      if (!update) {
+        return {
+          statusCode: HttpStatus.BAD_REQUEST,
+          data: null,
+          message: 'Unable to perform request',
+        };
+      }
+
       return {
         statusCode: HttpStatus.OK,
         data: user,
