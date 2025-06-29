@@ -192,6 +192,46 @@ export class UserService {
     }
   }
 
+  async getVendorPending(): Promise<any> {
+    try {
+      const users = await this.prisma.vendor.findMany({
+        where: { active: false },
+      });
+      return {
+        statusCode: HttpStatus.OK,
+        data: users,
+        message: 'Success',
+      };
+    } catch (err) {
+      console.log(err);
+      return {
+        statusCode: HttpStatus.NOT_FOUND,
+        data: null,
+        message: `Fail`,
+      };
+    }
+  }
+
+  async getApprovedVendor(): Promise<any> {
+    try {
+      const users = await this.prisma.vendor.findMany({
+        where: { active: true },
+      });
+      return {
+        statusCode: HttpStatus.OK,
+        data: users,
+        message: 'Success',
+      };
+    } catch (err) {
+      console.log(err);
+      return {
+        statusCode: HttpStatus.NOT_FOUND,
+        data: null,
+        message: `Fail`,
+      };
+    }
+  }
+
   async getOneVendor(id: any): Promise<any> {
     try {
       const user = await this.prisma.vendor.findUnique({ where: { id: id } });

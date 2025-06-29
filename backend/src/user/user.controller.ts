@@ -1,4 +1,12 @@
-import { Controller, Get, UseGuards, Param, Body, Post, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  UseGuards,
+  Param,
+  Body,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { FirebaseAuthGuard } from '@/auth/guards/firebase.guard';
 import { query } from 'express';
@@ -30,9 +38,12 @@ export class UserController {
     return await this.userService.createVendor(dto);
   }
   @Post('/update-vendor/:Id')
-  async updateVendor(@Body() dto: VendorDto, @Param('Id') Id: string): Promise<any> {
+  async updateVendor(
+    @Body() dto: VendorDto,
+    @Param('Id') Id: string,
+  ): Promise<any> {
     return await this.userService.updateVendor(dto, Id);
-  } 
+  }
   @Get('/getonevendor/:Id')
   async getOneVendor(@Param('Id') Id: any): Promise<any> {
     return this.userService.getOneVendor(Id);
@@ -49,9 +60,16 @@ export class UserController {
   async getAllVendor(): Promise<any> {
     return this.userService.getAllVendors();
   }
+  @Get('/get-vendor-pending-approver')
+  async getVendorPending(): Promise<any> {
+    return this.userService.getVendorPending();
+  }
+  @Get('/get-approved-vendor')
+  async getApprovedVendor(): Promise<any> {
+    return this.userService.getApprovedVendor();
+  }
   @Get('/verify-vendor/:userId')
   async verifyVendor(@Param('userId') userId: string): Promise<any> {
     return this.userService.verifyVendor(userId);
   }
- 
 }
