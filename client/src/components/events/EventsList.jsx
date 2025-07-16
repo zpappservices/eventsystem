@@ -108,7 +108,7 @@ const EventsList = ({ filters, setFilters }) => {
           ({activeFilterCount})
         </p>
         <p className="text-baseBlack text-xl font-bold">
-          Results: All events <span className="text-primary">(1867)</span>
+          Results: All events <span className="text-primary">({events?.length})</span>
         </p>
         <OptionsInput
           placeholder="Sort by"

@@ -4,7 +4,6 @@ import Layout from "@/components/Layout";
 import { useState } from "react";
 
 const Events = () => {
-  const [query, setQuery] = useState("");
   const [filters, setFilters] = useState({
     sortBy: "new",
   });
@@ -14,7 +13,7 @@ const Events = () => {
       isHeader={false}
       container="w-full max-w-[1512px] mx-auto px-5 mt-[103px] sm:!mt-[88px]"
     >
-      <Slider query={query} setQeury={setQuery} />
+      <Slider />
 
       <EventsList filters={filters} setFilters={setFilters} />
     </Layout>
