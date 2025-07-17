@@ -4,10 +4,12 @@ import StyledImage from "../StyledImage";
 import Button from "../widgets/Button";
 import { useRouter } from "next/router";
 
-const EventCard = ({ data }) => {
+const EventCard = ({ data, container }) => {
   const router = useRouter();
   return (
-    <div className="w-full !max-w-[350px] mx-auto md:mx-0 hover:scale-[1.02] duration-300 cursor-pointer p-5 border border-baseBlack shadow-[0_10px_15px_-3px_rgba(0,0,0,0.1)] rounded-[10px] overflow-hidden">
+    <div
+      className={`w-full !max-w-[350px] mx-auto md:mx-0 hover:scale-[1.02] duration-300 cursor-pointer p-5 border border-baseBlack shadow-[0_10px_15px_-3px_rgba(0,0,0,0.1)] rounded-[10px] overflow-hidden ${container}`}
+    >
       <div className="h-[164px] relative">
         <StyledImage
           src={
@@ -37,7 +39,8 @@ const EventCard = ({ data }) => {
 
         <Button
           style="!font-normal w-full"
-          onClick={() => router.push(`/events/${data?.id}`)}>
+          onClick={() => router.push(`/events/${data?.id}`)}
+        >
           Get Ticket
         </Button>
       </div>

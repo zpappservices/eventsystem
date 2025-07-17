@@ -1,159 +1,163 @@
 import { useRouter } from "next/router";
-import CustomAccordion from "./Accordion";
-import Button from "./Button";
-import Quantity from "./Quantity";
 import StyledImage from "./StyledImage";
-import { toast } from "react-toastify";
 import { convertTo12HourFormat, formatDate } from "@/utils/time";
-import { MdAccessTime, MdLocationPin } from "react-icons/md";
-import { BsCalendar2Date } from "react-icons/bs";
+import { SlClock } from "react-icons/sl";
+import { BsTags } from "react-icons/bs";
 import { useState } from "react";
-import useAuthToken from "@/hooks/useAuthToken";
+import { formatCurrencyWithoutDecimal } from "@/utils/conversions";
+import { IoMdShare } from "react-icons/io";
+import Button from "./widgets/Button";
+import SimilarEvents from "./events/SimilarEvents";
 
 const EventsDetails = ({ id, details }) => {
   const event = details?.EventTicket;
   const [tickets, setTickets] = useState([]);
 
   const router = useRouter();
-  const { activeUser, token } = useAuthToken();
-
-  const totalInStock = event?.reduce((acc, ticket) => acc + ticket.quantity, 0);
-  const totalQuantity = tickets?.reduce(
-    (acc, ticket) => acc + ticket.quantity,
-    0
-  );
-
-  const totalCost = tickets.reduce(
-    (acc, ticket) => acc + ticket.amount * ticket.quantity,
-    0
-  );
-
-  const platformFee = details?.platformFee ? totalCost * 0.015 : 0;
-  const finalTotalCost = totalCost + platformFee;
 
   const handleClick = () => {
-    if (!activeUser && !activeUser) {
-      toast.info("Please sign in to proceed with the purchase.");
-      return;
-    }
-
     const serializedData = {
       id: id,
-      tickets: JSON.stringify(tickets),
-      eventDetails: JSON.stringify({
-        totalQuantity: totalQuantity,
-        totalCost: `${finalTotalCost.toFixed(2)}`,
-        eventName: details?.title,
-        banner: details?.image_banner,
-        currency: details?.currency,
-        platformFee: platformFee
-      }),
     };
 
     router.push({
-      pathname: "/payment",
+      pathname: "/events/checkout",
       query: serializedData,
     });
   };
 
   const { currency } = details || {};
+  const totalCost = tickets.reduce(
+    (acc, ticket) => acc + ticket.amount * ticket.quantity,
+    0
+  );
 
   return (
     <div className="w-full flex flex-col gap-6">
-      <div className="w-full flex flex-col md:flex-row justify-between gap-6">
-        <div className="w-full max-w-[551px] mx-auto cursor-pointer">
-          <div className="w-full h-[400px] overflow-hidden">
+      <div className="w-full gap-6">
+        <div className="w-full flex items-start gap-6">
+          <div className="w-full max-w-[952px] h-[400px] overflow-hidden">
             <StyledImage
               src={details?.image_banner}
-              className="w-full h-full rounded-[30px] object-cover"
+              className="w-full h-full rounded-[10px] object-cover"
             />
           </div>
-          <div className="mt-5 space-y-1">
-            <p className="text-[14px] leading-normal capitalize flex items-center">
-              <MdLocationPin size={19} />
-              <span className="font-semibold mx-0.5">Location: </span>{" "}
-              {details?.location}
-            </p>
-            <p className="text-[14px] leading-normal capitalize flex items-start sm:items-center">
-              <BsCalendar2Date size={16} className="shrink-0" />
-              <span className="font-semibold mx-1.5">Date: </span>{" "}
-              {formatDate(details?.StartDate)} - {formatDate(details?.EndDate)}
-            </p>
-            <p className="text-[14px] leading-normal capitalize flex items-center">
-              <MdAccessTime size={19} />
-              <span className="font-semibold mx-0.5">Time: </span>{" "}
-              {convertTo12HourFormat(details?.StartTime)} -{" "}
-              {convertTo12HourFormat(details?.EndTime)}
-            </p>
-          </div>
-        </div>
-        <div className="w-full max-w-[578px] mx-auto flex flex-col gap-4 cursor-pointer">
-          <div>
-            <p className="text-[20px] font-semibold leading-snug">
-              {details?.title}
-            </p>
-            {/* {totalInStock > 0 ? (
-              <p className="text-[#1FCA59] text-[16px] leading-snug">
-                In stock {totalInStock} tickets
+          <div className="w-full max-w-[336px] space-y-8 p-5 border border-neutrals100 rounded-[10px]">
+            <div className="flex items-center gap-4">
+              <p className="text-sm text-baseBlack">
+                Price{" "}
+                <span className="text-base text-primary font-medium">
+                  {totalCost
+                    ? formatCurrencyWithoutDecimal(totalCost, currency)
+                    : "Free"}
+                </span>
               </p>
-            ) : (
-              <p className="text-red-600 text-[16px] leading-snug">
-                In stock {totalInStock} tickets
-              </p>
-            )} */}
-          </div>
-          <div className="w-full flex flex-col gap-2  border-b-2 border-gray-400 pb-2.5">
-            {event?.map(({ price, name, quantity }, index) => (
-              <div
-                key={index}
-                className="flex justify-between items-center gap-4">
-                <p className="text-[16px] leading-snug">{name} </p>
-                <p className="text-[16px] leading-snug ms-auto mr-3">
-                  <span className="font-semibold ms-5 mr-0.5">
-                    {currency === "USD" && "$"}
-                    {currency === "NGN" && "₦"}
-                    {currency === "GHS" && "GH₵"}
-                    {currency === "ZAR" && "R"}
-                    {!currency && "₦"}
-                  </span>
-                  {price?.toString()?.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                </p>
-                <Quantity
-                  inStock={quantity}
-                  onChange={setTickets}
-                  item={{ name: name, amount: price }}
-                />
-              </div>
-            ))}
-          </div>
-          <div className="flex flex-wrap items-center justify-between gap-1 border-b-2 border-gray-400 pb-4">
-            <p className="text-[16px] leading-snug">
-              <span className="font-bold">Total Quantity:</span> {totalQuantity}
-            </p>
-            <p className="text-[16px] leading-snug">
-              <span className="font-bold">Total Amount:</span>{" "}
-              <span className="font-semibold ms-5 mr-0.5">
-                {currency === "USD" && "$"}
-                {currency === "NGN" && "₦"}
-                {currency === "GHS" && "GH₵"}
-                {currency === "ZAR" && "R"}
-                {!currency && "₦"}
+
+              <IoMdShare className="text-base text-baseBlack ms-auto" />
+            </div>
+
+            <p className="text-[14px] leading-normal capitalize flex items-center">
+              <BsTags className="text-xl" />
+              <span className="font-medium mx-0.5 ms-4 text-primary">
+                {details?.category}
               </span>
-              {totalCost?.toString()?.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
             </p>
-          </div>
-          <div className="w-full flex flex-col gap-4 my-3">
-            <Button
-              container="w-full max-w-none"
-              disabled={tickets.length < 1}
-              onClick={handleClick}>
-              CHECKOUT
+
+            <p className="text-[14px] leading-normal capitalize flex items-start sm:items-center">
+              <StyledImage className="shrink-0" src="/img/calendar.svg" />
+              <span className="font-medium mx-0.5 ms-4">
+                {formatDate(details?.StartDate)}{" "}
+                {/* - {formatDate(details?.EndDate)} */}
+              </span>
+            </p>
+
+            <p className="text-[14px] leading-normal capitalize flex items-center">
+              <SlClock className="text-xl" />
+              <span className="font-medium mx-0.5 ms-4">
+                {convertTo12HourFormat(details?.StartTime)} -{" "}
+                {convertTo12HourFormat(details?.EndTime)}{" "}
+              </span>
+            </p>
+
+            <p className="text-[14px] leading-normal capitalize flex items-center">
+              <StyledImage className="shrink-0" src="/img/location.svg" />
+              <span className="font-medium mx-0.5 ms-4">
+                {details?.location}
+              </span>
+            </p>
+
+            <Button style="w-full !mt-10" onClick={handleClick}>
+              Get Ticket
             </Button>
           </div>
+        </div>
+      </div>
 
-          <div>
-            <CustomAccordion description={details?.description} />
+      <div className="space-y-5">
+        <div className="border-b border-neutrals100 flex items-center overflow-x-auto gap-8 pb-3">
+          {["Description", "Location", "Photos", "About Organizer"]?.map(
+            (item, index) => (
+              <p className="" key={index}>
+                {item}
+              </p>
+            )
+          )}
+        </div>
+
+        <div className="space-y-4">
+          <div className="flex flex-wrap items-end gap-5">
+            <p className="text-3xl font-bold text-baseBlack">
+              {details?.title}
+            </p>
+            <p className="text-base text-baseBlack">
+              Hosted by:{" "}
+              <span className="text-primary font-medium">Shadow Empire</span>
+            </p>
           </div>
+
+          <p>{details?.description}</p>
+
+          <div className="space-y-3">
+            <p className="text-base sm:text-xl font-medium">Location</p>
+            <p className="text-[14px] leading-normal capitalize flex items-center">
+              <StyledImage className="shrink-0" src="/img/location.svg" />
+              <span className="font-medium mx-0.5 ms-4">
+                {details?.location}
+              </span>
+            </p>
+          </div>
+
+          <div className="space-y-3">
+            <p className="text-base sm:text-xl font-medium">Photos</p>
+            <p className="text-[14px] leading-normal capitalize flex items-center">
+              <StyledImage
+                className="shrink-0 rounded-[4px] w-[200px] h-[200px] aspect-square object-cover"
+                src={details?.image_banner}
+              />
+            </p>
+          </div>
+
+          <div className="space-y-3">
+            <p className="text-base sm:text-xl font-medium"> About Organizer</p>
+            <div className="flex items-center gap-3">
+              <StyledImage
+                className="shrink-0 h-[48px] w-[48px] rounded-full"
+                src="/img/profile.png"
+              />
+              <div>
+                <p className="text-base text-baseBlack">Shadow Empire</p>
+                <p className="text-sm text-neutrals600">
+                  Events hosted: <span className="text-baseBlack">60</span>
+                </p>
+              </div>
+
+              <Button background="bg-sec" hover="hover:bg-sec/90">
+                Subscribe
+              </Button>
+            </div>
+          </div>
+
+          <SimilarEvents id={details?.category} />
         </div>
       </div>
     </div>

@@ -4,8 +4,24 @@ const getEvents = async (startLoading, stopLoading) => {
   return apiHelper(`event/getAllevent`, "get", null, startLoading, stopLoading);
 };
 
-const getEventsByCategory = async (startLoading, stopLoading) => {
-  return apiHelper(`event/getAllevent`, "get", null, startLoading, stopLoading);
+const getEventsByCategory = async (id,startLoading, stopLoading) => {
+  return apiHelper(
+    `event/geteventbycategory/${id}`,
+    "get",
+    null,
+    startLoading,
+    stopLoading
+  );
 };
 
-export { getEvents };
+const getEventDetails = async (id, startLoading, stopLoading) => {
+  return apiHelper(
+    `event/getoneevent/${id}`,
+    "get",
+    null,
+    startLoading,
+    stopLoading
+  );
+};
+
+export { getEvents, getEventDetails, getEventsByCategory };
