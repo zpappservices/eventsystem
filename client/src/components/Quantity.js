@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+import Button from "./widgets/Button";
+import { FiMinus, FiPlus } from "react-icons/fi";
 
 const Quantity = ({ onChange, inStock, item }) => {
   const [quantity, setQuantity] = useState(0);
@@ -11,10 +13,8 @@ const Quantity = ({ onChange, inStock, item }) => {
 
       onChange((prev) => {
         if (newQuantity === 0) {
-          // Remove the item from the array if quantity is 0
           return prev.filter((ticket) => ticket.name !== item.name);
         } else {
-          // Update the quantity of the item
           return prev.map((ticket) =>
             ticket.name === item.name
               ? { ...ticket, quantity: newQuantity }
@@ -35,7 +35,6 @@ const Quantity = ({ onChange, inStock, item }) => {
         const existingItem = prev.find((ticket) => ticket.name === item.name);
 
         if (existingItem) {
-          // Update the quantity of the existing item
           return prev.map((ticket) =>
             ticket.name === item.name
               ? { ...ticket, quantity: newQuantity }
@@ -47,25 +46,28 @@ const Quantity = ({ onChange, inStock, item }) => {
         }
       });
     } else {
-      toast.info(`Maximum ticket limit reached: ${maxQuantity}`);
+      toast.warn(`Maximum ticket limit reached: ${maxQuantity}`);
     }
   };
 
   return (
-    <div className="flex border rounded-[8px] overflow-hidden">
-      <div
-        className="w-10 text-[#636363] leading-[24px] text-center text-[16px] hover:bg-[#FF7F50] cursor-pointer"
-        onClick={handleDecrement}>
-        -
-      </div>
-      <p className="text-[16px] leading-normal text-black text-center w-10">
+    <div className="flex items-center rounded-[8px] overflow-hidden">
+      <Button
+        style="!py-1.5 !px-2"
+        startIcon={<FiMinus className="text-white text-xl" />}
+        onClick={handleDecrement}
+      ></Button>
+
+      <p className="text-xl leading-normal text-black text-center w-10">
         {quantity}
       </p>
-      <div
-        className="w-10 text-[#636363] leading-[24px] text-center text-[16px] hover:bg-[#FF7F50] cursor-pointer"
-        onClick={handleIncrement}>
-        +
-      </div>
+
+      <Button
+        style="!py-1.5 !px-2"
+        text="font-medium"
+        startIcon={<FiPlus className="text-white text-xl" />}
+        onClick={handleIncrement}
+      ></Button>
     </div>
   );
 };

@@ -35,7 +35,7 @@ const EventsDetails = ({ id, details }) => {
   return (
     <div className="w-full flex flex-col gap-6">
       <div className="w-full gap-6">
-        <div className="w-full flex items-start gap-6">
+        <div className="w-full flex flex-col sm:flex-row items-start gap-6">
           <div className="w-full max-w-[952px] h-[400px] overflow-hidden">
             <StyledImage
               src={details?.image_banner}
@@ -97,7 +97,7 @@ const EventsDetails = ({ id, details }) => {
         <div className="border-b border-neutrals100 flex items-center overflow-x-auto gap-8 pb-3">
           {["Description", "Location", "Photos", "About Organizer"]?.map(
             (item, index) => (
-              <p className="" key={index}>
+              <p className="min-w-fit" key={index}>
                 {item}
               </p>
             )
@@ -105,7 +105,7 @@ const EventsDetails = ({ id, details }) => {
         </div>
 
         <div className="space-y-4">
-          <div className="flex flex-wrap items-end gap-5">
+          <div className="">
             <p className="text-3xl font-bold text-baseBlack">
               {details?.title}
             </p>

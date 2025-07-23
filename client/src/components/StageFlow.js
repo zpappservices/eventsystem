@@ -1,21 +1,37 @@
-const StageFlow = ({ steps, currentStep, setCurrentStep, handlePrev }) => {
+import React from "react";
 
-   const handleNext = () => {
-      if (currentStep < steps.length - 1) {
-        setCurrentStep((prevStep) => prevStep + 1);
-      }
-    };
+const StageFlow = ({ steps, currentStep, setCurrentStep, ...props }) => {
+  const handleNext = () => {
+    if (currentStep < steps.length - 1) {
+      setCurrentStep((prevStep) => prevStep + 1);
+    }
+  };
 
-   const CurrentStepComponent = steps[currentStep].component;
+  const handlePrev = () => {
+    if (currentStep > 0) {
+      setCurrentStep((prevStep) => prevStep - 1);
+    }
+  };
 
-   return (
-      <CurrentStepComponent
-         next={handleNext}
-         prev={handlePrev}
-         currentStep={currentStep}
-         {...steps[currentStep].props}
-      />
-   );
+  const handleNextTwoSteps = () => {
+    if (currentStep < steps.length - 1) {
+      setCurrentStep((prevStep) => prevStep + 2);
+    }
+  };
+
+  const CurrentStepComponent = steps[currentStep]?.component;
+
+  return (
+    <CurrentStepComponent
+      next={handleNext}
+      prev={handlePrev}
+      nextTwoSteps={handleNextTwoSteps}
+      currentStep={currentStep}
+      setCurrentStep={setCurrentStep}
+      {...steps[currentStep]?.props}
+      {...props}
+    />
+  );
 };
 
 export default StageFlow;
