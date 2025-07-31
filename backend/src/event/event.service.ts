@@ -51,6 +51,7 @@ export class EventService {
         include: {
           EventTicket: true,
           EventContact: true,
+          user: true,
           EventTransaction: {
             select: {
               firstName: true,
@@ -60,9 +61,12 @@ export class EventService {
           },
         },
       });
+      const subscribers = await this.prisma.vendorFollower.count({
+        where: { vendorId: event.userId },
+      });
       return {
         statusCode: HttpStatus.OK,
-        data: event,
+        data: { event, subscribers },
         message: 'Success',
       };
     } catch (err) {
