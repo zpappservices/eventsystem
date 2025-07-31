@@ -25,6 +25,8 @@ model User {
   Vendor               Vendor[]
   VendorAccount        VendorAccount[]
   EventTransaction     EventTransaction[]
+  VendorFollower       VendorFollower[]   @relation("Vendor")
+  BuyerFollower        VendorFollower[]   @relation("Buyer")
 
   @@unique(id)
   @@index([email])
@@ -187,6 +189,20 @@ model ChargeSetup {
   updatedOn DateTime @default(now())
 
   event Event @relation(fields: [eventId], references: [id])
+}
+
+model VendorFollower {
+  id        String   @id @default(uuid())
+  buyerId   String?
+  vendorId  String?
+  active    Boolean  @default(true)
+  createdBy String?
+  createdOn DateTime @default(now())
+  updatedBy String?
+  updatedOn DateTime @default(now())
+
+  buyer  User? @relation("Buyer", fields: [buyerId], references: [id], map: "Buyer_Follow_fkey")
+  vendor User? @relation("Vendor", fields: [vendorId], references: [id], map: "Vendor_Follow_fkey")
 }
 
 enum RoleType {

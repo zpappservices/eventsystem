@@ -1,7 +1,7 @@
 import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '@/integrations/prisma/prisma.service';
 import { VendorEventDto } from '@/event/dtos/event.dto';
-import { VendorDto } from './dtos/user.dto';
+import { FollowDto, VendorDto } from './dtos/user.dto';
 import { RoleType } from '@prisma/client';
 import { EmailerService } from '@/integrations/email/emailer.service';
 
@@ -335,6 +335,53 @@ export class UserService {
       console.log(err);
       return {
         statusCode: HttpStatus.NOT_FOUND,
+        data: null,
+        message: `Fail`,
+      };
+    }
+  }
+
+  async followVendor(data: FollowDto): Promise<any> {
+    try {
+      const created = await this.prisma.vendorFollower.create({
+        data: {
+          buyerId: data.userId,
+          vendorId: data.vendorId,
+          createdOn: new Date(),
+          active: true,
+        },
+      });
+      return {
+        statusCode: HttpStatus.CREATED,
+        data: created,
+        message: 'Follow Vendor successfully.',
+      };
+    } catch (err) {
+      console.log(err);
+      return {
+        statusCode: HttpStatus.EXPECTATION_FAILED,
+        data: null,
+        message: 'Unable to follow vendor.',
+      };
+    }
+  }
+
+  async getVendorFollowers(userId: any): Promise<any> {
+    try {
+      const user = await this.prisma.vendorFollower.findMany({
+        where: { vendorId: userId },
+        include: { buyer: true },
+      });
+
+      return {
+        statusCode: HttpStatus.OK,
+        data: user,
+        message: 'Success',
+      };
+    } catch (err) {
+      console.log(err);
+      return {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
         data: null,
         message: `Fail`,
       };
