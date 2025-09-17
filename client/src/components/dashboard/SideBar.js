@@ -1,10 +1,5 @@
-import { IoAnalytics, IoMenuOutline } from "react-icons/io5";
 import Link from "next/link";
-import { LuCalendarDays } from "react-icons/lu";
 import { FaMoneyBills } from "react-icons/fa6";
-import { CgProfile } from "react-icons/cg";
-import { AiFillSetting } from "react-icons/ai";
-import { TfiHelpAlt } from "react-icons/tfi";
 import { FiLogOut } from "react-icons/fi";
 import { usePathname } from "next/navigation";
 import LogOut from "../auth/LogOut";
@@ -17,6 +12,10 @@ import StyledImage from "../StyledImage";
 import useAuthToken from "@/hooks/useAuthToken";
 import { apiRequest } from "@/utils/apiService";
 import { toast } from "react-toastify";
+import { useState } from "react";
+import { TbLayoutDashboard, TbLogout2 } from "react-icons/tb";
+import { MdEvent, MdEventAvailable } from "react-icons/md";
+import { IoSettingsOutline } from "react-icons/io5";
 
 const style = {
   position: "absolute",
@@ -34,6 +33,7 @@ const style = {
 };
 
 const SideBar = ({ isOpen, toggleMenu, showModal }) => {
+  const [expandedMenuId, setExpandedMenuId] = useState(null);
   const { activeUser, clearUserToken } = useAuthToken();
   const router = useRouter();
   const pathname = usePathname();
@@ -82,31 +82,38 @@ const SideBar = ({ isOpen, toggleMenu, showModal }) => {
       <div
         className={`${
           isOpen ? "translate-x-0" : "translate-x-[-100%] md:translate-x-0"
-        } w-[260px] md:w-[350px] h-screen bg-[#f5f3f3] text-[14px] transition-all duration-300 fixed md:static z-30 pt-[95px] md:pt-0 top-0 left-0 md:left-auto overflow-y-auto md:overflow-y-hidden`}>
+        } w-[260px] md:w-[262px] h-screen text-[14px] transition-all bg-white border-r border-dashed border-neutrals300 duration-300 fixed z-40 pt-[95px] md:pt-0 top-0 left-0 md:left-auto overflow-y-auto md:overflow-y-hidden`}
+      >
         <div className="flex flex-col h-[93%] gap-y-[180px]">
-          <ul className="text-[#A5D4B8] flex flex-col text-[16px]">
+          <ul className="text-[#A5D4B8] flex flex-col gap-2 text-[16px]">
+            <Link href="/" className="!z-[1400] py-2.5">
+              <StyledImage
+                src="/img/logo.svg"
+                className="w-full sm:min-w-[150px] max-w-[160px] !z-30 mx-auto mb-8"
+              />
+            </Link>
+
             <Link
               href="/dashboard"
-              className={`transition-all duration-300 relative ps-5 ${
+              className={`transition-all duration-300 relative px-3 ${
                 pathname === "/dashboard" ? "bg-white" : ""
-              }`}>
+              }`}
+            >
               {pathname === "/dashboard" ? (
-                <li className="text-[#FF7F50] flex gap-x-4 items-center bg-baseWhite p-3 rounded-l-full transition-all">
-                  <IoMenuOutline
-                    color="#FF7F50"
-                    size={22}
+                <li className="text-white flex gap-x-4 items-center bg-primary p-3 rounded-[10px] transition-all">
+                  <TbLayoutDashboard
+                    color="#fff"
                     onClick={toggleMenu}
-                    className=""
+                    className="text-[27px]"
                   />
                   Dashboard
                 </li>
               ) : (
-                <li className="text-black flex gap-x-4 items-center p-3 rounded-l-full transition-all">
-                  <IoMenuOutline
+                <li className="text-black flex gap-x-4 items-center p-3 hover:bg-primary100/60 rounded-[10px] transition-all">
+                  <TbLayoutDashboard
                     color="#000"
-                    size={22}
                     onClick={toggleMenu}
-                    className=""
+                    className="text-[27px]"
                   />
                   Dashboard
                 </li>
@@ -114,175 +121,208 @@ const SideBar = ({ isOpen, toggleMenu, showModal }) => {
             </Link>
             <Link
               href="/dashboard/createevent"
-              className={`transition-all duration-300 relative ps-5 ${
+              className={`transition-all duration-300 relative px-3 ${
                 pathname === "/dashboard/createevent" ? "bg-white" : ""
-              }`}>
+              }`}
+            >
               {pathname === "/dashboard/createevent" ? (
-                <li className="text-[#FF7F50] flex gap-x-4 items-center bg-baseWhite p-3 rounded-l-full transition-all">
-                  <LuCalendarDays
-                    color="#FF7F50"
-                    size={20}
+                <li className="text-white flex gap-x-4 items-center bg-primary p-3 rounded-[10px] transition-all">
+                  <MdEvent
+                    color="#fff"
                     onClick={toggleMenu}
-                    className=""
+                    className="text-[27px]"
                   />
                   Create Event
                 </li>
               ) : (
-                <li className="text-black flex gap-x-4 items-center p-3 rounded-l-full transition-all">
-                  <LuCalendarDays
+                <li className="text-black flex gap-x-4 items-center p-3 hover:bg-primary100/60 rounded-[10px] transition-all">
+                  <MdEvent
                     color="#000"
-                    size={20}
                     onClick={toggleMenu}
-                    className=""
+                    className="text-[27px]"
                   />
                   Create Event
+                </li>
+              )}
+            </Link>
+            <Link
+              href="/dashboard/events"
+              className={`transition-all duration-300 relative px-3 ${
+                pathname === "/dashboard/events" ? "bg-white" : ""
+              }`}
+            >
+              {pathname === "/dashboard/events" ? (
+                <li className="text-white flex gap-x-4 items-center bg-primary p-3 rounded-[10px] transition-all">
+                  <MdEventAvailable
+                    color="#fff"
+                    onClick={toggleMenu}
+                    className="text-[27px]"
+                  />
+                  Events
+                </li>
+              ) : (
+                <li className="text-black flex gap-x-4 items-center p-3 hover:bg-primary100/60 rounded-[10px] transition-all">
+                  <MdEventAvailable
+                    color="#000"
+                    onClick={toggleMenu}
+                    className="text-[27px]"
+                  />
+                  Events
+                </li>
+              )}
+            </Link>
+            <Link
+              href="/dashboard/sales"
+              className={`transition-all duration-300 relative px-3 ${
+                pathname === "/dashboard/sales" ? "bg-white" : ""
+              }`}
+            >
+              {pathname === "/dashboard/sales" ? (
+                <li className="text-white flex gap-x-4 items-center bg-primary p-3 rounded-[10px] transition-all">
+                  <StyledImage
+                    src="/img/ticket-sales-active.svg"
+                    className="w-[27px]"
+                  />
+                  Ticket Sales
+                </li>
+              ) : (
+                <li className="text-black flex gap-x-4 items-center p-3 hover:bg-primary100/60 rounded-[10px] transition-all">
+                  <StyledImage
+                    src="/img/ticket-sales.svg"
+                    className="w-[27px]"
+                  />
+                  Ticket Sales
                 </li>
               )}
             </Link>
             {/* <Link
               href="/dashboard/eventanalysis"
-              className={`transition-all duration-300 relative ps-5 ${
+              className={`transition-all duration-300 relative px-3 ${
                 pathname === "/dashboard/eventanalysis" ? "bg-white" : ""
               }`}>
               {pathname === "/dashboard/eventanalysis" ? (
-                <li className="text-[#FF7F50] flex gap-x-4 items-center bg-baseWhite p-3 rounded-l-full transition-all">
+                <li className="text-white flex gap-x-4 items-center bg-primary p-3 rounded-[10px] transition-all">
                   <IoAnalytics
-                    color="#FF7F50"
-                    size={20}
+                    color="#fff"
                     onClick={toggleMenu}
-                    className=""
+                    className="text-[27px]"
                   />
                   Event Analysis
                 </li>
               ) : (
-                <li className="text-black flex gap-x-4 items-center p-3 rounded-l-full transition-all">
+                <li className="text-black flex gap-x-4 items-center p-3 hover:bg-primary100/60 rounded-[10px] transition-all">
                   <IoAnalytics
                     color="#000"
-                    size={20}
                     onClick={toggleMenu}
-                    className=""
+                    className="text-[27px]"
                   />
                   Event Analysis
+                </li>
+              )}
+            </Link> */}
+            {/* <Link
+              href="/dashboard/payout"
+              className={`transition-all duration-300 relative px-3 ${
+                pathname === "/dashboard/payout" ? "bg-white" : ""
+              }`}
+            >
+              {pathname === "/dashboard/payout" ? (
+                <li className="text-white flex gap-x-4 items-center bg-primary p-3 rounded-[10px] transition-all">
+                  <FaMoneyBills
+                    color="#fff"
+                    onClick={toggleMenu}
+                    className="text-[27px]"
+                  />
+                  Payout
+                </li>
+              ) : (
+                <li className="text-black flex gap-x-4 items-center p-3 hover:bg-primary100/60 rounded-[10px] transition-all">
+                  <FaMoneyBills
+                    color="#000"
+                    onClick={toggleMenu}
+                    className="text-[27px]"
+                  />
+                  Payout
                 </li>
               )}
             </Link> */}
             <Link
-              href="/dashboard/payout"
-              className={`transition-all duration-300 relative ps-5 ${
-                pathname === "/dashboard/payout" ? "bg-white" : ""
-              }`}>
-              {pathname === "/dashboard/payout" ? (
-                <li className="text-[#FF7F50] flex gap-x-4 items-center bg-baseWhite p-3 rounded-l-full transition-all">
-                  <FaMoneyBills
-                    color="#FF7F50"
-                    size={20}
-                    onClick={toggleMenu}
-                    className=""
+              href="/dashboard/profile"
+              className={`transition-all duration-300 relative px-3 ${
+                pathname === "/dashboard/profile" ? "bg-white" : ""
+              }`}
+            >
+              {pathname === "/dashboard/profile" ? (
+                <li className="text-white flex gap-x-4 items-center bg-primary p-3 rounded-[10px] transition-all">
+                  <StyledImage
+                    src="/img/user-active.svg"
+                    className="w-[27px]"
                   />
-                  Payout
+                  My Profile
                 </li>
               ) : (
-                <li className="text-black flex gap-x-4 items-center p-3 rounded-l-full transition-all">
-                  <FaMoneyBills
-                    color="#000"
-                    size={20}
-                    onClick={toggleMenu}
-                    className=""
-                  />
-                  Payout
+                <li className="text-black flex gap-x-4 items-center p-3 hover:bg-primary100/60 rounded-[10px] transition-all">
+                  <StyledImage src="/img/user.svg" className="w-[27px]" />
+                  My Profile
                 </li>
               )}
             </Link>
-            {/* <Link
-              href="/dashboard/profile"
-              className={`transition-all duration-300 relative ps-5 ${
-                pathname === "/dashboard/profile" ? "bg-white" : ""
-              }`}>
-              {pathname === "/dashboard/profile" ? (
-                <li className="text-[#FF7F50] flex gap-x-4 items-center bg-baseWhite p-3 rounded-l-full transition-all">
-                  <CgProfile
-                    color="#FF7F50"
-                    size={20}
-                    onClick={toggleMenu}
-                    className=""
-                  />
-                  My Profile
-                </li>
-              ) : (
-                <li className="text-black flex gap-x-4 items-center p-3 rounded-l-full transition-all">
-                  <CgProfile
-                    color="#000"
-                    size={20}
-                    onClick={toggleMenu}
-                    className=""
-                  />
-                  My Profile
-                </li>
-              )}
-            </Link> */}
-            {/* <Link
+            <Link
               href="/dashboard/settings"
-              className={`transition-all duration-300 relative ps-5 ${
+              className={`transition-all duration-300 relative px-3 ${
                 pathname === "/dashboard/settings" ? "bg-white" : ""
-              }`}>
+              }`}
+            >
               {pathname === "/dashboard/settings" ? (
-                <li className="text-[#FF7F50] flex gap-x-4 items-center bg-baseWhite p-3 rounded-l-full transition-all">
-                  <AiFillSetting
-                    color="#FF7F50"
-                    size={20}
+                <li className="text-white flex gap-x-4 items-center bg-primary p-3 rounded-[10px] transition-all">
+                  <IoSettingsOutline
+                    color="#fff"
                     onClick={toggleMenu}
-                    className=""
+                    className="text-[27px]"
                   />
-                  Account Settiings
+                  Settiings
                 </li>
               ) : (
-                <li className="text-black flex gap-x-4 items-center p-3 rounded-l-full transition-all">
-                  <AiFillSetting
+                <li className="text-black flex gap-x-4 items-center p-3 hover:bg-primary100/60 rounded-[10px] transition-all">
+                  <IoSettingsOutline
                     color="#000"
-                    size={20}
                     onClick={toggleMenu}
-                    className=""
+                    className="text-[27px]"
                   />
-                  Account Settiings
+                  Settiings
                 </li>
               )}
-            </Link> */}
+            </Link>
             {/*<Link
               href="/dashboard/help"
-              className={`transition-all duration-300 relative ps-5 ${
+              className={`transition-all duration-300 relative px-3 ${
                 pathname === "/dashboard/help" ? "bg-white" : ""
               }`}>
               {pathname === "/dashboard/help" ? (
-                <li className="text-[#FF7F50] flex gap-x-4 items-center bg-baseWhite p-3 rounded-l-full transition-all">
+                <li className="text-white flex gap-x-4 items-center bg-primary p-3 rounded-[10px] transition-all">
                   <TfiHelpAlt
-                    color="#FF7F50"
-                    size={20}
+                    color="#fff"
                     onClick={toggleMenu}
-                    className=""
+                    className="text-[27px]"
                   />
                   Need Help ?
                 </li>
               ) : (
-                <li className="text-black flex gap-x-4 items-center p-3 rounded-l-full transition-all">
+                <li className="text-black flex gap-x-4 items-center p-3 hover:bg-primary100/60 rounded-[10px] transition-all">
                   <TfiHelpAlt
                     color="#000"
-                    size={20}
                     onClick={toggleMenu}
-                    className=""
+                    className="text-[27px]"
                   />
                   Need Help ?
                 </li>
               )}
             </Link> */}
             <li
-              className="text-black flex gap-x-4 ms-5 items-center p-3 rounded-l-full transition-all cursor-pointer"
-              onClick={openModal}>
-              <FiLogOut
-                color="#000"
-                size={20}
-                onClick={toggleMenu}
-                className=""
-              />
+              className="text-error flex gap-x-4 ms-3 items-center p-3 rounded-l-full transition-all cursor-pointer"
+              onClick={openModal}
+            >
+              <TbLogout2 onClick={toggleMenu} className="text-[27px]" />
               Logout
             </li>
           </ul>
@@ -292,7 +332,8 @@ const SideBar = ({ isOpen, toggleMenu, showModal }) => {
         open={isModalOpen}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description">
+        aria-describedby="modal-modal-description"
+      >
         <Box sx={style}>
           <div className="w-full  rounded-[15px] p-6 sm:px-[30px]">
             <div className="bg-white rounded-lg p-6 w-96 space-y-7 mx-auto">
@@ -310,13 +351,15 @@ const SideBar = ({ isOpen, toggleMenu, showModal }) => {
               <div className="flex justify-end space-x-4">
                 <ButtonLoading
                   className="w-full py-3 rounded-[8px] !max-w-none bg-gray-700 text-white hover:bg-gray-700/90"
-                  onClick={closeModal}>
+                  onClick={closeModal}
+                >
                   Cancel
                 </ButtonLoading>
                 <ButtonLoading
                   isLoading={isLoading}
                   className="w-full py-3 rounded-[8px] bg-red-600 text-white hover:bg-red-700/90"
-                  onClick={signOut}>
+                  onClick={signOut}
+                >
                   Logout
                 </ButtonLoading>
               </div>

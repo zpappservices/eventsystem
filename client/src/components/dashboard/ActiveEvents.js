@@ -10,6 +10,7 @@ import useAuthToken from "@/hooks/useAuthToken";
 import useApiRequest from "@/hooks/useApiRequest";
 import { convertTo12HourFormat, formatDate } from "@/utils/time";
 import { useRouter } from "next/router";
+import { MoreVertical } from "lucide-react";
 
 function createData(name, calories, fat, carbs, protein) {
   return { name, calories, fat, carbs, protein };
@@ -44,55 +45,60 @@ const ActiveEvents = () => {
 
   const activeEvents = events?.filter((event) => event.active === true);
   return (
-    <div className="w-full flex flex-col gap-10">
-      <p className="text-[20px] !font-bold leading-[24px]">
+    <div className="w-full max-w-[900px] 3xl:max-w-fit flex-1 flex flex-col border rounded-[10px] bg-neutrals100/10">
+      <p className="text-[20px] !font-bold leading-[24px] py-5 px-2">
         Active Event Tickets
       </p>
-      <div>
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell className="!font-bold">Event Name</TableCell>
-                <TableCell align="center" className="!font-bold">
-                  Category
-                </TableCell>
-                <TableCell align="center" className="!font-bold">
-                  Date & Time
-                </TableCell>
-                <TableCell align="center" className="!font-bold">
-                  Location
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {activeEvents?.map(
-                ({ title, id, category, StartDate, StartTime, location }) => (
-                  <TableRow
-                    key={id}
-                    sx={{
-                      "&:last-child td, &:last-child th": { border: 0 },
-                    }}
-                    className="cursor-pointer"
-                    onClick={() => router.push(`/dashboard/event/${id}`)}>
-                    <TableCell
-                      component="th"
-                      scope="row"
-                      className="text-ellipsis">
-                      {title}
-                    </TableCell>
-                    <TableCell align="center">{category}</TableCell>
-                    <TableCell align="center" className="w-[350px]">
-                      {formatDate(StartDate)}{" "}
-                      {convertTo12HourFormat(StartTime)}
-                    </TableCell>
-                    <TableCell align="center">{location}</TableCell>
-                  </TableRow>
-                )
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
+
+      <div className="overflow-x-auto">
+        <table className="w-[1150px]">
+          <thead className="bg-neutrals100">
+            <tr>
+              <th className="py-3 px-2 text-left text-neutrals600 text-sm font-semibold">
+                Event Name
+              </th>
+              <th className="py-3 px-2 text-left text-neutrals600 text-sm font-semibold">
+                Category
+              </th>
+              <th className="py-3 px-2 text-left text-neutrals600 text-sm font-semibold">
+                Date & Time
+              </th>
+              <th className="py-3 px-2 text-left text-neutrals600 text-sm font-semibold">
+                Location
+              </th>
+              <th className="py-3 px-2 text-left text-neutrals600 text-sm font-semibold">
+                <button className="inline-flex items-center justify-center text-neutrals600">
+                  <MoreVertical size={18} />
+                </button>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {activeEvents?.map((event, index) => (
+              <tr
+                key={index}
+                className="border-b border-gray-100 last:border-0 cursor-pointer"
+                onClick={() => router.push(`/dashboard/event/${event?.id}`)}
+              >
+                <td className="py-4 px-2 text-xs">{event?.title}</td>
+                <td className="py-4 px-2 text-xs">{event?.category}</td>
+                <td className="py-4 px-2 text-xs">
+                  {formatDate(event?.StartDate)}{" "}
+                  {convertTo12HourFormat(event?.StartTime)}
+                </td>
+                <td className="py-4 px-2 text-xs">{event?.location}</td>
+                <td
+                  className="py-3 px-2 text-left text-neutrals600 text-sm font-semibold"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <button className="inline-flex items-center justify-center text-neutrals600">
+                    <MoreVertical size={18} />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
