@@ -1,327 +1,178 @@
-import { TextField, MenuItem, FormControl, Autocomplete } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import FormButton from "./FormButton";
 import { useCreateEvent } from "@/context/CreateEventContext";
-import { toast } from "react-toastify";
-import useApiRequest from "@/hooks/useApiRequest";
-import { MdDelete } from "react-icons/md";
-import { FaClipboardList } from "react-icons/fa";
+import TextField from "../widgets/TextField";
+import Button from "../widgets/Button";
+import { IoIosRadioButtonOff, IoIosRadioButtonOn } from "react-icons/io";
+import { FiUpload, FiX } from "react-icons/fi";
 
 const TicketDto = ({ handleBack, handleReset }) => {
-  const [tickets, setTickets] = useState([
-    {
-      type: "free",
-      name: "Free",
-      price: 0,
-      quantity: 10,
-    },
-    {
-      type: "paid",
-      name: "Standard",
-      price: 1000,
-      quantity: 10,
-    },
-  ]);
-  const [imageData, setImageData] = useState(null);
-
-  const { formData, formError, setFormError, setFormData, base64Image } =
-    useCreateEvent();
-
-  const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({
-    type: "",
-    name: "",
-    price: "",
-    quantity: "",
+  const [error, setError] = useState({
+    venueImages: "",
+    restrictions: "",
   });
+  const [images, setImages] = useState([null, null, null]);
 
-  const ticketOptions = [
-    "Regular",
-    "VIP",
-    "Silver",
-    "Gold",
-    "Diamond",
-    "Platinum",
-  ];
+  const { extras, setExtras } = useCreateEvent();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setForm((prevForm) => {
+    setExtras((prevForm) => {
       const updatedForm = { ...prevForm, [name]: value };
-
-      if (name === "type" && value === "free") {
-        updatedForm.name = "Free";
-        updatedForm.price = "0";
-      } else if (name === "type" && value !== "free") {
-        updatedForm.name = "";
-        updatedForm.price = "";
-      }
-
       return updatedForm;
     });
   };
 
-  const handleConfirm = () => {
-    if (form.type && form.name && form.price && form.quantity) {
-      setFormData((prev) => ({
-        ...prev,
-        ticketDto: [
-          ...prev.ticketDto,
-          {
-            ...form,
-            price: parseFloat(form.price),
-            quantity: parseInt(form.quantity, 10),
-          },
-        ],
-      }));
-      setForm({ type: "", name: "", price: "", quantity: "" });
-      setShowForm(false);
-    } else {
-      alert("Please fill in all fields.");
-    }
-  };
-
-  const handleCancel = () => {
-    setForm({ type: "", name: "", price: "", quantity: "" });
-    setShowForm(false);
-  };
-
-  const isComplete = formData?.ticketDto.length > 0;
-
-  const { data, error, loading, request } = useApiRequest({
-    method: "post",
-    url: "event/v2/createevent",
-    data: formData,
-    headers: null,
-    useToken: true,
-  });
-
-  const createEvent = async () => {
-    await request();
-  };
-
-  const {
-    data: uploadData,
-    error: UploadError,
-    loading: Uploading,
-    request: uploadRequest,
-  } = useApiRequest({
-    method: "post",
-    url: "event/uploadeventimage",
-    data: imageData,
-    headers: null,
-    useToken: true,
-  });
-
-  const uploadImage = async () => {
-    await uploadRequest();
-  };
-
-  const deleteTicket = (index) => {
-    setFormData((prevData) => {
-      const updatedTickets = prevData.ticketDto.filter((_, i) => i !== index);
-      return {
-        ...prevData,
-        ticketDto: updatedTickets,
-      };
+  const handleRadio = (value) => {
+    setExtras((prevForm) => {
+      return { ...prevForm, restrictions: value };
     });
   };
 
-  useEffect(() => {
-    if (data?.statusCode >= 200 && data?.statusCode < 300) {
-      toast.success(data?.message || "Event Created successfully!");
-      const { id } = data?.data || {};
-      setImageData({
-        image: base64Image,
-        eventId: id,
-      });
-    } else if (data?.error || data?.message) {
-      toast.error(
-        data?.error || data?.message || "Couldn't Post Event! Try again later."
-      );
-    } else if (data?.statusCode >= 400 && data?.statusCode < 500) {
-      toast.error(
-        data?.error || data?.message || "Couldn't Post Event! Try again later."
-      );
-    }
-  }, [data]);
+  const handleFileChange = (e, index) => {
+    const file = e.target.files[0];
+    if (!file) return;
 
-  useEffect(() => {
-    if (imageData) {
-      uploadImage();
-    }
-  }, [imageData]);
+    const previewUrl = URL.createObjectURL(file);
 
-  useEffect(() => {
-    if (error) {
-      toast.error("Unexpected error. Please try again!");
-    }
-  }, [error]);
+    const updatedImages = [...images];
+    updatedImages[index] = { file, preview: previewUrl };
+    setImages(updatedImages);
+  };
 
-  useEffect(() => {
-    if (uploadData?.statusCode >= 200 && uploadData?.statusCode < 300) {
-      toast.success(
-        uploadData?.message || "Event banner uploaded successfully!"
-      );
-      handleReset(setFormData);
-    } else if (uploadData?.error || uploadData?.message) {
-      toast.error(
-        uploadData?.error ||
-          uploadData?.message ||
-          "Couldn't Post Event! Try again later."
-      );
-    } else if (uploadData?.statusCode >= 400 && uploadData?.statusCode < 500) {
-      toast.error(
-        uploadData?.error ||
-          uploadData?.message ||
-          "Couldn't Post Event! Try again later."
-      );
-    }
-  }, [uploadData]);
+  const removeImage = (index) => {
+    const updatedImages = [...images];
+    updatedImages[index] = null;
+    setImages(updatedImages);
+  };
 
-  useEffect(() => {
-    if (UploadError) {
-      toast.error("Unexpected error. Please try again!");
-    }
-  }, [UploadError]);
-
-  useEffect(() => {
-    if (form.type.toLowerCase() === "free") {
-      setForm({ ...form, price: "0" });
-    } else {
-      setForm({ ...form, price: "" });
-    }
-  }, [form.type]);
+  const handleSubmit = () => {};
 
   return (
-    <>
-      <div className="p-4">
-        {!showForm && (
-          <button
-            className="bg-[#FF7F50] hover:bg-[#FFB26F] text-white px-4 py-2 rounded transition-all duration-300 ease-in-out hover:scale-[1.1]"
-            onClick={() => setShowForm(true)}
-          >
-            Add Ticket
-          </button>
-        )}
-
-        {showForm && (
-          <div className="p-4 rounded shadow space-y-3">
-            <div className="flex gap-5">
-              <FormControl className="mb-2 flex-1">
-                <TextField
-                  id="demo-simple-select"
-                  select
-                  labelid="demo-simple-select-label"
-                  label="Ticket Type"
-                  name="type"
-                  value={form.type}
-                  onChange={handleInputChange}
-                  color="warning"
-                >
-                  <MenuItem value="Free">Free</MenuItem>
-                  <MenuItem value="Paid">Paid</MenuItem>
-                </TextField>
-              </FormControl>
-
-              <Autocomplete
-                value={form.name || ""}
-                onChange={(event, newValue) => {
-                  setForm({ ...form, name: newValue || "" });
-                }}
-                inputValue={form.name || ""}
-                onInputChange={(event, newInputValue) => {
-                  setForm((prevForm) => ({
-                    ...prevForm,
-                    name: newInputValue,
-                  }));
-                }}
-                options={ticketOptions}
-                disabled={form.type === "free"}
-                className="flex-1"
-                renderInput={(params) => (
-                  <TextField {...params} label="Ticket name" />
-                )}
-              />
-            </div>
-
-            <div className="mb-3 flex gap-5">
-              {form.type !== "Free" && (
-                <TextField
-                  label="Price"
-                  type="number"
-                  name="price"
-                  value={form.price}
-                  onChange={handleInputChange}
-                  className="flex-1"
-                  color="warning"
-                  disabled={form.type === "free"}
-                />
-              )}
-
-              <TextField
-                label="Quantity"
-                type="number"
-                name="quantity"
-                value={form.quantity}
-                onChange={handleInputChange}
-                className="flex-1"
-                color="warning"
-              />
-            </div>
-
-            <div className="flex space-x-5">
-              <button
-                className="bg-[#62825D] hover:bg-[#B1C29E] text-white px-4 py-2 rounded transition-all duration-300 ease-in-out hover:scale-[1.1]"
-                onClick={handleConfirm}
-              >
-                Confirm
-              </button>
-              <button
-                className="bg-[#FF7F50] hover:bg-[#FFB26F] text-white px-4 py-2 rounded transition-all duration-300 ease-in-out hover:scale-[1.1]"
-                onClick={handleCancel}
-              >
-                Cancel
-              </button>
-            </div>
+    <div className="space-y-10">
+      <div className="rounded-[20px] md:border border-neutrals400 md:p-10 md:py-12 space-y-5">
+        <div className="flex items-center justify-center flex-wrap gap-5 font-bold mb-5">
+          <div className="bg-sec100 text-baseBlack h-[30px] w-[30px] rounded-full flex items-center justify-center">
+            <p>6</p>
           </div>
-        )}
-        <div className="mt-4">
-          <h2 className="text-lg font-bold">Tickets:</h2>
-          <ul className="list-disc pl-2">
-            {formData?.ticketDto?.map((ticket, index) => (
-              <div key={index} className="flex items-center gap-2">
-                <FaClipboardList />
-                {`${ticket.name} (${ticket.type})=> `}
-                <span>{`Price of tickets $(${ticket.price}) - Number of tickets: (${ticket.quantity})`}</span>
-                <MdDelete
-                  size={18}
-                  color="red"
-                  className="cursor-pointer"
-                  onClick={() => deleteTicket(index)}
-                />
+          <p>Do you have any restriction in regards to your audience?</p>
+        </div>
+
+        <p className="text-base font-medium">Select any restriction</p>
+        <div className="flex flex-wrap gap-5">
+          {[
+            "None",
+            "Children only",
+            "Women only",
+            "No children",
+            "Event 18+",
+            "Senior citizen",
+          ]?.map((item, index) => {
+            const isSelected = extras.restrictions === item;
+            return (
+              <div className="" key={index}>
+                <div className="flex items-start gap-2">
+                  {isSelected ? (
+                    <IoIosRadioButtonOn
+                      className="text-xl mt-0.5 cursor-pointer text-sec"
+                      onClick={() => handleRadio(item)}
+                    />
+                  ) : (
+                    <IoIosRadioButtonOff
+                      className="text-xl mt-0.5 cursor-pointer"
+                      onClick={() => handleRadio(item)}
+                    />
+                  )}
+                  <p className="text-baseBlack">{item}</p>
+                </div>
               </div>
-            ))}
-          </ul>
+            );
+          })}
         </div>
       </div>
 
-      <div className="flex justify-between">
-        <FormButton
-          handleAction={handleBack}
-          position={"justify-start"}
-          direction={"Back"}
-        />
+      <div className="rounded-[20px] md:border border-neutrals400 md:p-10 md:py-12 space-y-5">
+        <div className="flex items-center justify-center flex-wrap gap-5 font-bold mb-5">
+          <div className="bg-sec100 text-baseBlack h-[30px] w-[30px] rounded-full flex items-center justify-center">
+            <p>7</p>
+          </div>
+          <p>Do you have pictures of the event hall</p>
+        </div>
+
+        <div>
+          <p className="text-base font-medium">Additional photos</p>
+          <p className="text-base text-neutrals500">
+            Upload additional photos to help attendances imagine what the event
+            would look like
+          </p>
+        </div>
+        <div className="flex gap-10 items-center flex-wrap">
+          {images.map((img, index) => (
+            <div className="w-full max-w-[300px] overflow-hidden flex items-center justify-center border border-neutrals200 rounded-[10px] h-[180px] mx-auto">
+              {img ? (
+                <div className="w-full h-full relative">
+                  <img
+                    src={img.preview}
+                    alt={`upload-${index}`}
+                    className="w-full h-full object-cover"
+                  />
+                  <button
+                    onClick={() => removeImage(index)}
+                    className="absolute top-2 right-2 bg-error400 text-white p-0.5 rounded-full"
+                  >
+                    <FiX className="text-[20px]" />
+                  </button>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center gap-2 p-10">
+                  <label
+                    key={index}
+                    className="relative max-w-[100px] px-5 py-3 bg-sec100 flex items-center justify-center rounded-xl overflow-hidden cursor-pointer"
+                  >
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => handleFileChange(e, index)}
+                    />
+                    <FiUpload className="text-[20px] text-sec" />
+                  </label>
+
+                  <label className="text-center text-base">
+                    <span className="text-sec cursor-pointer">Click here</span>{" "}
+                    to upload event banner here
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => handleFileChange(e, index)}
+                    />
+                  </label>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="flex justify-between ">
+        <div className="p-4 flex justify-center">
+          <Button
+            onClick={handleBack}
+            outline
+            text="text-primary hover:text-white"
+          >
+            Back
+          </Button>
+        </div>
 
         <FormButton
-          handleAction={createEvent}
+          handleAction={handleSubmit}
           position={"justify-end"}
-          direction={"Submit"}
-          disabled={!isComplete || loading}
-          isLoading={loading}
+          direction={"Next"}
         />
       </div>
-    </>
+    </div>
   );
 };
 

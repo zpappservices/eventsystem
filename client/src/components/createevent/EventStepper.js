@@ -1,17 +1,14 @@
-import Box from "@mui/material/Box";
-import Stepper from "@mui/material/Stepper";
-import Step from "@mui/material/Step";
-import StepLabel from "@mui/material/StepLabel";
 import { useState } from "react";
 import { CreateEventProvider } from "@/context/CreateEventContext";
 import EventDtoForm from "./EventDtoForm";
 import ContactDto from "./ContactDto";
 import TicketDto from "./TicketDto";
+import { IoMdCheckmark } from "react-icons/io";
 
-const steps = ["Event Details", "Contact Info", "Ticket Details"];
+const steps = ["General Information", "Contact Info", "Ticket Details"];
 
 export default function EventStepper() {
-  const [activeStep, setActiveStep] = useState(0);
+  const [activeStep, setActiveStep] = useState(2);
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -42,42 +39,61 @@ export default function EventStepper() {
       },
       ticketDto: [],
     }));
-    
+
     setActiveStep(0);
   };
-  
 
   return (
-    <Box sx={{ width: "100%" }}>
-      <Stepper activeStep={activeStep}>
-        {steps.map((label, index) => (
-          <Step key={index}>
-            <StepLabel
-              sx={{
-                "& .MuiStepIcon-root": {
-                  color: "gray", // Default (inactive) step color
-                  transition: "color 1s ease-in-out", // Smooth transition
-                },
-                "& .MuiStepIcon-root.Mui-active": {
-                  color: "#FF8000", // Active step color
-                },
-                "& .MuiStepIcon-root.Mui-completed": {
-                  color: "#F9C0AB", // Completed step color (optional)
-                },
-              }}
-            >
-              {label}
-            </StepLabel>
-          </Step>
-        ))}
-      </Stepper>
-      <CreateEventProvider>
-        {activeStep === 0 && <EventDtoForm handleNext={handleNext} />}
+    <div className="space-y-10">
+      <div className="flex  relative">
+        {steps?.map((item, index) => {
+          const isActive = activeStep === index;
+          const isDone = activeStep > index;
+          return (
+            <div className="flex-1 z-10">
+              <div className="space-y-2" key={index}>
+                <div
+                  className={`w-[40px] h-[40px] rounded-full text-sm flex items-center justify-center mx-auto ${
+                    isActive ? "bg-primary/30" : ""
+                  }`}
+                >
+                  <div
+                    className={`w-[30px] h-[30px] rounded-full text-sm flex items-center justify-center ${
+                      isActive || isDone
+                        ? "text-white bg-primary "
+                        : "text-baseBlack bg-neutrals100"
+                    }`}
+                  >
+                    {isDone ? <IoMdCheckmark className="text-white text-[21px]" /> : index + 1}
+                  </div>
+                </div>
+                <p className="text-xs text-baseBlack mx-auto text-center">
+                  {item}
+                </p>
+              </div>
+            </div>
+          );
+        })}
 
-        {activeStep === 1 && <ContactDto handleNext={handleNext} handleBack={handleBack} />}
+        <div className="border w-[64%] mx-auto absolute left-0 top-5 right-0 z-0"></div>
+      </div>
 
-        {activeStep === 2 && <TicketDto handleBack={handleBack} handleReset={handleResetStepper} />}
-      </CreateEventProvider>
-    </Box>
+      <div>
+        <CreateEventProvider>
+          {activeStep === 0 && <EventDtoForm handleNext={handleNext} />}
+
+          {activeStep === 1 && (
+            <ContactDto handleNext={handleNext} handleBack={handleBack} />
+          )}
+
+          {activeStep === 2 && (
+            <TicketDto
+              handleBack={handleBack}
+              handleReset={handleResetStepper}
+            />
+          )}
+        </CreateEventProvider>
+      </div>
+    </div>
   );
 }

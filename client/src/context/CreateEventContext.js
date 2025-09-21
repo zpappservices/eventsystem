@@ -8,6 +8,23 @@ function CreateEventProvider({ children }) {
   const { activeUser } = useAuthToken()
   const [formError, setFormError] = useState({});
   const [fileError, setFileError] = useState("");
+  const [ticket, setTicket] = useState({
+    type: "Free",
+    name: "",
+    quantity: "",
+    price: "",
+    description: "",
+    min: "",
+    max: ""
+  })
+  const [location, setLocation] = useState({
+    location: "",
+    venue: "",
+  });
+  const [extras, setExtras] = useState({
+    restrictions: "",
+    venueImages: [],
+  });
 
   const [formData, setFormData] = useState({
     eventDto: {
@@ -31,6 +48,8 @@ function CreateEventProvider({ children }) {
     },
     ticketDto: [
     ],
+    eventType: "",
+    eventDuration: ""
   });
   const [base64Image, setBase64Image] = useState(null);
 
@@ -83,9 +102,6 @@ function CreateEventProvider({ children }) {
     if (fileInputRef.current) fileInputRef.current.value = ""; 
   };
 
-  {
-    /**---------------------------------- NEED TO BE REVIEWED -------------- */
-  }
   const [preview, setPreview] = useState(null);
   const fileInputRef = useRef(null); // Ref for file input
 
@@ -181,7 +197,13 @@ function CreateEventProvider({ children }) {
         handleDeleteImage,
         handleResetForm,
         base64Image,
-        handleImageChange
+        handleImageChange,
+        setTicket,
+        ticket,
+        location,
+        setLocation,
+        extras,
+        setExtras,
       }}
     >
       {children}

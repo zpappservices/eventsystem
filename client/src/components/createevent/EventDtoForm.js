@@ -1,12 +1,16 @@
 import { useCreateEvent } from "@/context/CreateEventContext";
-import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import FormButton from "./FormButton";
 import useApiRequest from "@/hooks/useApiRequest";
 import { useEffect } from "react";
 import PhotoUpload from "./PhotoUpload";
+import TextField from "../widgets/TextField";
+import { CgSpinner } from "react-icons/cg";
+import { Skeleton } from "@mui/material";
+import TextArea from "../widgets/TextArea";
+import { TextField as MUITextField } from "@mui/material";
 
-function EventDtoForm({ handleNext }) {
+const EventDtoForm = ({ handleNext }) => {
   const {
     formData,
     formError,
@@ -28,8 +32,7 @@ function EventDtoForm({ handleNext }) {
           eventDto: {
             ...prevData.eventDto,
             [name]: value,
-            location:
-              value === "Online" ? "Online" : "", 
+            location: value === "Online" ? "Online" : "",
           },
         };
       }
@@ -43,7 +46,6 @@ function EventDtoForm({ handleNext }) {
       };
     });
   }
-
 
   const { data, error, loading, request } = useApiRequest({
     method: "get",
@@ -93,7 +95,6 @@ function EventDtoForm({ handleNext }) {
     return Object.keys(errors).length === 0;
   };
 
-
   const handleSubmit = () => {
     if (validateForm()) handleNext();
   };
@@ -101,190 +102,233 @@ function EventDtoForm({ handleNext }) {
   const categories = data?.data;
 
   return (
-    <>
-      {/* Event Name */}
-      <div className="p-4">
-        <h2 className="font-semibold pb-2">Event Name</h2>
-        <TextField
-          fullWidth
-          label="Enter event name"
-          id="event-name"
-          name="title"
-          value={formData.eventDto.title}
-          onChange={handleChange}
-          color="warning"
-          error={!!formError.title}
-          helperText={formError.title || ""}
-        />
+    <div className="space-y-10">
+      <div className="rounded-[20px] md:border border-neutrals400 md:p-10 md:py-12">
+        <div className="flex items-center justify-center flex-wrap gap-5 font-bold mb-5">
+          <div className="bg-sec100 text-baseBlack h-[30px] w-[30px] rounded-full flex items-center justify-center">
+            <p>1</p>
+          </div>
+          <p>Tell the world about your event</p>
+        </div>
+
+        <div className="space-y-6">
+          <TextField
+            value={formData.eventDto.title}
+            onChange={handleChange}
+            error={formError.title}
+            label="Event name*"
+            style="!rounded-[6px]"
+            name="title"
+          />
+
+          <TextArea
+            value={formData.eventDto.description}
+            onChange={handleChange}
+            error={formError.description}
+            label="Describe your event*"
+            style="!rounded-[6px]"
+            name="description"
+            placeholder=""
+            rows={7}
+            textAreaClassName="!bg-inherit !border-neutrals200"
+          />
+
+          <div className="w-full space-y-3">
+            <p className="text-sm sm:text-base text-baseBlack">
+              Select a category for your event*
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-5 md:gap-7">
+              {loading
+                ? ["", "", "", "", "", "", ""]?.map((item, index) => (
+                    <Skeleton
+                      height={60}
+                      className="w-full max-w-[80px]"
+                      key={index}
+                    />
+                  ))
+                : categories?.map((item, index) => {
+                    const isSelected = item.id === formData.eventDto.categoryId;
+
+                    return (
+                      <div
+                        className={`border border-sec/40 text-baseBlack rounded-[10px] p-3.5 px-5 cursor-pointer hover:bg-sec/50 transition-all ${
+                          isSelected ? "bg-sec" : ""
+                        }`}
+                        key={index}
+                        onClick={() =>
+                          setFormData((prevData) => {
+                            return {
+                              ...prevData,
+                              eventDto: {
+                                ...prevData.eventDto,
+                                categoryId: item.id,
+                              },
+                            };
+                          })
+                        }
+                      >
+                        <p className="text-sm text-baseBlack">{item?.name}</p>
+                      </div>
+                    );
+                  })}
+            </div>
+          </div>
+
+          <div className="w-full space-y-2">
+            <p className="text-sm sm:text-base text-baseBlack">
+              Select event type
+            </p>
+            <div className="flex flex-wrap items-center ">
+              {["Public Event", "Private Event"]?.map((item, index) => {
+                const isSelected = item === formData.eventType;
+                return (
+                  <div
+                    className={`border border-sec/40 text-baseBlack first:rounded-l-[10px] last:rounded-r-[10px] first:border-r-0 p-2.5 cursor-pointer hover:bg-sec/50 transition-all ${
+                      isSelected ? "bg-sec" : ""
+                    }`}
+                    key={index}
+                    onClick={() =>
+                      setFormData((prevData) => {
+                        return {
+                          ...prevData,
+                          eventType: item,
+                        };
+                      })
+                    }
+                  >
+                    <p className="text-sm text-baseBlack">{item}</p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Event description */}
-      <div className="p-4">
-        <h2 className="font-semibold pb-2">Event Description</h2>
-        <TextField
-          fullWidth
-          multiline
-          rows={4} // Number of visible lines
-          label="Enter event description"
-          id="event-description"
-          name="description" // Corrected to match `description` in formData.eventDto
-          value={formData.eventDto.description}
-          onChange={handleChange}
-          color="warning"
-          error={!!formError.description}
-          helperText={formError.description || ""}
-        />
+      <div className="rounded-[20px] md:border border-neutrals400 md:p-10 md:py-12">
+        <div className="flex items-center justify-center flex-wrap gap-5 font-bold mb-5">
+          <div className="bg-sec100 text-baseBlack h-[30px] w-[30px] rounded-full flex items-center justify-center">
+            <p>2</p>
+          </div>
+          <p>What time is the event</p>
+        </div>
+
+        <div className="space-y-6">
+          <div className="w-full space-y-2">
+            <p className="text-sm sm:text-base text-baseBlack">Event Date</p>
+            <div className="flex flex-wrap items-center ">
+              {["Single Event", "Multiple Days Event"]?.map((item, index) => {
+                const isSelected = item === formData.eventDuration;
+                return (
+                  <div
+                    className={`border border-sec/40 text-baseBlack first:rounded-l-[10px] last:rounded-r-[10px] first:border-r-0 p-2.5 cursor-pointer hover:bg-sec/50 transition-all ${
+                      isSelected ? "bg-sec" : ""
+                    }`}
+                    key={index}
+                    onClick={() =>
+                      setFormData((prevData) => {
+                        return {
+                          ...prevData,
+                          eventDuration: item,
+                        };
+                      })
+                    }
+                  >
+                    <p className="text-sm text-baseBlack">{item}</p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+          <div className="flex flex-wrap justify-between">
+            <div className="flex gap-6">
+              <TextField
+                label="Start date"
+                id="event-start-date"
+                type="date"
+                name="startDate"
+                value={formData.eventDto.startDate}
+                onChange={handleChange}
+                focused
+                color="warning"
+                error={!!formError.startDate || !!formError.dateTime}
+                helperText={formError.startDate || formError.dateTime || ""}
+                inputProps={{
+                  min: new Date().toISOString().split("T")[0],
+                }}
+              />
+              <TextField
+                label="Time"
+                id="event-start-time"
+                type="time"
+                name="startTime"
+                value={formData.eventDto.startTime}
+                onChange={handleChange}
+                focused
+                color="warning"
+                error={!!formError.startTime || !!formError.dateTime}
+                helperText={formError.startTime || formError.dateTime || ""}
+                style="custom-time"
+              />
+            </div>
+            <div className="flex flex-wrap gap-6">
+              <TextField
+                label="Event ends"
+                id="event-end-date"
+                type="date"
+                name="endDate"
+                value={formData.eventDto.endDate}
+                onChange={handleChange}
+                focused
+                color="warning"
+                error={!!formError.endDate || !!formError.dateTime}
+                helperText={formError.endDate || formError.dateTime || ""}
+                inputProps={{
+                  min: new Date().toISOString().split("T")[0],
+                }}
+              />
+              <TextField
+                label="Time ends"
+                id="event-end-time"
+                type="time"
+                name="endTime"
+                required
+                value={formData.eventDto.endTime}
+                onChange={handleChange}
+                focused
+                color="warning"
+                error={!!formError.endTime || !!formError.dateTime}
+                helperText={formError.endTime || formError.dateTime || ""}
+              />
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Event Category */}
-      <div className="p-4">
-        <h2 className="font-semibold pb-2">Event Category</h2>
-        <TextField
-          fullWidth
-          id="event-category"
-          select
-          label="Select event category"
-          name="categoryId"
-          value={formData.eventDto.categoryId}
-          onChange={handleChange}
-          color="warning"
-          error={!!formError.categoryId}
-          helperText={formError.categoryId || ""}>
-          {categories?.length > 0 &&
-            categories?.map(({ name, id }) => (
-              <MenuItem key={id} value={name}>
-                {name}
-              </MenuItem>
-            ))}
-        </TextField>
-      </div>
-      <div className="p-4">
-        <h2 className="font-semibold pb-2">Location type</h2>
-        <TextField
-          fullWidth
-          id="demo-simple-select"
-          select
-          labelid="demo-simple-select-label"
-          label="Location type"
-          name="locationType"
-          value={formData.eventDto.locationType}
-          onChange={handleChange}
-          color="warning"
-          error={!!formError.locationType}
-          helperText={formError.locationType || ""}>
-          <MenuItem value="Online">Online</MenuItem>
-          <MenuItem value="Venue">Venue</MenuItem>
-        </TextField>
-      </div>
-      {/* Event Address */}
-      {formData.eventDto.locationType === "Venue" && (
+      <div className="rounded-[20px] md:border border-neutrals400 md:p-10 md:py-12">
+        <div className="flex items-center justify-center flex-wrap gap-5 font-bold mb-5">
+          <div className="bg-sec100 text-baseBlack h-[30px] w-[30px] rounded-full flex items-center justify-center">
+            <p>3</p>
+          </div>
+          <p>Do you have an Event banner or Flyer?</p>
+        </div>
+
         <div className="p-4">
-          <h2 className="font-semibold pb-2">Event Location</h2>
-          <TextField
-            fullWidth
-            label="Enter event address"
-            id="event-address"
-            name="location"
-            value={formData.eventDto.location}
-            onChange={handleChange}
-            color="warning"
-            error={!!formError.location}
-            helperText={formError.location || ""}
+          <PhotoUpload
+            onImageChange={handleImageChange}
+            maxSizeMB={5}
+            fileError={formError.base64Image || fileError}
+            setFileError={setFileError}
           />
         </div>
-      )}
-      <div className="p-4">
-        <PhotoUpload
-          onImageChange={handleImageChange}
-          maxSizeMB={5}
-          fileError={formError.base64Image || fileError}
-          setFileError={setFileError}
-        />
       </div>
-      <div className="p-4">
-        <h2 className="font-semibold pb-4">Event Date & Time</h2>
-        <div className="sm:max-w-[80%] max-w-none grid sm:grid-cols-2 gap-y-7 gap-x-10">
-          <TextField
-            label="Event starts"
-            id="event-start-date"
-            type="date"
-            name="startDate"
-            value={formData.eventDto.startDate}
-            onChange={handleChange}
-            focused
-            color="warning"
-            error={!!formError.startDate || !!formError.dateTime}
-            helperText={formError.startDate || formError.dateTime || ""}
-            inputProps={{
-              min: new Date().toISOString().split("T")[0],
-            }}
-          />
-          <TextField
-            label="Time starts"
-            id="event-start-time"
-            type="time"
-            name="startTime"
-            value={formData.eventDto.startTime}
-            onChange={handleChange}
-            focused
-            color="warning"
-            error={!!formError.startTime || !!formError.dateTime}
-            helperText={formError.startTime || formError.dateTime || ""}
-          />
-          <TextField
-            label="Event ends"
-            id="event-end-date"
-            type="date"
-            name="endDate"
-            value={formData.eventDto.endDate}
-            onChange={handleChange}
-            focused
-            color="warning"
-            error={!!formError.endDate || !!formError.dateTime}
-            helperText={formError.endDate || formError.dateTime || ""}
-            inputProps={{
-              min: new Date().toISOString().split("T")[0], 
-            }}
-          />
-          <TextField
-            label="Time ends"
-            id="event-end-time"
-            type="time"
-            name="endTime"
-            required
-            value={formData.eventDto.endTime}
-            onChange={handleChange}
-            focused
-            color="warning"
-            error={!!formError.endTime || !!formError.dateTime}
-            helperText={formError.endTime || formError.dateTime || ""}
-          />
-          <TextField
-            fullWidth
-            id="demo-simple-select"
-            select
-            labelid="demo-simple-select-label"
-            label="Currency"
-            name="currency"
-            value={formData.eventDto.currency}
-            onChange={handleChange}
-            color="warning"
-            error={!!formError.currency}
-            helperText={formError.currency || ""}>
-            <MenuItem value="NGN">Naira</MenuItem>
-            {/* <MenuItem value="USD">US Dollars</MenuItem>
-            <MenuItem value="GHS">Cedis</MenuItem>
-            <MenuItem value="ZAR">Rand</MenuItem> */}
-          </TextField>
-        </div>
-      </div>
-
+      
       <FormButton
         handleAction={handleSubmit}
         position={"justify-end"}
         direction={"Next"}
       />
-    </>
+    </div>
   );
 }
 
