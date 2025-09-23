@@ -32,7 +32,7 @@ const TextField = ({
     : "border-neutrals300";
   const errorTextClass = error ? "text-error300" : "text-neutrals700";
 
-  const inputClass = `!h-[48px] rounded-[8px] border border-neutral200 py-3 px-4 
+  const inputClass = `!h-[48px] rounded-[8px] border border-neutrals200 py-3 px-4 
       outline-none transition-colors focus:border-primary focus:transition-all duration-300 text-baseBlack
       text-[14px] sm:text-[16px] leading-[19.6px] placeholder:text-neutral600 placeholder:text-[14px]  ${style} ${errorBorderClass} ${
     password ? "pr-[50px]" : ""
