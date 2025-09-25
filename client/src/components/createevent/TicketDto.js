@@ -50,7 +50,7 @@ const TicketDto = ({ handleBack, handleReset }) => {
 
   return (
     <div className="space-y-10">
-      <div className="rounded-[20px] md:border border-neutrals400 md:p-10 md:py-12 space-y-5">
+      <div className="rounded-[20px] md:border border-neutrals200 md:p-10 md:py-12 space-y-5">
         <div className="flex items-center justify-center flex-wrap gap-5 font-bold mb-5">
           <div className="bg-sec100 text-baseBlack h-[30px] w-[30px] rounded-full flex items-center justify-center">
             <p>6</p>
@@ -91,7 +91,7 @@ const TicketDto = ({ handleBack, handleReset }) => {
         </div>
       </div>
 
-      <div className="rounded-[20px] md:border border-neutrals400 md:p-10 md:py-12 space-y-5">
+      <div className="rounded-[20px] md:border border-neutrals200 md:p-10 md:py-12 space-y-5">
         <div className="flex items-center justify-center flex-wrap gap-5 font-bold mb-5">
           <div className="bg-sec100 text-baseBlack h-[30px] w-[30px] rounded-full flex items-center justify-center">
             <p>7</p>

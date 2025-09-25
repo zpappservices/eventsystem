@@ -1,4 +1,4 @@
-import Layout from "@/components/admin/Layout";
+ import Layout from "@/components/admin/Layout";
 import AdminDashboardTheme from "@/components/admin/settings/AdminDashboardTheme";
 import Currency from "@/components/admin/settings/Currency";
 import DateTimeFormat from "@/components/admin/settings/DateTimeFormat";

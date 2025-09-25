@@ -103,7 +103,7 @@ const EventDtoForm = ({ handleNext }) => {
 
   return (
     <div className="space-y-10">
-      <div className="rounded-[20px] md:border border-neutrals400 md:p-10 md:py-12">
+      <div className="rounded-[20px] md:border border-neutrals200 md:p-10 md:py-12">
         <div className="flex items-center justify-center flex-wrap gap-5 font-bold mb-5">
           <div className="bg-sec100 text-baseBlack h-[30px] w-[30px] rounded-full flex items-center justify-center">
             <p>1</p>
@@ -205,7 +205,7 @@ const EventDtoForm = ({ handleNext }) => {
         </div>
       </div>
 
-      <div className="rounded-[20px] md:border border-neutrals400 md:p-10 md:py-12">
+      <div className="rounded-[20px] md:border border-neutrals200 md:p-10 md:py-12">
         <div className="flex items-center justify-center flex-wrap gap-5 font-bold mb-5">
           <div className="bg-sec100 text-baseBlack h-[30px] w-[30px] rounded-full flex items-center justify-center">
             <p>2</p>
@@ -305,7 +305,7 @@ const EventDtoForm = ({ handleNext }) => {
         </div>
       </div>
 
-      <div className="rounded-[20px] md:border border-neutrals400 md:p-10 md:py-12">
+      <div className="rounded-[20px] md:border border-neutrals200 md:p-10 md:py-12">
         <div className="flex items-center justify-center flex-wrap gap-5 font-bold mb-5">
           <div className="bg-sec100 text-baseBlack h-[30px] w-[30px] rounded-full flex items-center justify-center">
             <p>3</p>

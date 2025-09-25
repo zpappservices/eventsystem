@@ -1,29 +1,13 @@
 import Layout from "@/components/dashboard/Layout";
 import Button from "@/components/widgets/Button";
-import TextField from "@/components/widgets/TextField";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React from "react";
+import { RxExternalLink } from "react-icons/rx";
 
-const settings = () => {
-  const [form, setForm] = useState({
-    password: "",
-    newPassword: "",
-    confirmPassword: "",
-  });
-
+const BillingSettings = () => {
   const pathname = usePathname();
   const { push } = useRouter();
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prev) => {
-      return {
-        ...prev,
-        [name]: value,
-      };
-    });
-  };
 
   return (
     <Layout>
@@ -66,39 +50,27 @@ const settings = () => {
         </div>
 
         <div className="rounded-[10px] md:border md:bg-baseWhite border-neutrals200 md:p-10 space-y-5">
-          <p className="text-xl text-neutrals600 font-bold">
-            Change your password
-          </p>
+          <p className="text-xl text-neutrals600 font-bold">Your plan</p>
 
           <div className="space-y-5">
-            <TextField
-              value={form.password}
-              onChange={handleInputChange}
-              label="Current password"
-              style="!rounded-[6px]"
-              name="password"
-              placeholder="Enter current password"
-            />
+            <div>
+              <p className="text-3xl font-bold ">Free plan</p>
+              <p className="text-black">
+                Publish unlimited free ticket and {"<"} ₦20,000 per paid ticket{" "}
+              </p>
+            </div>
 
-            <TextField
-              value={form.newPassword}
-              onChange={handleInputChange}
-              label="New password"
-              style="!rounded-[6px]"
-              name="newPassword"
-              placeholder="Enter new password"
-            />
-
-            <TextField
-              value={form.confirmPassword}
-              onChange={handleInputChange}
-              label="Confirm new password"
-              style="!rounded-[6px]"
-              name="confirmPassword"
-              placeholder="Enter new password"
-            />
-
-            <Button className="!ms-auto !mt-10">Update password</Button>
+            <Button
+              className="!ms-auto !mt-10"
+              outline
+              border="border-primary"
+              text="text-primary hover:text-white"
+              endIcon={
+                <RxExternalLink className="text-primary hover:text-white text-xl" />
+              }
+            >
+              Update password
+            </Button>
           </div>
         </div>
       </div>
@@ -106,4 +78,4 @@ const settings = () => {
   );
 };
 
-export default settings;
+export default BillingSettings;

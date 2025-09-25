@@ -1,29 +1,13 @@
 import Layout from "@/components/dashboard/Layout";
 import Button from "@/components/widgets/Button";
-import TextField from "@/components/widgets/TextField";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React from "react";
+import { RxExternalLink } from "react-icons/rx";
 
-const settings = () => {
-  const [form, setForm] = useState({
-    password: "",
-    newPassword: "",
-    confirmPassword: "",
-  });
-
+const TeamSettings = () => {
   const pathname = usePathname();
   const { push } = useRouter();
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prev) => {
-      return {
-        ...prev,
-        [name]: value,
-      };
-    });
-  };
 
   return (
     <Layout>
@@ -66,44 +50,11 @@ const settings = () => {
         </div>
 
         <div className="rounded-[10px] md:border md:bg-baseWhite border-neutrals200 md:p-10 space-y-5">
-          <p className="text-xl text-neutrals600 font-bold">
-            Change your password
-          </p>
-
-          <div className="space-y-5">
-            <TextField
-              value={form.password}
-              onChange={handleInputChange}
-              label="Current password"
-              style="!rounded-[6px]"
-              name="password"
-              placeholder="Enter current password"
-            />
-
-            <TextField
-              value={form.newPassword}
-              onChange={handleInputChange}
-              label="New password"
-              style="!rounded-[6px]"
-              name="newPassword"
-              placeholder="Enter new password"
-            />
-
-            <TextField
-              value={form.confirmPassword}
-              onChange={handleInputChange}
-              label="Confirm new password"
-              style="!rounded-[6px]"
-              name="confirmPassword"
-              placeholder="Enter new password"
-            />
-
-            <Button className="!ms-auto !mt-10">Update password</Button>
-          </div>
+          <p className="text-xl text-neutrals600 font-bold">Team Management</p>
         </div>
       </div>
     </Layout>
   );
 };
 
-export default settings;
+export default TeamSettings;

@@ -66,7 +66,7 @@ const profile = () => {
           </div>
         </div>
 
-        <div className="rounded-[10px] md:border md:bg-baseWhite border-neutrals400 md:p-10 space-y-5">
+        <div className="rounded-[10px] md:border md:bg-baseWhite border-neutrals200 md:p-10 space-y-5">
           <div className="flex gap-10 justify-between">
             <div className="relative w-[135px] h-[135px] aspect-square rounded-full shrink-0">
               <StyledImage src="/img/profile.png" className="w-full h-full" />
