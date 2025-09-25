@@ -131,6 +131,11 @@ export class OrderDto {
   phone: string;
 
   @IsNotEmpty()
+  @IsString()
+  @ApiProperty()
+  currency: string;
+
+  @IsNotEmpty()
   @IsArray()
   @ApiProperty()
   tickets: TicketDto[];

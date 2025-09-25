@@ -297,13 +297,13 @@ export class PaymentService {
         payload = {
           email: data.email,
           amount: amount,
-          currency: event.currency,
+          currency: data.currency,
           reference: batchId,
           callback_url: callBackUrl,
           bearer: 'subaccount',
           split: {
             type: chargeSetup.type,
-            currency: event.currency,
+            currency: data.currency,
             subaccounts: [
               {
                 subaccount: subaccount.accountId,
@@ -317,13 +317,13 @@ export class PaymentService {
         payload = {
           email: data.email,
           amount: amount,
-          currency: event.currency,
+          currency: data.currency,
           reference: batchId,
           callback_url: callBackUrl,
           bearer: 'subaccount',
           split: {
             type: 'percentage',
-            currency: event.currency,
+            currency: data.currency,
             subaccounts: [
               {
                 subaccount: subaccount.accountId,

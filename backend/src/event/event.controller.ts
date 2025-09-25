@@ -6,6 +6,7 @@ import {
   EventDto,
   EventImageDto,
   EventTicketDto,
+  FilterEventDto,
   VendorEventDto,
 } from './dtos/event.dto';
 import {
@@ -24,6 +25,11 @@ export class EventController {
   @Get('/getAllevent')
   async getAllEvents() {
     return this.eventService.getAllEvents();
+  }
+
+  @Post('/getEventByFilter')
+  async getEventByFilter(@Body() filter: FilterEventDto) {
+    return this.eventService.getEventByFilter(filter);
   }
 
   @Get('/getoneevent/:id')
@@ -55,10 +61,10 @@ export class EventController {
     return this.eventService.getEventByCategory(id);
   }
 
-  @Post('/createevent')
-  async createEvent(@Body() body: EventDto) {
-    return this.eventService.createEvent(body);
-  }
+  // @Post('/createevent')
+  // async createEvent(@Body() body: EventDto) {
+  //   return this.eventService.createEvent(body);
+  // }
 
   @ApiOperation({ summary: 'Create Event' })
   @ApiBody({ description: 'Payload to create event', type: VendorEventDto })
