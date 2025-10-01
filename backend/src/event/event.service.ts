@@ -109,7 +109,7 @@ export class EventService {
                 currency: true,
                 minOrder: true,
                 maxOrder: true,
-                sold:true
+                sold: true,
               },
             },
           },
@@ -132,7 +132,7 @@ export class EventService {
       };
     } catch (err) {
       console.log(err);
-      
+
       return {
         statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
         data: null,
@@ -149,6 +149,7 @@ export class EventService {
           EventTicket: true,
           EventLocation: true,
           user: true,
+          Category: true,
           EventTransaction: {
             select: {
               firstName: true,
@@ -180,6 +181,7 @@ export class EventService {
     try {
       const event = await this.prisma.event.findMany({
         where: { userId: vendorId },
+        include: { EventLocation: true, EventTicket: true },
       });
       return {
         statusCode: HttpStatus.OK,
@@ -383,7 +385,6 @@ export class EventService {
 
   async updateEvent(data: EventDto, id: string) {
     try {
-    
       const upated = await this.prisma.event.update({
         where: { id },
         data: {
