@@ -30,6 +30,7 @@ export class EventService {
             gte: new Date(), // Fetch events where eventDate is in the future
           },
         },
+        include: { EventLocation: true, EventTicket: true, Category: true },
       });
       return {
         statusCode: HttpStatus.OK,
@@ -102,6 +103,7 @@ export class EventService {
                 venueName: true,
               },
             },
+            Category: true,
             EventTicket: {
               select: {
                 name: true,
