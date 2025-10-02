@@ -286,10 +286,10 @@ export class UserService {
     } catch (err) {
       console.log(err);
       return {
-        statusCode: HttpStatus.NOT_FOUND,
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
         data: null,
         message: `Fail`,
-      };
+      }; 
     }
   }
 

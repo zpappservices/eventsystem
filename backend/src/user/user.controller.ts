@@ -50,7 +50,7 @@ export class UserController {
   }
   @Get('/getvendorbyuserid/:userId')
   async getVendorBy(@Param('userId') userId: any): Promise<any> {
-    return this.userService.getOneVendor(userId);
+    return this.userService.getVendorByUserId(userId);
   }
   @Get('/get-vendor-account/:userId')
   async getVendorAccount(@Param('userId') userId: string): Promise<any> {
@@ -72,4 +72,5 @@ export class UserController {
   async verifyVendor(@Param('userId') userId: string): Promise<any> {
     return this.userService.verifyVendor(userId);
   }
+
 }
