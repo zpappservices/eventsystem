@@ -10,7 +10,7 @@ import {
 import { UserService } from './user.service';
 import { FirebaseAuthGuard } from '@/auth/guards/firebase.guard';
 import { query } from 'express';
-import { VendorDto } from './dtos/user.dto';
+import { UpdateVendorDto, VendorDto } from './dtos/user.dto';
 
 @Controller('user')
 export class UserController {
@@ -39,7 +39,7 @@ export class UserController {
   }
   @Post('/update-vendor/:Id')
   async updateVendor(
-    @Body() dto: VendorDto,
+    @Body() dto: UpdateVendorDto,
     @Param('Id') Id: string,
   ): Promise<any> {
     return await this.userService.updateVendor(dto, Id);
@@ -72,5 +72,4 @@ export class UserController {
   async verifyVendor(@Param('userId') userId: string): Promise<any> {
     return this.userService.verifyVendor(userId);
   }
-
 }
