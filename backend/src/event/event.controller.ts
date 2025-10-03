@@ -6,6 +6,7 @@ import {
   EventDto,
   EventImageDto,
   EventTicketDto,
+  EventTransactionDto,
   FilterEventDto,
   VendorEventDto,
 } from './dtos/event.dto';
@@ -141,5 +142,10 @@ export class EventController {
   @Post('/uploadeventimage')
   async uploadEventImage(@Body() req: EventImageDto) {
     return this.eventService.uploadEventImage(req);
+  }
+
+  @Post('/get-event-transactions')
+  async getEventTransaction(@Body() req: EventTransactionDto) {
+    return this.eventService.getEventTransaction(req);
   }
 }

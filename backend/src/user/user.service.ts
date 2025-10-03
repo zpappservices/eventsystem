@@ -1,7 +1,7 @@
 import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '@/integrations/prisma/prisma.service';
 import { VendorEventDto } from '@/event/dtos/event.dto';
-import { FollowDto, VendorDto } from './dtos/user.dto';
+import { FollowDto, UpdateVendorDto, VendorDto } from './dtos/user.dto';
 import { RoleType } from '@prisma/client';
 import { EmailerService } from '@/integrations/email/emailer.service';
 
@@ -141,9 +141,9 @@ export class UserService {
     }
   }
 
-  async updateVendor(data: VendorDto, id: string): Promise<any> {
+  async updateVendor(data: UpdateVendorDto, id: string): Promise<any> {
     try {
-      const created = await this.prisma.vendor.update({
+      const updated = await this.prisma.vendor.update({
         where: { id },
         data: {
           firstName: data.firstName,
@@ -157,11 +157,29 @@ export class UserService {
           createdOn: new Date(),
           active: true,
           userId: data.userId,
+          bio: data.bio,
+          address: data.address,
+          state: data.state,
+          zipcode: data.zipcode,
+          country: data.country,
+          facebook: data.facebook,
+          twitter: data.twitter,
+          instagram: data.instagram,
+          linkedin: data.linkedin,
         },
       });
+
+      if (updated) {
+        return {
+          statusCode: HttpStatus.BAD_REQUEST,
+          data: null,
+          message: `unable to update info`,
+        };
+      }
+
       return {
         statusCode: HttpStatus.CREATED,
-        data: created,
+        data: updated,
         message: 'Vendor updated successfully.',
       };
     } catch (err) {
@@ -289,7 +307,7 @@ export class UserService {
         statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
         data: null,
         message: `Fail`,
-      }; 
+      };
     }
   }
 
