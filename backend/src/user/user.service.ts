@@ -169,7 +169,7 @@ export class UserService {
         },
       });
 
-      if (updated) {
+      if (!updated) {
         return {
           statusCode: HttpStatus.BAD_REQUEST,
           data: null,
@@ -178,7 +178,7 @@ export class UserService {
       }
 
       return {
-        statusCode: HttpStatus.CREATED,
+        statusCode: HttpStatus.OK,
         data: updated,
         message: 'Vendor updated successfully.',
       };
