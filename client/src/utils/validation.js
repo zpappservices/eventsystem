@@ -31,9 +31,9 @@ const validateTicket = (form, setError) => {
   }
   if (!form.price) {
     newError.price = "Ticket price is required";
-    }
-    
-    console.log(newError)
+  }
+
+  console.log(newError);
 
   setError(newError);
   return Object.keys(newError).length === 0;
@@ -53,4 +53,42 @@ const checkComplete = (fields) => {
   return isValid;
 };
 
-export { validateContact, validateTicket, checkComplete };
+const validateInfoForm = (form, isChecked, setErrors) => {
+  const newErrors = {};
+
+  if (!form.firstName.trim()) newErrors.firstName = "First name is required";
+  if (!form.lastName.trim()) newErrors.lastName = "Last name is required";
+  if (!form.phone.trim()) newErrors.phone = "Last name is required";
+
+  if (!form.phone.trim()) {
+    newErrors.phone = "Phone number is required";
+  } else if (form.phone.trim().length !== 11) {
+    newErrors.phone = "Mobile number length is invalid";
+  }
+
+  if (!form.email.trim()) {
+    newErrors.email = "Email is required";
+  } else if (!validateEmail(form.email)) {
+    newErrors.email = "Enter a valid email address";
+  }
+  
+  if (!isChecked) {
+    newErrors.isChecked = "You must accept the Terms and Conditions";
+  }
+
+  setErrors(newErrors);
+  return Object.keys(newErrors).length === 0;
+};
+
+const validateEmail = (email) => {
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return re.test(email);
+};
+
+export {
+  validateContact,
+  validateTicket,
+  checkComplete,
+  validateInfoForm,
+  validateEmail,
+};

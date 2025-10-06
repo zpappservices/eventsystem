@@ -10,7 +10,7 @@ const Button = ({
   textButton,
   isLoading = false,
   loaderFillColor = "#fff",
-  disabledLoadingStyle = "disabled:bg-baseBlack disabled:text-primary",
+  disabledLoadingStyle = "disabled:bg-primary disabled:text-primary",
   startIcon,
   endIcon,
   className,
@@ -42,7 +42,7 @@ const Button = ({
       {isLoading ? (
         <span className="flex items-center justify-center mt-0.5">
           <svg
-            className="w-[15px] h-[15px] text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+            className="w-[16px] h-[16px] text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
             viewBox="0 0 100 101"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"

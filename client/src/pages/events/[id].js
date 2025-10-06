@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Layout from "@/components/Layout";
 import EventsDetails from "@/components/EventsDetails";
@@ -6,6 +6,7 @@ import { Loader2 } from "lucide-react";
 import useApiRequest from "@/hooks/useApiRequest";
 
 const Event = () => {
+  const [categories, setCategories] = useState([]);
   const router = useRouter();
   const { id } = router.query;
 
@@ -33,7 +34,7 @@ const Event = () => {
     }
   }, [id, router.isReady]);
 
-  const { data: event = {} } = data || {};
+  const { event = {} } = data?.data || {};
 
   if (loading)
     return (
