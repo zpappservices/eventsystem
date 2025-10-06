@@ -12,9 +12,9 @@ const TicketDto = ({ handleBack, handleReset }) => {
     venueImages: "",
     restrictions: "",
   });
-  const [images, setImages] = useState([null, null, null]);
 
-  const { extras, setExtras, handleSubmit } = useCreateEvent();
+  const { extras, setExtras, handleSubmit, images, setImages } =
+    useCreateEvent();
 
   const { isLoading, startLoading, stopLoading } = useLoading();
 

@@ -9,7 +9,7 @@ import { checkComplete } from "@/utils/validation";
 
 const ContactDto = ({ handleNext, handleBack }) => {
   const [error, setError] = useState({});
-  const { location, setLocation, setTicket } = useCreateEvent();
+  const { location, setLocation, setTicket, ticket } = useCreateEvent();
 
   const [tickets, setTickets] = useState([]);
   const [showForm, setShowForm] = useState(false);
@@ -73,6 +73,7 @@ const ContactDto = ({ handleNext, handleBack }) => {
     }
 
     setTickets((prev) => [...prev, currentTicket]);
+    setTicket((prev) => [...tickets, currentTicket]);
     setCurrentTicket({
       type: "",
       name: "",
@@ -91,7 +92,6 @@ const ContactDto = ({ handleNext, handleBack }) => {
   };
 
   const handleSubmit = () => {
-    setTicket(tickets);
     handleNext();
   };
 
@@ -114,10 +114,10 @@ const ContactDto = ({ handleNext, handleBack }) => {
           <p>Add Ticket Type</p>
         </div>
 
-        {tickets.length > 0 && (
+        {(tickets.length > 0 || ticket.length > 0) && (
           <div className="space-y-4">
             <h3 className="font-semibold text-lg">Added Tickets</h3>
-            {tickets.map((t, index) => (
+            {(tickets.length > 0 ? tickets : ticket)?.map((t, index) => (
               <div
                 key={index}
                 className="flex justify-between items-center border border-neutrals200 rounded-lg p-4"

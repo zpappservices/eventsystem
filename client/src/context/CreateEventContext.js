@@ -1,6 +1,7 @@
 import { createEvent } from "@/apis/eventsServices";
 import useAuthToken from "@/hooks/useAuthToken";
 import { uploadFilesToS3 } from "@/utils/s3Upload";
+import { useRouter } from "next/router";
 import React, { createContext, useContext, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -10,15 +11,7 @@ function CreateEventProvider({ children }) {
   const { activeUser } = useAuthToken();
   const [formError, setFormError] = useState({});
   const [fileError, setFileError] = useState("");
-  const [ticket, setTicket] = useState({
-    type: "Free",
-    name: "",
-    quantity: "",
-    price: "",
-    description: "",
-    min: "",
-    max: "",
-  });
+  const [ticket, setTicket] = useState([]);
   const [location, setLocation] = useState({
     location: "",
     venue: "",
@@ -45,6 +38,8 @@ function CreateEventProvider({ children }) {
   });
   const [banner, setBanner] = useState(null);
   const [images, setImages] = useState([null, null, null]);
+
+  const router = useRouter();
 
   const handleImageChange = (image) => {
     setBanner(image);
@@ -126,18 +121,16 @@ function CreateEventProvider({ children }) {
           venueName: location.venue,
           latlong: "",
         },
-        ticketDto: [
-          {
-            type: ticket.type,
-            name: ticket.name,
-            description: ticket.description,
-            quantity: Number(ticket.quantity),
-            currency: "NGN",
-            price: ticket.price,
-            minOrder: Number(ticket.min),
-            maxOrder: Number(ticket.max),
-          },
-        ],
+        ticketDto: ticket?.map((item) => ({
+          type: item.type,
+          name: item.name,
+          description: item.description,
+          quantity: Number(item.quantity),
+          currency: "NGN",
+          price: item.price || "0",
+          minOrder: Number(item.min),
+          maxOrder: Number(item.max),
+        })),
       };
 
       const { data, message, success } = await createEvent(
@@ -149,10 +142,10 @@ function CreateEventProvider({ children }) {
       if (success) {
         toast.success("Event created successfully");
         handleResetForm();
+        router.reload();
       } else {
         toast.error("Something went wrong. Please try again.");
       }
-
     } catch (error) {
       toast.error("Something went wrong. Please try again.");
       return;
@@ -175,22 +168,25 @@ function CreateEventProvider({ children }) {
     try {
       const uploaded = await uploadFilesToS3(allFiles);
 
-      const image_banner = bannerFile
-        ? uploaded.slice(0, 1 + imageFiles.length) 
-        : uploaded.slice(0, imageFiles.length); 
+      let image_banner = [];
+      let venueImage = [];
 
-      const venueImage = bannerFile
-        ? uploaded.slice(1 + imageFiles.length) 
-        : uploaded.slice(imageFiles.length);
+      if (bannerFile) {
+        image_banner = [
+          uploaded[0],
+          ...uploaded.slice(1, 1 + imageFiles.length),
+        ];
+        venueImage = uploaded.slice(1 + imageFiles.length);
+      } else {
+        image_banner = uploaded.slice(0, imageFiles.length);
+        venueImage = uploaded.slice(imageFiles.length);
+      }
 
       return { image_banner, venueImage };
     } catch (error) {
-      console.error("Error uploading images:", error);
       return { image_banner: [], venueImage: [] };
     }
   };
-
-
 
   return (
     <CreateEventContext.Provider

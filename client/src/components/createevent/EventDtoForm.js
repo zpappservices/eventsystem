@@ -10,6 +10,7 @@ import { Skeleton } from "@mui/material";
 import TextArea from "../widgets/TextArea";
 import { TextField as MUITextField } from "@mui/material";
 import Button from "../widgets/Button";
+import { toast } from "react-toastify";
 
 const EventDtoForm = ({ handleNext }) => {
   const {
@@ -63,15 +64,10 @@ const EventDtoForm = ({ handleNext }) => {
     if (!formData.description)
       errors.description = "Event description is required.";
     if (!formData.categoryId) errors.categoryId = "Event category is required.";
-    if (!formData.currency) errors.currency = "Currency is required.";
     if (!formData.startDate) errors.startDate = "Start date is required.";
     if (!formData.endDate) errors.endDate = "End date is required.";
     if (!formData.startTime) errors.startTime = "Start time is required.";
     if (!formData.endTime) errors.endTime = "End time is required.";
-
-    if (formData.locationType === "Venue") {
-      if (!formData.location) errors.location = "Event location is required.";
-    }
 
     if (!banner) errors.banner = "Banner Image is required.";
 
@@ -83,6 +79,10 @@ const EventDtoForm = ({ handleNext }) => {
         "End date and time must be after the start date and time.";
     }
 
+    if (errors) {
+      toast.error("Form is incomplete")
+    }
+
     setFormError(errors);
     return Object.keys(errors).length === 0;
   };
@@ -92,7 +92,6 @@ const EventDtoForm = ({ handleNext }) => {
   };
 
   const categories = data?.data;
-  console.log(formData, images);
 
   return (
     <div className="space-y-10">
@@ -319,7 +318,7 @@ const EventDtoForm = ({ handleNext }) => {
         </div>
       </div>
 
-      <Button onClick={handleNext} className="ms-auto !mb-10">
+      <Button onClick={handleSubmit} className="ms-auto !mb-10">
         Next
       </Button>
     </div>
