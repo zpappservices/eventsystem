@@ -10,8 +10,13 @@ import Button from "./widgets/Button";
 import SimilarEvents from "./events/SimilarEvents";
 
 const EventsDetails = ({ id, details }) => {
-  const event = details?.EventTicket;
   const [tickets, setTickets] = useState([]);
+
+  const event = details;
+  const location = details?.EventLocation?.[0];
+  const bannerPhotos = details?.image_banner?.slice(1) || [];
+  const venuePhotos = details?.venue_image || [];
+  const photos = [...bannerPhotos, ...venuePhotos];
 
   const router = useRouter();
 
@@ -38,7 +43,7 @@ const EventsDetails = ({ id, details }) => {
         <div className="w-full flex flex-col sm:flex-row items-start gap-6">
           <div className="w-full max-w-[952px] h-[400px] overflow-hidden">
             <StyledImage
-              src={details?.image_banner}
+              src={event?.image_banner?.[0]}
               className="w-full h-full rounded-[10px] object-cover"
             />
           </div>
@@ -59,30 +64,30 @@ const EventsDetails = ({ id, details }) => {
             <p className="text-[14px] leading-normal capitalize flex items-center">
               <BsTags className="text-xl" />
               <span className="font-medium mx-0.5 ms-4 text-primary">
-                {details?.category}
+                {event?.Category?.name}
               </span>
             </p>
 
             <p className="text-[14px] leading-normal capitalize flex items-start sm:items-center">
               <StyledImage className="shrink-0" src="/img/calendar.svg" />
               <span className="font-medium mx-0.5 ms-4">
-                {formatDate(details?.StartDate)}{" "}
-                {/* - {formatDate(details?.EndDate)} */}
+                {formatDate(event?.StartDate)}{" "}
+                {/* - {formatDate(event?.EndDate)} */}
               </span>
             </p>
 
             <p className="text-[14px] leading-normal capitalize flex items-center">
               <SlClock className="text-xl" />
               <span className="font-medium mx-0.5 ms-4">
-                {convertTo12HourFormat(details?.StartTime)} -{" "}
-                {convertTo12HourFormat(details?.EndTime)}{" "}
+                {convertTo12HourFormat(event?.StartTime)} -{" "}
+                {convertTo12HourFormat(event?.EndTime)}{" "}
               </span>
             </p>
 
             <p className="text-[14px] leading-normal capitalize flex items-center">
               <StyledImage className="shrink-0" src="/img/location.svg" />
               <span className="font-medium mx-0.5 ms-4">
-                {details?.location}
+                {location?.location}
               </span>
             </p>
 
@@ -106,38 +111,39 @@ const EventsDetails = ({ id, details }) => {
 
         <div className="space-y-4">
           <div className="">
-            <p className="text-3xl font-bold text-baseBlack">
-              {details?.title}
-            </p>
+            <p className="text-3xl font-bold text-baseBlack">{event?.title}</p>
             <p className="text-base text-baseBlack">
               Hosted by:{" "}
               <span className="text-primary font-medium">Shadow Empire</span>
             </p>
           </div>
 
-          <p>{details?.description}</p>
+          <p>{event?.description}</p>
 
           <div className="space-y-3">
             <p className="text-base sm:text-xl font-medium">Location</p>
             <p className="text-[14px] leading-normal capitalize flex items-center">
               <StyledImage className="shrink-0" src="/img/location.svg" />
               <span className="font-medium mx-0.5 ms-4">
-                {details?.location}
+                {location?.location}
               </span>
             </p>
           </div>
 
           <div className="space-y-3">
             <p className="text-base sm:text-xl font-medium">Photos</p>
-            <p className="text-[14px] leading-normal capitalize flex items-center">
-              <StyledImage
-                className="shrink-0 rounded-[4px] w-[200px] h-[200px] aspect-square object-cover"
-                src={details?.image_banner}
-              />
-            </p>
+            <div className="text-[14px] leading-normal capitalize flex flex-wrap [@media(max-width:461px)]:justify-center items-center gap-5">
+              {photos?.map((item, index) => (
+                <StyledImage
+                  key={index}
+                  className="shrink-0 rounded-[4px] w-[200px] h-[200px] aspect-square object-cover"
+                  src={item}
+                />
+              ))}
+            </div>
           </div>
 
-          <div className="space-y-3">
+          {/* <div className="space-y-3">
             <p className="text-base sm:text-xl font-medium"> About Organizer</p>
             <div className="flex items-center gap-3">
               <StyledImage
@@ -155,9 +161,9 @@ const EventsDetails = ({ id, details }) => {
                 Subscribe
               </Button>
             </div>
-          </div>
+          </div> */}
 
-          <SimilarEvents id={details?.category} />
+          <SimilarEvents id={event?.category} />
         </div>
       </div>
     </div>

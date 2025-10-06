@@ -17,6 +17,7 @@ const TextField = ({
   container,
   password = false,
   inputStyle,
+  passwordToggleClass,
   ...props
 }) => {
   const [type, setType] = useState("password");
@@ -59,7 +60,7 @@ const TextField = ({
         style={inputStyle}
         {...props}
       />
-      <div className="absolute right-[18.5px] top-[17px] cursor-pointer">
+      <div className={`absolute right-[18.5px] top-[17px] cursor-pointer ${passwordToggleClass}`}>
         {password &&
           (error ? (
             <MdError size={24} className="text-error400" />

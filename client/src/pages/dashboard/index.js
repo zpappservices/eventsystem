@@ -14,13 +14,13 @@ const Dashboard = () => {
           <Summary />
         </div>
 
-        <div className="w-full flex flex-wrap items-start gap-5">
+        {/* <div className="w-full flex flex-wrap items-start gap-5">
           <SalesRevenue />
 
           <Earnings />
 
           <RecentActivities />
-        </div>
+        </div> */}
 
         <div className="w-full bg-white py-6 pb-10 flex flex-col xl:flex-row items-start gap-5">
           <ActiveEvents />

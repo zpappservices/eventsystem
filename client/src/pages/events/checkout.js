@@ -34,8 +34,8 @@ const checkout = () => {
     );
 
     if (success) {
-      setEvent(data?.EventTicket);
-      setDetails(data);
+      setEvent(data?.event?.EventTicket);
+      setDetails(data?.event);
     }
   };
 
@@ -72,10 +72,10 @@ const checkout = () => {
 
   return (
     <Layout container="w-full max-w-[1512px] mx-auto px-5 mt-[103px] sm:!mt-[98px]">
-      <div className="flex flex-col min-h-[80vh]">
+      <div className="flex flex-col lg:flex-row min-h-[80vh] gap-10 items-center lg:items-stretch">
         <div className="flex-1 min-h-full">
           <div className="w-full max-w-[678px] min-h-full mx-auto flex flex-col gap-4 space-y-5">
-            <p className="text-xl sm:text-3xl mx-auto font-semibold text-baseBlack">
+            <p className="text-xl sm:text-3xl mx-auto font-semibold text-baseBlack mt-7 lg:mt-4">
               {title}
             </p>
 
@@ -118,7 +118,7 @@ const checkout = () => {
         <div className="w-full max-w-[523px] bg-neutrals100/50">
           <StyledImage
             className="h-[290px] w-full object-cover aspect-video"
-            src={image_banner}
+            src={image_banner?.[0]}
           />
 
           <div className="w-full overflow-x-auto px-2">

@@ -1,24 +1,56 @@
+import { useMemo } from "react";
 import { FaCalendarAlt } from "react-icons/fa";
 import { LiaExclamationCircleSolid } from "react-icons/lia";
 
-const OrderStats = ({ period }) => {
-  const stats = [
-    {
-      label: "Total Revenue",
-      value: "55,550.00",
-      change: "+1.2%",
-    },
-    {
-      label: "Total Orders",
-      value: "247,520",
-      change: "+1.2%",
-    },
-    {
-      label: "Total Returns",
-      value: "20",
-      change: "+1.2%",
-    },
-  ];
+const OrderStats = ({ period, data }) => {
+  const stats = useMemo(() => {
+    if (!data?.events?.length) return [];
+
+    const now = new Date();
+    const startOfWeek = new Date(now);
+    startOfWeek?.setDate(now.getDate() - now.getDay() + 1);
+    startOfWeek?.setHours(0, 0, 0, 0);
+
+    const filteredEvents = data?.events?.filter((e) => {
+      const created = new Date(e?.createdOn);
+      return period === "This Week" ? created >= startOfWeek : true;
+    });
+
+    const statsData = filteredEvents.map((e) => {
+      const ticket = data?.tickets?.find((t) => t?.name === e?.ticket);
+      return {
+        revenue: ticket?.price ? Number(ticket?.price) : 0,
+        returned: e?.isReturned || false,
+      };
+    });
+
+    const totalRevenue = statsData.reduce((sum, i) => sum + i?.revenue, 0);
+
+    const totalOrders = filteredEvents?.length;
+    const totalReturns = statsData?.filter((i) => i.returned)?.length;
+
+    const change = "+1.2%";
+
+    return [
+      {
+        label: "Total Revenue",
+        value: `₦${totalRevenue?.toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+        })}`,
+        change,
+      },
+      {
+        label: "Total Orders",
+        value: totalOrders?.toLocaleString(),
+        change,
+      },
+      {
+        label: "Total Returns",
+        value: totalReturns?.toLocaleString(),
+        change,
+      },
+    ];
+  }, [data, period]);
 
   return (
     <div className="w-full flex flex-col md:flex-row items-center justify-between gap-6 p-5">
@@ -27,7 +59,6 @@ const OrderStats = ({ period }) => {
         <span className="text-lg font-medium text-primary capitalize">{period}</span>
       </div>
 
-      {/* Divider */}
       <div className="hidden md:block w-px bg-black h-20" />
 
       <div className="flex-1 grid lg:grid-cols-2 xl:grid-cols-3 gap-10 items-center justify-around w-full">
@@ -40,14 +71,14 @@ const OrderStats = ({ period }) => {
             >
               <div className="w-full max-w-[242px] mx-auto flex flex-col items-center md:items-start gap-2.5 text-center md:text-left">
                 <div className="w-full flex items-center gap-2 text-neutrals600 text-sm font-medium">
-                  <span className="text-sm">{item.label}</span>
+                  <span className="text-sm">{item?.label}</span>
                   <LiaExclamationCircleSolid className="text-neutrals400 ms-auto text-lg" />
                 </div>
                 <div className="w-full flex gap-5 items-center">
                   <p className="text-2xl font-semibold text-black">
-                    {item.value}
+                    {item?.value}
                   </p>
-                  <div className="text-right ms-auto">
+                  {/* <div className="text-right ms-auto">
                     <span className="text-xs text-primary bg-primary100 px-2 py-0.5 rounded-md">
                       ↑ {item.change}
                     </span>
@@ -55,7 +86,7 @@ const OrderStats = ({ period }) => {
                     <p className="text-right text-xs text-neutrals500">
                       from last week
                     </p>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>

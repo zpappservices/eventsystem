@@ -4,17 +4,9 @@ import useApiRequest from "@/hooks/useApiRequest";
 import { convertTo12HourFormat, formatDate } from "@/utils/time";
 import { useRouter } from "next/router";
 import { MoreVertical } from "lucide-react";
+import StyledImage from "../StyledImage";
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-  createData("AY Live", "AY Live", 150000, 24, "11/06/2024"),
-  createData("MC Pashun", "MC Pashun", 5000000, 7, "11/12/2024"),
-];
-
-const ActiveEvents = () => {
+const SalesEvents = ({ next, setId }) => {
   const { activeUser } = useAuthToken();
   const router = useRouter();
 
@@ -38,24 +30,41 @@ const ActiveEvents = () => {
 
   const activeEvents = events?.filter((event) => event.active === true);
 
+  const handleClick = (id) => {
+    setId(id);
+    next();
+  };
+
   if (activeEvents?.length < 1) {
     return (
-      <div className="w-full max-w-[900px] 3xl:max-w-fit flex-1 flex flex-col border rounded-[10px] bg-neutrals100/10">
-        <p className="text-[20px] !font-bold leading-[24px] py-5 px-2">
-          Active Event Tickets
-        </p>
+      <div className="w-full max-w-[900px] 3xl:max-w-fit flex-1 flex flex-col gap-10">
+        <div className="">
+          <p className="text-[20px] !font-bold leading-[24px] px-2">
+            Active Event Tickets
+          </p>
+          <p className="text-neutrals700 leading-[24px] px-2">
+            Select an event to see ticket sales
+          </p>
+        </div>
 
-        <div className="p-5 pb-10">
-          <p className="text-neutrals600 mx-auto text-center">No events created</p>
+        <div className="p-5 pb-10 h-[40vh] border rounded-[8px] flex justify-center items-center">
+          <p className="text-neutrals500 mx-auto text-center">
+            No events created
+          </p>
         </div>
       </div>
     );
   }
   return (
-    <div className="w-full max-w-[900px] 3xl:max-w-fit flex-1 flex flex-col border rounded-[10px] bg-neutrals100/10">
-      <p className="text-[20px] !font-bold leading-[24px] py-5 px-2">
-        Active Event Tickets
-      </p>
+    <div className="w-full max-w-[1190px] 3xl:max-w-fit flex-1 flex flex-col gap-10">
+      <div className="">
+        <p className="text-[20px] !font-bold leading-[24px] px-2">
+          Active Event Tickets
+        </p>
+        <p className="text-neutrals700 leading-[24px] px-2">
+          Select an event to see ticket sales
+        </p>
+      </div>
 
       <div className="overflow-x-auto">
         <table className="w-[1150px]">
@@ -65,18 +74,13 @@ const ActiveEvents = () => {
                 Event Name
               </th>
               <th className="py-3 px-2 text-left text-neutrals600 text-sm font-semibold">
-                Category
+                Event Type
               </th>
               <th className="py-3 px-2 text-left text-neutrals600 text-sm font-semibold">
                 Date & Time
               </th>
               <th className="py-3 px-2 text-left text-neutrals600 text-sm font-semibold">
                 Location
-              </th>
-              <th className="py-3 px-2 text-left text-neutrals600 text-sm font-semibold">
-                <button className="inline-flex items-center justify-center text-neutrals600">
-                  <MoreVertical size={18} />
-                </button>
               </th>
             </tr>
           </thead>
@@ -85,22 +89,22 @@ const ActiveEvents = () => {
               <tr
                 key={index}
                 className="border-b border-gray-100 last:border-0 cursor-pointer"
-                onClick={() => router.push(`/dashboard/event/${event?.id}`)}
+                onClick={() => handleClick(event?.id)}
               >
-                <td className="py-4 px-2 text-xs">{event?.title}</td>
-                <td className="py-4 px-2 text-xs">{event?.category}</td>
+                <td className="py-4 px-2 text-xs flex items-center gap-2.5">
+                  <StyledImage
+                    src={event?.image_banner?.[0]}
+                    className="!w-[40px] h-[40px] rounded-[10px]"
+                  />{" "}
+                  {event?.title}
+                </td>
+                <td className="py-4 px-2 text-xs">{event?.eventType}</td>
                 <td className="py-4 px-2 text-xs">
                   {formatDate(event?.StartDate)}{" "}
                   {convertTo12HourFormat(event?.StartTime)}
                 </td>
-                <td className="py-4 px-2 text-xs">{event?.EventLocation?.[0]?.location}</td>
-                <td
-                  className="py-3 px-2 text-left text-neutrals600 text-sm font-semibold"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <button className="inline-flex items-center justify-center text-neutrals600">
-                    <MoreVertical size={18} />
-                  </button>
+                <td className="py-4 px-2 text-xs">
+                  {event?.EventLocation?.[0]?.location}
                 </td>
               </tr>
             ))}
@@ -111,4 +115,4 @@ const ActiveEvents = () => {
   );
 };
 
-export default ActiveEvents;
+export default SalesEvents;

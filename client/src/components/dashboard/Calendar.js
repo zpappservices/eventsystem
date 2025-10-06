@@ -1,29 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import Button from "../widgets/Button";
-
-const mockEvents = [
-  {
-    id: 1,
-    title: "Evolution Cup 2025",
-    status: "Upcoming",
-    date: "2025-07-25",
-  },
-  {
-    id: 2,
-    title: "Tech Conference",
-    status: "Upcoming",
-    date: "2025-07-27",
-  },
-  {
-    id: 3,
-    title: "Music Festival",
-    status: "Upcoming",
-    date: "2025-07-29",
-  },
-];
+import { getVendorEvents } from "@/apis/eventsServices";
+import useAuthToken from "@/hooks/useAuthToken";
+import { toast } from "react-toastify";
 
 const Calendar = () => {
   const today = dayjs();
@@ -33,14 +15,39 @@ const Calendar = () => {
   );
 
   const [selectedDay, setSelectedDay] = useState(today);
+  const [events, setEvents] = useState([]);
+
+  const { activeUser, startLoading, stopLoading } = useAuthToken();
+
+  const getEvents = async () => {
+    const { success, data, error } = await getVendorEvents(
+      activeUser,
+      startLoading,
+      stopLoading
+    );
+
+    if (success) {
+      setEvents(data); 
+    } else {
+      toast.error(error || "Something went wrong");
+    }
+  };
+
+  useEffect(() => {
+    getEvents();
+  }, []);
+
+  const eventsForDay = events.filter((event) =>
+    dayjs(event.StartDate).isSame(selectedDay, "day")
+  );
 
   return (
     <div className="w-full max-w-[413px] border rounded-xl p-4 space-y-4">
       <h2 className="font-semibold text-lg">Calendar</h2>
 
+      {/* Week days */}
       <div className="flex justify-between">
         {days.map((day) => {
-          const isToday = day.isSame(today, "day");
           const isSelected = day.isSame(selectedDay, "day");
           return (
             <button
@@ -49,7 +56,7 @@ const Calendar = () => {
               className={`flex flex-col items-center px-2 py-1 rounded-md text-sm ${
                 isSelected
                   ? "border border-green-600 text-green-600"
-                  : "text-gray-600"
+                  : "text-neutrals600"
               }`}
             >
               <span className={isSelected ? "font-semibold" : ""}>
@@ -57,7 +64,7 @@ const Calendar = () => {
               </span>
               <span
                 className={`${
-                  isSelected ? "text-green-600 font-medium" : "text-gray-600"
+                  isSelected ? "text-green-600 font-medium" : "text-neutrals600"
                 }`}
               >
                 {day.format("D")}
@@ -68,23 +75,29 @@ const Calendar = () => {
       </div>
 
       <div className="space-y-3">
-        {mockEvents.map((event) => (
-          <div
-            key={event.id}
-            className="flex justify-between items-center border rounded-xl p-3"
-          >
-            <div>
-              <p className="font-semibold">{event.title}</p>
-              <p className="text-sm text-gray-500 flex items-center gap-2">
-                {event.status} • {dayjs(event.date).format("MMMM D, YYYY")}
-              </p>
+        {eventsForDay.length > 0 ? (
+          eventsForDay.map((event) => (
+            <div
+              key={event.id}
+              className="flex justify-between items-center border rounded-xl p-3 gap-2.5"
+            >
+              <div>
+                <p className="font-semibold">{event.title}</p>
+                <p className="text-sm text-neutrals500 flex items-center gap-2">
+                  {dayjs(event.StartDate).isAfter(today) ? "Upcoming" : "Past"}{" "}
+                  • {dayjs(event.StartDate).format("MMMM D, YYYY")}{" "}
+                  {event.StartTime && `• ${event.StartTime}`}
+                </p>
+              </div>
+              <Button>View Event</Button>
             </div>
-            <Button>View Event</Button>
-          </div>
-        ))}
+          ))
+        ) : (
+          <p className="text-neutrals500 text-sm text-center">No events for this day</p>
+        )}
       </div>
     </div>
   );
-}
+};
 
-export default Calendar
+export default Calendar;

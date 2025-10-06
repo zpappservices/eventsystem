@@ -81,6 +81,7 @@ const Payout = ({ paymentDetails, prev }) => {
         email_CC: form.email,
         channel: "paystack",
         totalAmount: totalCost,
+        currency: "NGN",
         tickets,
       };
     } else {
@@ -91,6 +92,7 @@ const Payout = ({ paymentDetails, prev }) => {
         userId: activeUser,
         totalAmount: totalCost,
         email_CC: form.email,
+        currency: "NGN",
         tickets,
       };
     }

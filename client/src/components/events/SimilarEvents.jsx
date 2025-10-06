@@ -31,15 +31,10 @@ const SimilarEvents = ({ id }) => {
       <p className="text-base sm:text-xl font-bold"> Similar Events</p>
 
       {events?.length > 0 ? (
-        <div className="w-full overflow-x-auto py-4">
-          <div className="flex gap-5 w-max">
-            {events?.map((item) => (
-              <EventCard
-                data={item}
-                key={item?.id}
-              />
-            ))}
-          </div>
+        <div className="w-full flex items-center gap-5 overflow-x-auto py-4">
+          {events?.map((item) => (
+            <EventCard data={item} key={item?.id} container="shrink-0" />
+          ))}
         </div>
       ) : (
         <div className="w-full flex-1 flex items-center justify-center h-[200px] pt-4">

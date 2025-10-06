@@ -8,18 +8,19 @@ const EventCard = ({ data, container }) => {
   const router = useRouter();
   return (
     <div
-      className={`w-full !max-w-[350px] mx-auto md:mx-0 hover:scale-[1.02] duration-300 cursor-pointer p-5 border border-baseBlack shadow-[0_10px_15px_-3px_rgba(0,0,0,0.1)] rounded-[10px] overflow-hidden ${container}`}
+      className={`w-full max-w-[300px] mx-auto md:mx-0 hover:scale-[1.01] duration-300 cursor-pointer p-5 border border-baseBlack shadow-[0_10px_15px_-3px_rgba(0,0,0,0.1)] rounded-[10px] overflow-hidden ${container}`}
     >
       <div className="h-[164px] relative">
         <StyledImage
           src={
-            data?.image_banner || "https://via.placeholder.com/300x200?text="
+            data?.image_banner?.[0] ||
+            "https://via.placeholder.com/300x200?text="
           }
           className="w-full h-full object-cover"
         />
 
         <p className="absolute top-0 left-0 p-1 bg-sec w-fit rounded-br-[8px] text-[10px] font-medium px-1.5 text-baseBlack">
-          {data?.category}
+          {data?.Category?.name}
         </p>
       </div>
 

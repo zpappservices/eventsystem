@@ -1,17 +1,34 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import OptionsInput from "../widgets/OptionsInput";
 import { FaFileAlt, FaSortDown } from "react-icons/fa";
 import Button from "../widgets/Button";
 import StyledImage from "../StyledImage";
 import { LuChevronRight } from "react-icons/lu";
 import { BsCalendarDate } from "react-icons/bs";
+import { useRouter } from "next/router";
+import { getVendorEvents } from "@/apis/eventsServices";
+import useAuthToken from "@/hooks/useAuthToken";
+import { toast } from "react-toastify";
+import usePagination from "@/hooks/usePagination";
+import useFilter from "@/hooks/useFilter";
+import CustomPagination from "../widgets/Pagination";
 
 const EventCard = ({ data }) => {
+  const router = useRouter();
+  const tickets = data?.EventTicket;
+  const totalTickets = tickets?.reduce((sum, t) => sum + t?.quantity, 0);
+  const availableTickets = tickets?.reduce(
+    (sum, t) => sum + (t?.quantity - t?.sold),
+    0
+  );
   return (
     <div className="w-full max-w-[278px] mx-auto space-y-2.5 p-3.5 py-4 border border-neutrals300 rounded-[10px]">
       <div className="flex gap-5 items-start justify-between">
-        <StyledImage className="w-full max-w-[118px]" src={data?.event_image} />
-        <p className="flex text-xs items-center gap-1 text-primary">
+        <StyledImage
+          className="w-full max-w-[118px] h-[90px] rounded-[8px]"
+          src={data?.image_banner?.[0]}
+        />
+        <p className="flex text-xs items-center gap-0.5 text-primary" onClick={() => router.push(`/dashboard/events/${data?.id}`)}>
           More details <LuChevronRight className="text-lg" />
         </p>
       </div>
@@ -37,17 +54,16 @@ const EventCard = ({ data }) => {
               className="text-neutrals500 text-[17px]"
             />
             <p className="text-xs text-neutrals500 truncate text-ellipsis flex-1 w-full max-w-[160px]">
-              {data?.location}
+              {data?.EventLocation?.[0]?.location}
             </p>
           </div>
         </div>
         <div className="flex items-center justify-between">
           <p className="text-sm text-black">
-            Ticket: {data?.total_tickets?.toLocaleString()}
+            Ticket: {totalTickets?.toLocaleString()}
           </p>
           <p className="text-xs text-sec700">
-            {data?.available_tickets?.toLocaleString()}{" "}
-            tickets available
+            {availableTickets?.toLocaleString()} tickets available
           </p>
         </div>
       </div>
@@ -56,52 +72,54 @@ const EventCard = ({ data }) => {
 };
 
 const EventList = () => {
+  const [data, setData] = useState()
   const [type, setType] = useState("");
   const [status, setStatus] = useState("Active");
-  const [date, setDate] = useState("Active");
 
-  const mockEvents = [
-    {
-      event_name: "Tech Innovators Conference",
-      event_image: "/img/soccer.svg",
-      description:
-        "A gathering of the brightest minds in technology to discuss the future of AI, blockchain, and more.",
-      date: "29 Jan",
-      location: "Lagos, Nigeria",
-      total_tickets: 500,
-      available_tickets: 120,
-    },
-    {
-      event_name: "Afrobeats Music Festival",
-      event_image: "/img/soccer.svg",
-      description:
-        "Experience the best Afrobeats artists live on stage with food, dance, and cultural showcases.",
-      date: "1 Oct",
-      location: "Accra, Ghana",
-      total_tickets: 2000,
-      available_tickets: 450,
-    },
-    {
-      event_name: "Startup Pitch Night",
-      event_image: "/img/soccer.svg",
-      description:
-        "Watch innovative startups pitch their ideas to top investors and industry experts.",
-      date: "12 Dec",
-      location: "Nairobi, Kenya",
-      total_tickets: 300,
-      available_tickets: 50,
-    },
-    {
-      event_name: "Startup Pitch Night",
-      event_image: "/img/soccer.svg",
-      description:
-        "Watch innovative startups pitch their ideas to top investors and industry experts.",
-      date: "12 Dec",
-      location: "Nairobi, Kenya",
-      total_tickets: 300,
-      available_tickets: 50,
-    },
-  ];
+  const { activeUser, startLoading, stopLoading } = useAuthToken();
+  const router = useRouter()
+
+  const getEvents = async () => {
+    const { success, data, error } = await getVendorEvents(
+      activeUser,
+      startLoading,
+      stopLoading
+    );
+
+    if (success) {
+      setData(data);
+    } else {
+      toast.error("Something went wrong");
+    }
+  };
+
+  const filteredItems = useMemo(() => {
+    if (!Array.isArray(data)) return [];
+    return data.filter((item) => {
+      const matchesType = type ? item?.eventType === type : true;
+      const matchesStatus =
+        status === "Active"
+          ? item?.active === true
+          : status === "Inactive"
+          ? item?.active === false
+          : true;
+      return matchesType && matchesStatus;
+    });
+  }, [data, type, status]);
+
+
+  const {
+    currentPage,
+    totalPaginationPages,
+    paginatedData,
+    handlePageChange,
+    startIndex,
+    endIndex,
+  } = usePagination(filteredItems, 10);
+
+  useEffect(() => {
+    getEvents();
+  }, []);
 
   return (
     <div className="space-y-5">
@@ -109,8 +127,8 @@ const EventList = () => {
         <OptionsInput
           value={type}
           options={[
-            { label: "Music", value: "Music" },
-            { label: "Event", value: "Event" },
+            { label: "Single", value: "SINGLE" },
+            { label: "Multiple", value: "MULTIPLE" },
           ]}
           openIcon={<FaSortDown className="text-[18px] text-baseBlack -mt-2" />}
           style="rounded-[8px] !py-2.5 !px-3 !border-neutrals400"
@@ -137,7 +155,7 @@ const EventList = () => {
           }}
         />
 
-        <OptionsInput
+        {/* <OptionsInput
           value={date}
           options={[
             { label: "2025", value: "2025" },
@@ -153,23 +171,36 @@ const EventList = () => {
           onChange={(name, value) => {
             setDate(value);
           }}
-        />
+        /> */}
 
         <Button
           className="sm:ms-auto"
           startIcon={
             <StyledImage className="!shrink-0" src="/img/create.svg" />
           }
+          onClick={() => router.push("/dashboard/createevent")}
         >
           Create Event
         </Button>
       </div>
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-        {mockEvents?.map((item, index) => (
+        {paginatedData?.map((item, index) => (
           <EventCard key={index} data={item} />
         ))}
       </div>
+
+      {filteredItems?.length > 10 && (
+        <div className="mt-12 flex flex-wrap gapx-2 py-3.5.5 gap-y-5 items-center justify-between">
+          <div className="text-[14px] sm:text-[16px] text-baseBlack font-medium leading-normal">
+            Showing {startIndex} - {endIndex} of {filteredItems?.length}
+          </div>
+          <CustomPagination
+            count={totalPaginationPages}
+            handlePageChange={handlePageChange}
+          />
+        </div>
+      )}
     </div>
   );
 };

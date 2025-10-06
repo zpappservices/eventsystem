@@ -7,8 +7,8 @@ import EventCardSkeleton from "./events/EventCardSkeleton";
 
 const TopEvents = ({ next, isTopEvent = true, loaderClass }) => {
   const { data, error, loading, request } = useApiRequest({
-    method: "get",
-    url: "event/getallevent",
+    method: "post",
+    url: "event/getEventByFilter",
   });
 
   const getAllEvents = async () => {
@@ -36,7 +36,7 @@ const TopEvents = ({ next, isTopEvent = true, loaderClass }) => {
       </div>
     );
   }
-  const events = data?.data;
+  const events = data?.data?.events;
   return (
     <div className="w-full max-w-[1323px] px-5 mx-auto" id="topevents">
       <div className="py-3 flex items-center gap-3 justify-between">

@@ -270,10 +270,10 @@ const SideBar = ({ isOpen, toggleMenu, showModal }) => {
             <Link
               href="/dashboard/settings"
               className={`transition-all duration-300 relative px-3 ${
-                pathname.includes("settings") ? "bg-white" : ""
+                pathname?.includes("settings") ? "bg-white" : ""
               }`}
             >
-              {pathname.includes("settings") ? (
+              {pathname?.includes("settings") ? (
                 <li className="text-white flex gap-x-4 items-center bg-primary p-3 rounded-[10px] transition-all">
                   <IoSettingsOutline
                     color="#fff"

@@ -1,6 +1,4 @@
 import Layout from "@/components/dashboard/Layout";
-import { FaTrash } from "react-icons/fa6";
-import Image from "next/image";
 import EventStepper from "@/components/createevent/EventStepper";
 
 const CreateEvent = () => {

@@ -40,10 +40,10 @@ const Header = ({
 
             {/* Right: Icon buttons */}
             <div className="flex items-center gap-4 sm:ms-auto">
-              <div onClick={toggleRightSidebar} className="cursor-pointer">
+              {/* <div onClick={toggleRightSidebar} className="cursor-pointer">
                 <Notifications isActive={isRightSidebarOpen} />
               </div>
-              <Messages />
+              <Messages /> */}
               <Profile />
             </div>
           </div>

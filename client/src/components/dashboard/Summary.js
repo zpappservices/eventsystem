@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import StyledImage from "../StyledImage";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import { formatCurrencyWithoutDecimal } from "@/utils/conversions";
-import { HiArrowLongUp,HiArrowLongDown } from "react-icons/hi2";
+import { HiArrowLongUp, HiArrowLongDown } from "react-icons/hi2";
 
 const Card = ({ title, amount, icon, data, percentile }) => {
   return (
@@ -51,7 +51,7 @@ const Summary = () => {
 
   const { data: profileData, request: profileRequest } = useApiRequest({
     method: "get",
-    url: `user/getoneuser/${activeUser}`,
+    url: `user/getvendorbyuserid/${activeUser}`,
     useToken: true,
   });
 
@@ -70,14 +70,23 @@ const Summary = () => {
 
   const { activeEvent, totalAmmountSold, totalEvent, totalTransactions } =
     data?.data || {};
-  const { username } = profileData?.data || {};
+  const { firstName } = profileData?.data || {};
+  const currentHour = new Date().getHours();
+  const greeting =
+    currentHour < 12
+      ? "Good Morning"
+      : currentHour < 18
+      ? "Good Afternoon"
+      : "Good Evening";
 
   return (
     <div className="w-full">
       <div className="w-full flex flex-wrap items-center gap-5">
         <div className="w-full max-w-[272px] mr-10">
           <div className="space-y-3 text-baseBlack">
-            <p>Good Morning, {username}</p>
+            <p>
+              {greeting}, {firstName}
+            </p>
             <p className="text-2xl font-bold">
               Welcome to Your Event Management!
             </p>

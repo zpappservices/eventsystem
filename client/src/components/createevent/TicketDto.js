@@ -5,6 +5,7 @@ import TextField from "../widgets/TextField";
 import Button from "../widgets/Button";
 import { IoIosRadioButtonOff, IoIosRadioButtonOn } from "react-icons/io";
 import { FiUpload, FiX } from "react-icons/fi";
+import useLoading from "@/hooks/useLoading";
 
 const TicketDto = ({ handleBack, handleReset }) => {
   const [error, setError] = useState({
@@ -13,15 +14,9 @@ const TicketDto = ({ handleBack, handleReset }) => {
   });
   const [images, setImages] = useState([null, null, null]);
 
-  const { extras, setExtras } = useCreateEvent();
+  const { extras, setExtras, handleSubmit } = useCreateEvent();
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setExtras((prevForm) => {
-      const updatedForm = { ...prevForm, [name]: value };
-      return updatedForm;
-    });
-  };
+  const { isLoading, startLoading, stopLoading } = useLoading();
 
   const handleRadio = (value) => {
     setExtras((prevForm) => {
@@ -45,8 +40,6 @@ const TicketDto = ({ handleBack, handleReset }) => {
     updatedImages[index] = null;
     setImages(updatedImages);
   };
-
-  const handleSubmit = () => {};
 
   return (
     <div className="space-y-10">
@@ -108,7 +101,10 @@ const TicketDto = ({ handleBack, handleReset }) => {
         </div>
         <div className="flex gap-10 items-center flex-wrap">
           {images.map((img, index) => (
-            <div className="w-full max-w-[300px] overflow-hidden flex items-center justify-center border border-neutrals200 rounded-[10px] h-[180px] mx-auto">
+            <div
+              key={index}
+              className="w-full max-w-[300px] overflow-hidden flex items-center justify-center border border-neutrals200 rounded-[10px] h-[180px] mx-auto"
+            >
               {img ? (
                 <div className="w-full h-full relative">
                   <img
@@ -166,11 +162,13 @@ const TicketDto = ({ handleBack, handleReset }) => {
           </Button>
         </div>
 
-        <FormButton
-          handleAction={handleSubmit}
-          position={"justify-end"}
-          direction={"Next"}
-        />
+        <Button
+          onClick={() => handleSubmit(startLoading, stopLoading)}
+          className="ms-auto !mb-10 w-full !max-w-[90px]"
+          isLoading={isLoading}
+        >
+          Next
+        </Button>
       </div>
     </div>
   );

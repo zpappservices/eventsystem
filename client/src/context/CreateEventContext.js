@@ -1,11 +1,13 @@
+import { createEvent } from "@/apis/eventsServices";
 import useAuthToken from "@/hooks/useAuthToken";
-import { Description } from "@radix-ui/react-toast";
-import React, { createContext, useContext, useEffect, useRef, useState } from "react";
+import { uploadFilesToS3 } from "@/utils/s3Upload";
+import React, { createContext, useContext, useState } from "react";
+import { toast } from "react-toastify";
 
 const CreateEventContext = createContext();
 
 function CreateEventProvider({ children }) {
-  const { activeUser } = useAuthToken()
+  const { activeUser } = useAuthToken();
   const [formError, setFormError] = useState({});
   const [fileError, setFileError] = useState("");
   const [ticket, setTicket] = useState({
@@ -15,8 +17,8 @@ function CreateEventProvider({ children }) {
     price: "",
     description: "",
     min: "",
-    max: ""
-  })
+    max: "",
+  });
   const [location, setLocation] = useState({
     location: "",
     venue: "",
@@ -27,7 +29,49 @@ function CreateEventProvider({ children }) {
   });
 
   const [formData, setFormData] = useState({
-    eventDto: {
+    title: "",
+    description: "",
+    categoryId: "",
+    location: "",
+    locationType: "",
+    userId: activeUser,
+    startDate: "",
+    endDate: "",
+    startTime: "",
+    endTime: "",
+    currency: "",
+    createdBy: "System",
+    eventType: "",
+  });
+  const [banner, setBanner] = useState(null);
+  const [images, setImages] = useState([null, null, null]);
+
+  const handleImageChange = (image) => {
+    setBanner(image);
+  };
+
+  const handleResetForm = () => {
+    setTicket({
+      type: "Free",
+      name: "",
+      quantity: "",
+      price: "",
+      description: "",
+      min: "",
+      max: "",
+    });
+
+    setLocation({
+      location: "",
+      venue: "",
+    });
+
+    setExtras({
+      restrictions: "",
+      venueImages: [],
+    });
+
+    setFormData({
       title: "",
       description: "",
       categoryId: "",
@@ -38,165 +82,128 @@ function CreateEventProvider({ children }) {
       endDate: "",
       startTime: "",
       endTime: "",
-      currency: "",
+      currency: "NGN",
       createdBy: "System",
-    },
-    contactDto: {
-      email: "",
-      phone: "",
-      facebook: "",
-    },
-    ticketDto: [
-    ],
-    eventType: "",
-    eventDuration: ""
-  });
-  const [base64Image, setBase64Image] = useState(null);
-
-  const handleImageChange = (base64) => {
-    setBase64Image(base64);
-    if (base64) {
-    } else {
-    }
-  };
-
-  const handleResetForm = () => {
-    setFormData({
-      eventDto: {
-        title: "",
-        description: "",
-        categoryId: "",
-        location: "",
-        userId: "",
-        startDate: "",
-        endDate: "",
-        startTime: "",
-        endTime: "",
-        createdBy: "System",
-        currency: "",
-      },
-      contactDto: {
-        email: "",
-        phone: "",
-        facebook: "",
-      },
-      ticketDto: [
-        {
-          type: "free",
-          name: "Free",
-          price: 0,
-          quantity: 10,
-        },
-        {
-          type: "paid",
-          name: "Standard",
-          price: 1000,
-          quantity: 10,
-        },
-      ],
+      eventType: "",
+      eventDuration: "",
     });
 
-    setPreview(null);
     setFormError({});
     setFileError("");
-    if (fileInputRef.current) fileInputRef.current.value = ""; 
   };
 
-  const [preview, setPreview] = useState(null);
-  const fileInputRef = useRef(null); // Ref for file input
+  const handleSubmit = async (startLoading, stopLoading) => {
+    startLoading();
 
-  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+    try {
+      const { image_banner, venueImage } = await fetchImage();
 
-  useEffect(() => {
-    return () => {
-      if (preview) {
-        URL.revokeObjectURL(preview);
-      }
-    };
-  }, [preview]);
-
-  const handleChange = (e) => {
-    const { name, value, type, files, checked } = e.target;
-    if (type === "file") {
-      const file = files[0];
-      if (file.size > MAX_FILE_SIZE) {
-        setFileError("File size should not exceed 5MB.");
+      if (image_banner.length < 1) {
         return;
       }
-      setFileError(""); // Clear error if file is valid
-      setFormData((prevData) => ({ ...prevData, coverPhoto: file }));
-      setPreview(URL.createObjectURL(file));
-    } else if (type === "checkbox") {
-      setFormData((prevData) => ({ ...prevData, [name]: checked }));
-    } else {
-      setFormData((prevData) => ({ ...prevData, [name]: value }));
+
+      const payload = {
+        eventDto: {
+          userId: activeUser || "",
+          categoryId: formData.categoryId,
+          title: formData.title,
+          description: formData.description,
+          eventType: formData.eventDuration,
+          startDate: formData.startDate,
+          endDate: formData.endDate,
+          startTime: formData.startTime,
+          endTime: formData.endTime,
+          AllDay: false,
+          image_banner: image_banner,
+          venueImage: venueImage,
+          image_tile: "",
+          restrictionLevel: extras.restrictions,
+          createdBy: "",
+        },
+        locationDto: {
+          locationType: "PHYSICAL",
+          location: location.location,
+          venueName: location.venue,
+          latlong: "",
+        },
+        ticketDto: [
+          {
+            type: ticket.type,
+            name: ticket.name,
+            description: ticket.description,
+            quantity: Number(ticket.quantity),
+            currency: "NGN",
+            price: ticket.price,
+            minOrder: Number(ticket.min),
+            maxOrder: Number(ticket.max),
+          },
+        ],
+      };
+
+      const { data, message, success } = await createEvent(
+        payload,
+        startLoading,
+        stopLoading
+      );
+
+      if (success) {
+        toast.success("Event created successfully");
+        handleResetForm();
+      } else {
+        toast.error("Something went wrong. Please try again.");
+      }
+
+    } catch (error) {
+      toast.error("Something went wrong. Please try again.");
+      return;
+    } finally {
+      stopLoading();
     }
   };
 
-  const handleDeleteImage = () => {
-    setFormData((prevData) => ({ ...prevData, coverPhoto: null }));
-    setPreview(null);
+  const fetchImage = async () => {
+    const bannerFile = banner?.file || null;
+    const imageFiles = images.map((img) => img?.file || null).filter(Boolean);
+    const venueImageFiles = extras.venueImages
+      .map((img) => img?.file || null)
+      .filter(Boolean);
 
-    if (fileInputRef.current) fileInputRef.current.value = ""; // Clear the file input value
-  };
+    const allFiles = [bannerFile, ...imageFiles, ...venueImageFiles].filter(
+      Boolean
+    );
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+    try {
+      const uploaded = await uploadFilesToS3(allFiles);
 
-    if (validateForm()) {
-      const formDataToSend = new FormData();
+      const image_banner = bannerFile
+        ? uploaded.slice(0, 1 + imageFiles.length) 
+        : uploaded.slice(0, imageFiles.length); 
 
-      // Append each field to FormData
-      formDataToSend.append("eventName", formData.eventName);
-      formDataToSend.append("eventCategory", formData.eventCategory);
-      formDataToSend.append("eventAddress", formData.eventAddress);
-      formDataToSend.append("eventStartDate", formData.eventStartDate);
-      formDataToSend.append("eventStartTime", formData.eventStartTime);
-      formDataToSend.append("eventEndDate", formData.eventEndDate);
-      formDataToSend.append("eventEndTime", formData.eventEndTime);
-      formDataToSend.append("ticketType", formData.ticketType);
-      formDataToSend.append("acceptTerms", formData.acceptTerms);
-      if (formData.coverPhoto) {
-        formDataToSend.append("coverPhoto", formData.coverPhoto);
-        console.log(formData.coverPhoto);
-      }
+      const venueImage = bannerFile
+        ? uploaded.slice(1 + imageFiles.length) 
+        : uploaded.slice(imageFiles.length);
 
-      try {
-        // Send formDataToSend to your server (API endpoint example used)
-        const response = await fetch("/api/events", {
-          method: "POST",
-          body: formDataToSend,
-        });
-
-        if (response.ok) {
-          console.log("Event created successfully!");
-          handleResetForm();
-        } else {
-          console.error("Failed to create event.");
-        }
-      } catch (error) {
-        console.error("Error submitting form:", error);
-      }
+      return { image_banner, venueImage };
+    } catch (error) {
+      console.error("Error uploading images:", error);
+      return { image_banner: [], venueImage: [] };
     }
   };
+
+
 
   return (
     <CreateEventContext.Provider
       value={{
         formData,
         setFormData,
-        preview,
-        setPreview,
         fileError,
         setFileError,
         formError,
         setFormError,
-        fileInputRef,
-        handleChange,
         handleSubmit,
-        handleDeleteImage,
         handleResetForm,
-        base64Image,
+        banner,
         handleImageChange,
         setTicket,
         ticket,
@@ -204,6 +211,8 @@ function CreateEventProvider({ children }) {
         setLocation,
         extras,
         setExtras,
+        images,
+        setImages,
       }}
     >
       {children}
@@ -213,7 +222,10 @@ function CreateEventProvider({ children }) {
 
 function useCreateEvent() {
   const context = useContext(CreateEventContext);
-  if (!context) throw new Error("CreateEventContext was used outside the CreateEventProvider");
+  if (!context)
+    throw new Error(
+      "CreateEventContext was used outside the CreateEventProvider"
+    );
   return context;
 }
 

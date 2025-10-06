@@ -1,9 +1,15 @@
+import { getVendorProfile, updateVendorProfile } from "@/apis/profile_services";
 import Layout from "@/components/dashboard/Layout";
 import StyledImage from "@/components/StyledImage";
 import Button from "@/components/widgets/Button";
 import TextArea from "@/components/widgets/TextArea";
 import TextField from "@/components/widgets/TextField";
-import React, { useState } from "react";
+import useAuthToken from "@/hooks/useAuthToken";
+import useLoading from "@/hooks/useLoading";
+import { uploadFilesToS3 } from "@/utils/s3Upload";
+import React, { useEffect, useState } from "react";
+import { FaUser } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 const profile = () => {
   const [personal, setPersonal] = useState({
@@ -26,6 +32,17 @@ const profile = () => {
     instagram: "",
   });
   const [image, setImage] = useState();
+  const [preImage, setPreImage] = useState("");
+  const [profile, setProfile] = useState({});
+  const maxSizeMB = 5;
+
+  const { activeUser } = useAuthToken();
+  const { isLoading, startLoading, stopLoading } = useLoading();
+  const {
+    isLoading: isUpdating,
+    startLoading: startUpdating,
+    stopLoading: stopUpdating,
+  } = useLoading();
 
   const handlePersonalChange = (e) => {
     const { name, value } = e.target;
@@ -57,6 +74,115 @@ const profile = () => {
     });
   };
 
+  const getProfile = async () => {
+    const { data, success, error, message } = await getVendorProfile(
+      activeUser,
+      startLoading,
+      stopLoading
+    );
+
+    if (success) {
+      setPersonal({
+        firstName: data?.firstName ?? "",
+        lastName: data?.lastName ?? "",
+        organizerName: data?.company ?? "",
+        phone: data?.phone ?? "",
+        bio: data?.bio ?? "",
+      });
+
+      setCompany({
+        country: data?.country,
+        state: data?.state,
+        address: data?.address,
+        zipCode: data?.zipcode,
+      });
+
+      setSocials({
+        facebook: data?.facebook,
+        twitter: data?.twitter,
+        linkedIn: data?.linkedin,
+        instagram: data?.instagram,
+      });
+
+      setPreImage(data?.photo);
+      setProfile(data);
+    } else {
+      toast.error(message || "Something went wrong");
+    }
+  };
+
+  const updateProfile = async () => {
+    let imageUrl = preImage;
+
+    try {
+      if (image?.file) {
+        const uploaded = await uploadFilesToS3([image.file]);
+        imageUrl = uploaded?.[0];
+      }
+    } catch (error) {
+      toast.error("Unable to upload images");
+      return;
+    }
+
+    const payload = {
+      userId: activeUser,
+      firstName: personal.firstName,
+      lastName: personal.lastName,
+      phone: personal.phone,
+      email: profile?.email,
+      company: personal.organizerName,
+      jobTitle: profile?.jobTitle,
+      website: profile?.website,
+      photo: imageUrl,
+      bio: personal?.bio,
+      address: company?.address,
+      state: company?.state,
+      zipcode: company?.zipCode,
+      country: company.country,
+      facebook: socials.facebook,
+      twitter: socials.twitter,
+      instagram: socials.instagram,
+      linkedin: socials.linkedIn,
+    };
+
+    const { message, success } = await updateVendorProfile(
+      profile?.id,
+      payload,
+      startUpdating,
+      stopUpdating
+    );
+
+    if (success) {
+      getProfile();
+      toast.success("Profile updated");
+    } else {
+      toast.error("Couldn't update profile");
+    }
+  };
+
+  const handleImage = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const isValidFile =
+      ["image/png", "image/jpeg", "image/gif"].includes(file.type) &&
+      file.size <= maxSizeMB * 1024 * 1024;
+
+    if (!isValidFile) {
+      toast.error(
+        `Invalid file. Ensure it's a PNG, JPG, or GIF under ${maxSizeMB}MB.`
+      );
+      return;
+    }
+
+    const previewUrl = URL.createObjectURL(file);
+    setImage({ file, preview: previewUrl });
+  };
+
+  useEffect(() => {
+    getProfile();
+  }, []);
+
   return (
     <Layout>
       <div className="w-full max-w-[1190px] space-y-12 py-5">
@@ -67,13 +193,37 @@ const profile = () => {
         </div>
 
         <div className="rounded-[10px] md:border md:bg-baseWhite border-neutrals200 md:p-10 space-y-5">
-          <div className="flex gap-10 justify-between">
-            <div className="relative w-[135px] h-[135px] aspect-square rounded-full shrink-0">
-              <StyledImage src="/img/profile.png" className="w-full h-full" />
-              <StyledImage
-                src="/img/camera.svg"
-                className="absolute bottom-0 right-2 cursor-pointer"
+          <div className="lg:flex gap-10 space-y-10 justify-between">
+            <div className="relative w-[135px] h-[135px] aspect-square rounded-full shrink-0 mx-auto">
+              {image?.preview ? (
+                <StyledImage
+                  src={image.preview}
+                  className="w-full h-full object-cover rounded-full"
+                />
+              ) : preImage ? (
+                <StyledImage
+                  src={preImage}
+                  className="w-full h-full object-cover rounded-full"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center bg-gray-200 rounded-full">
+                  <FaUser className="text-neutrals600 text-6xl" />
+                </div>
+              )}
+              <input
+                type="file"
+                accept="image/png, image/jpeg"
+                className="hidden"
+                id="fileInput"
+                onChange={handleImage}
               />
+
+              <label
+                htmlFor="fileInput"
+                className="absolute bottom-0 right-2 cursor-pointer"
+              >
+                <StyledImage src="/img/camera.svg" />
+              </label>
             </div>
 
             <div className="w-full max-w-[888px] space-y-5">
@@ -211,7 +361,7 @@ const profile = () => {
 
                     <TextField
                       value={socials.instagram}
-                      onChange={handleCompanyChange}
+                      onChange={handleSocialsChange}
                       label="Instagram"
                       style="!rounded-[6px]"
                       name="instagram"
@@ -221,7 +371,13 @@ const profile = () => {
                 </div>
               </div>
 
-              <Button className="!ms-auto w-full !max-w-[120px] !mt-10">Save</Button>
+              <Button
+                onClick={updateProfile}
+                isLoading={isUpdating}
+                className="!ms-auto w-full !max-w-[120px] !mt-10"
+              >
+                Save
+              </Button>
             </div>
           </div>
         </div>

@@ -9,6 +9,7 @@ import { CgSpinner } from "react-icons/cg";
 import { Skeleton } from "@mui/material";
 import TextArea from "../widgets/TextArea";
 import { TextField as MUITextField } from "@mui/material";
+import Button from "../widgets/Button";
 
 const EventDtoForm = ({ handleNext }) => {
   const {
@@ -17,9 +18,11 @@ const EventDtoForm = ({ handleNext }) => {
     setFormError,
     setFormData,
     handleImageChange,
-    base64Image,
+    banner,
     fileError,
     setFileError,
+    images,
+    setImages,
   } = useCreateEvent();
 
   function handleChange(e) {
@@ -29,20 +32,14 @@ const EventDtoForm = ({ handleNext }) => {
       if (name === "locationType") {
         return {
           ...prevData,
-          eventDto: {
-            ...prevData.eventDto,
-            [name]: value,
-            location: value === "Online" ? "Online" : "",
-          },
+          [name]: value,
+          location: value === "Online" ? "Online" : "",
         };
       }
 
       return {
         ...prevData,
-        eventDto: {
-          ...prevData.eventDto,
-          [name]: value,
-        },
+        [name]: value,
       };
     });
   }
@@ -62,29 +59,24 @@ const EventDtoForm = ({ handleNext }) => {
 
   const validateForm = () => {
     const errors = {};
-    if (!formData.eventDto.title) errors.title = "Event name is required.";
-    if (!formData.eventDto.description)
+    if (!formData.title) errors.title = "Event name is required.";
+    if (!formData.description)
       errors.description = "Event description is required.";
-    if (!formData.eventDto.categoryId)
-      errors.categoryId = "Event category is required.";
-    if (!formData.eventDto.currency) errors.currency = "Currency is required.";
-    if (!formData.eventDto.startDate)
-      errors.startDate = "Start date is required.";
-    if (!formData.eventDto.endDate) errors.endDate = "End date is required.";
-    if (!formData.eventDto.startTime)
-      errors.startTime = "Start time is required.";
-    if (!formData.eventDto.endTime) errors.endTime = "End time is required.";
+    if (!formData.categoryId) errors.categoryId = "Event category is required.";
+    if (!formData.currency) errors.currency = "Currency is required.";
+    if (!formData.startDate) errors.startDate = "Start date is required.";
+    if (!formData.endDate) errors.endDate = "End date is required.";
+    if (!formData.startTime) errors.startTime = "Start time is required.";
+    if (!formData.endTime) errors.endTime = "End time is required.";
 
-    if (formData.eventDto.locationType === "Venue") {
-      if (!formData.eventDto.location)
-        errors.location = "Event location is required.";
+    if (formData.locationType === "Venue") {
+      if (!formData.location) errors.location = "Event location is required.";
     }
 
-    if (!base64Image) errors.base64Image = "Banner Image is required.";
+    if (!banner) errors.banner = "Banner Image is required.";
 
     const isEndDateValid =
-      new Date(formData.eventDto.endDate) >=
-      new Date(formData.eventDto.startDate);
+      new Date(formData.endDate) >= new Date(formData.startDate);
 
     if (!isEndDateValid) {
       errors.dateTime =
@@ -100,6 +92,7 @@ const EventDtoForm = ({ handleNext }) => {
   };
 
   const categories = data?.data;
+  console.log(formData, images);
 
   return (
     <div className="space-y-10">
@@ -113,7 +106,7 @@ const EventDtoForm = ({ handleNext }) => {
 
         <div className="space-y-6">
           <TextField
-            value={formData.eventDto.title}
+            value={formData.title}
             onChange={handleChange}
             error={formError.title}
             label="Event name*"
@@ -122,7 +115,7 @@ const EventDtoForm = ({ handleNext }) => {
           />
 
           <TextArea
-            value={formData.eventDto.description}
+            value={formData.description}
             onChange={handleChange}
             error={formError.description}
             label="Describe your event*"
@@ -147,7 +140,7 @@ const EventDtoForm = ({ handleNext }) => {
                     />
                   ))
                 : categories?.map((item, index) => {
-                    const isSelected = item.id === formData.eventDto.categoryId;
+                    const isSelected = item.id === formData.categoryId;
 
                     return (
                       <div
@@ -159,10 +152,7 @@ const EventDtoForm = ({ handleNext }) => {
                           setFormData((prevData) => {
                             return {
                               ...prevData,
-                              eventDto: {
-                                ...prevData.eventDto,
-                                categoryId: item.id,
-                              },
+                              categoryId: item.id,
                             };
                           })
                         }
@@ -217,8 +207,11 @@ const EventDtoForm = ({ handleNext }) => {
           <div className="w-full space-y-2">
             <p className="text-sm sm:text-base text-baseBlack">Event Date</p>
             <div className="flex flex-wrap items-center ">
-              {["Single Event", "Multiple Days Event"]?.map((item, index) => {
-                const isSelected = item === formData.eventDuration;
+              {[
+                { name: "Single Event", key: "SINGLE" },
+                { name: "Multiple Days Event", key: "MULTIPLE" },
+              ]?.map((item, index) => {
+                const isSelected = item.key === formData.eventDuration;
                 return (
                   <div
                     className={`border border-sec/40 text-baseBlack first:rounded-l-[10px] last:rounded-r-[10px] first:border-r-0 p-2.5 cursor-pointer hover:bg-sec/50 transition-all ${
@@ -229,12 +222,12 @@ const EventDtoForm = ({ handleNext }) => {
                       setFormData((prevData) => {
                         return {
                           ...prevData,
-                          eventDuration: item,
+                          eventDuration: item.key,
                         };
                       })
                     }
                   >
-                    <p className="text-sm text-baseBlack">{item}</p>
+                    <p className="text-sm text-baseBlack">{item.name}</p>
                   </div>
                 );
               })}
@@ -247,7 +240,7 @@ const EventDtoForm = ({ handleNext }) => {
                 id="event-start-date"
                 type="date"
                 name="startDate"
-                value={formData.eventDto.startDate}
+                value={formData.startDate}
                 onChange={handleChange}
                 focused
                 color="warning"
@@ -262,7 +255,7 @@ const EventDtoForm = ({ handleNext }) => {
                 id="event-start-time"
                 type="time"
                 name="startTime"
-                value={formData.eventDto.startTime}
+                value={formData.startTime}
                 onChange={handleChange}
                 focused
                 color="warning"
@@ -277,7 +270,7 @@ const EventDtoForm = ({ handleNext }) => {
                 id="event-end-date"
                 type="date"
                 name="endDate"
-                value={formData.eventDto.endDate}
+                value={formData.endDate}
                 onChange={handleChange}
                 focused
                 color="warning"
@@ -293,7 +286,7 @@ const EventDtoForm = ({ handleNext }) => {
                 type="time"
                 name="endTime"
                 required
-                value={formData.eventDto.endTime}
+                value={formData.endTime}
                 onChange={handleChange}
                 focused
                 color="warning"
@@ -317,19 +310,20 @@ const EventDtoForm = ({ handleNext }) => {
           <PhotoUpload
             onImageChange={handleImageChange}
             maxSizeMB={5}
-            fileError={formError.base64Image || fileError}
+            fileError={formError.banner || fileError}
             setFileError={setFileError}
+            images={images}
+            setImages={setImages}
+            banner={banner}
           />
         </div>
       </div>
-      
-      <FormButton
-        handleAction={handleSubmit}
-        position={"justify-end"}
-        direction={"Next"}
-      />
+
+      <Button onClick={handleNext} className="ms-auto !mb-10">
+        Next
+      </Button>
     </div>
   );
-}
+};
 
 export default EventDtoForm;

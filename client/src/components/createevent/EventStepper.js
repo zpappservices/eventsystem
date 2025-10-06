@@ -8,7 +8,7 @@ import { IoMdCheckmark } from "react-icons/io";
 const steps = ["General Information", "Contact Info", "Ticket Details"];
 
 export default function EventStepper() {
-  const [activeStep, setActiveStep] = useState(2);
+  const [activeStep, setActiveStep] = useState(0);
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -21,23 +21,14 @@ export default function EventStepper() {
   const handleResetStepper = (setForm) => {
     setForm((prev) => ({
       ...prev,
-      eventDto: {
-        ...prev.eventDto,
-        title: "",
-        description: "",
-        categoryId: "",
-        location: "",
-        startDate: "",
-        endDate: "",
-        startTime: "",
-        endTime: "",
-      },
-      contactDto: {
-        email: "",
-        phone: "",
-        facebook: "",
-      },
-      ticketDto: [],
+      title: "",
+      description: "",
+      categoryId: "",
+      location: "",
+      startDate: "",
+      endDate: "",
+      startTime: "",
+      endTime: "",
     }));
 
     setActiveStep(0);
@@ -64,7 +55,11 @@ export default function EventStepper() {
                         : "text-baseBlack bg-neutrals100"
                     }`}
                   >
-                    {isDone ? <IoMdCheckmark className="text-white text-[21px]" /> : index + 1}
+                    {isDone ? (
+                      <IoMdCheckmark className="text-white text-[21px]" />
+                    ) : (
+                      index + 1
+                    )}
                   </div>
                 </div>
                 <p className="text-xs text-baseBlack mx-auto text-center">

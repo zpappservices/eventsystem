@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { MoreVertical } from "lucide-react";
 import TextInput from "../widgets/TextInput";
 import TextField from "../widgets/TextField";
@@ -7,123 +7,28 @@ import { IoFilterOutline } from "react-icons/io5";
 import { LuListFilter } from "react-icons/lu";
 import useSearch from "@/hooks/useSearch";
 
-const OrderSummary = () => {
-  const [data, setData] = useState([
-    {
-      id: "#4134675",
-      date: "07/08/2025",
-      event: "Evolution Cup 2025",
-      buyer: "Austin Wade",
-      ticketType: "Free",
-      soldTickets: 2,
-      available: 100,
-      returns: "No",
-      totalRevenue: "₦0",
-    },
-    {
-      id: "#4134676",
-      date: "07/08/2025",
-      event: "Evolution Cup 2025",
-      buyer: "Sarah Johnson",
-      ticketType: "Free",
-      soldTickets: 2,
-      available: 98,
-      returns: "No",
-      totalRevenue: "₦0",
-    },
-    {
-      id: "#4134677",
-      date: "07/08/2025",
-      event: "Evolution Cup 2025",
-      buyer: "Michael Lee",
-      ticketType: "VIP",
-      soldTickets: 1,
-      available: 49,
-      returns: "No",
-      totalRevenue: "₦15,000",
-    },
-    {
-      id: "#4134678",
-      date: "07/08/2025",
-      event: "Evolution Cup 2025",
-      buyer: "Jane Doe",
-      ticketType: "Free",
-      soldTickets: 2,
-      available: 96,
-      returns: "No",
-      totalRevenue: "₦0",
-    },
-    {
-      id: "#4134679",
-      date: "07/08/2025",
-      event: "Evolution Cup 2025",
-      buyer: "David Green",
-      ticketType: "Free",
-      soldTickets: 2,
-      available: 94,
-      returns: "No",
-      totalRevenue: "₦0",
-    },
-    {
-      id: "#4134680",
-      date: "07/08/2025",
-      event: "Evolution Cup 2025",
-      buyer: "Aisha Bello",
-      ticketType: "Standard",
-      soldTickets: 3,
-      available: 47,
-      returns: "Yes",
-      totalRevenue: "₦4,500",
-    },
-    {
-      id: "#4134681",
-      date: "07/08/2025",
-      event: "Evolution Cup 2025",
-      buyer: "Samuel King",
-      ticketType: "Free",
-      soldTickets: 2,
-      available: 95,
-      returns: "No",
-      totalRevenue: "₦0",
-    },
-    {
-      id: "#4134682",
-      date: "07/08/2025",
-      event: "Evolution Cup 2025",
-      buyer: "Chinwe Nnaji",
-      ticketType: "Free",
-      soldTickets: 2,
-      available: 93,
-      returns: "No",
-      totalRevenue: "₦0",
-    },
-    {
-      id: "#4134683",
-      date: "07/08/2025",
-      event: "Evolution Cup 2025",
-      buyer: "Peter Obi",
-      ticketType: "Standard",
-      soldTickets: 1,
-      available: 46,
-      returns: "No",
-      totalRevenue: "₦1,500",
-    },
-    {
-      id: "#4134684",
-      date: "07/08/2025",
-      event: "Evolution Cup 2025",
-      buyer: "Lola Martins",
-      ticketType: "Free",
-      soldTickets: 2,
-      available: 91,
-      returns: "No",
-      totalRevenue: "₦0",
-    },
-  ]);
+const OrderSummary = ({data}) => {
   const [search, setSearch] = useState("");
 
+  const mapped = useMemo(() => {
+    return data?.events?.map((e) => {
+      const ticket = data?.tickets?.find((t) => t?.name === e?.ticket);
+      return {
+        id: `#${e?.id?.slice(0, 8)}`,
+        date: new Date(e?.createdOn)?.toLocaleDateString("en-GB"),
+        event: e?.event?.title || "Unknown Event",
+        buyer: `${e?.firstName} ${e?.lastName}`,
+        ticketType: e?.ticket || "N/A",
+        soldTickets: 1,
+        available: ticket?.quantity || 0,
+        returns: "No",
+        totalRevenue: `₦${ticket?.price ? Number(ticket?.price) * 1 : 0}`,
+      };
+    });
+  }, [data]);
+
   const searchFunction = (item, term) => {
-    const lowerTerm = term.toLowerCase();
+    const lowerTerm = term?.toLowerCase();
     return (
       item.event.toLowerCase().includes(lowerTerm) ||
       item.buyer.toLowerCase().includes(lowerTerm) ||
@@ -131,7 +36,7 @@ const OrderSummary = () => {
     );
   };
 
-  const searchedItems = useSearch(data, search, searchFunction);
+  const searchedItems = useSearch(mapped, search, searchFunction);
 
   return (
     <div className="w-full space-y-5">
@@ -145,7 +50,7 @@ const OrderSummary = () => {
 
         <div className="ms-auto flex items-end gap-4">
           <div className="w-full flex relative">
-            <FiSearch className="text-xl text-neutrals500 font-bold absolute bottom-2.5 z-10 left-2" />
+            <FiSearch className="text-xl text-neutrals500 font-bold absolute bottom-3.5 z-10 left-2" />
             <TextField
               value={search}
               onChange={(e) => setSearch(e.target.value)}

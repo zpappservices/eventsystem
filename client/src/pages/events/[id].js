@@ -34,7 +34,7 @@ const Event = () => {
     }
   }, [id, router.isReady]);
 
-  const { data: event = {} } = data || {};
+  const { event = {} } = data?.data || {};
 
   if (loading)
     return (
