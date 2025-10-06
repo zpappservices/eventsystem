@@ -100,7 +100,7 @@ const TicketDto = ({ handleBack, handleReset }) => {
           </p>
         </div>
         <div className="flex gap-10 items-center flex-wrap">
-          {images.map((img, index) => (
+          {images?.map((img, index) => (
             <div
               key={index}
               className="w-full max-w-[300px] overflow-hidden flex items-center justify-center border border-neutrals200 rounded-[10px] h-[180px] mx-auto"
