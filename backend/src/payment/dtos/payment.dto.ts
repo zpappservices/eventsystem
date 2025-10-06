@@ -1,179 +1,189 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { Decimal } from "@prisma/client/runtime";
-import { IsArray, IsDecimal, IsEmail, IsEnum, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
-
+import { ApiProperty } from '@nestjs/swagger';
+import { Decimal } from '@prisma/client/runtime';
+import {
+  IsArray,
+  IsDecimal,
+  IsEmail,
+  IsEnum,
+  IsInt,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export enum ChargeTypeEnum {
-  "PERCENT" = "PERCENT",
-  "FLAT" = "FLAT",
+  'PERCENT' = 'PERCENT',
+  'FLAT' = 'FLAT',
 }
 
 export class PaymentDto {
+  @IsNotEmpty()
+  @IsEmail()
+  @ApiProperty()
+  email: string;
 
-    @IsNotEmpty()
-    @IsEmail()
-    @ApiProperty()
-    email: string;
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty()
+  firstName: string;
 
-    @IsNotEmpty()
-    @IsString()
-    @ApiProperty()
-    firstName: string;
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty()
+  lastName: string;
 
-    @IsNotEmpty()
-    @IsString()
-    @ApiProperty()
-    lastName: string;
-  
-    @IsNotEmpty()
-    @IsString()
-    @ApiProperty()
-    transId: string;
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty()
+  transId: string;
 
-    @IsDecimal()
-    @ApiProperty()
-    amount: Decimal;
-    
-    @IsOptional()
-    @IsString()
-    @ApiProperty()
-    subaccount: string;
-        
-    @IsOptional()
-    @IsString()
-    @ApiProperty()
-    bearer: string;
-            
-    @IsOptional()
-    @IsString()
-    @ApiProperty()
-    charge: string;
-  }
+  @IsDecimal()
+  @ApiProperty()
+  amount: Decimal;
 
-  export class SubaccountDto {
+  @IsOptional()
+  @IsString()
+  @ApiProperty()
+  subaccount: string;
 
-    @IsNotEmpty()
-    @IsString()
-    @ApiProperty()
-    business_name: string;
+  @IsOptional()
+  @IsString()
+  @ApiProperty()
+  bearer: string;
 
-    @IsNotEmpty()
-    @IsString()
-    @ApiProperty()
-    settlement_bank: string;
+  @IsOptional()
+  @IsString()
+  @ApiProperty()
+  charge: string;
+}
 
-    @IsNotEmpty()
-    @IsString()
-    @ApiProperty()
-    account_number: string;
-    
-    @IsOptional()
-    @IsString()
-    @ApiProperty()
-    percentage_charge: string;
+export class SubaccountDto {
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty()
+  business_name: string;
 
-    @IsNotEmpty()
-    @IsString()
-    @ApiProperty()
-    userId: string;
-  
-  }
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty()
+  settlement_bank: string;
 
-  export class OrderDto {
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty()
+  account_number: string;
 
-    @IsNotEmpty()
-    @IsEmail()
-    @ApiProperty()
-    email: string;
+  @IsOptional()
+  @IsString()
+  @ApiProperty()
+  percentage_charge: string;
 
-    @IsNotEmpty()
-    @IsString()
-    @ApiProperty()
-    firstName: string;
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty()
+  userId: string;
+}
 
-    @IsNotEmpty()
-    @IsString()
-    @ApiProperty()
-    lastName: string;
-  
-    @IsNotEmpty()
-    @IsString()
-    @ApiProperty()
-    eventId: string;
-      
-    @IsNotEmpty()
-    @IsString()
-    @ApiProperty()
-    channel: string;
-     
-    @IsNotEmpty()
-    @IsString()
-    @ApiProperty()
-    userId: string;
+export class OrderDto {
+  @IsNotEmpty()
+  @IsEmail()
+  @ApiProperty()
+  email: string;
 
-    @IsDecimal()
-    @ApiProperty()
-    totalAmount: string;
-    
-    @IsOptional()
-    @IsString()
-    @ApiProperty()
-    email_CC: string;
-        
-    @IsNotEmpty()
-    @IsArray()
-    @ApiProperty()
-    tickets: TicketDto[];
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty()
+  firstName: string;
 
-  }
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty()
+  lastName: string;
 
-  export class TicketDto {
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty()
+  eventId: string;
 
-    @IsNotEmpty()
-    @IsString()
-    @ApiProperty()
-    name: string;
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty()
+  channel: string;
 
-    @IsNotEmpty()
-    @IsDecimal()
-    @ApiProperty()
-    amount: Decimal;
-  
-    @IsNotEmpty()
-    @IsInt()
-    @ApiProperty()
-    quantity: number;
-  }
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty()
+  userId: string;
 
-  export class ChargeSetupDto {
+  @IsDecimal()
+  @ApiProperty()
+  totalAmount: string;
 
-    @IsNotEmpty()
-    @IsString()
-    @ApiProperty()
-    eventId: string;
- 
-    @IsNotEmpty()
-    @IsEnum(ChargeTypeEnum)
-    @ApiProperty()
-    type: ChargeTypeEnum;
-  
-    @IsNotEmpty()
-    @IsNumber()
-    @ApiProperty()
-    value: number;
-  }
+  @IsOptional()
+  @IsString()
+  @ApiProperty()
+  email_CC: string;
 
+  @IsOptional()
+  @IsString()
+  @ApiProperty()
+  phone: string;
 
-  export enum PaymentStatusEnum {
-    "PENDING" = "PENDING",
-    "PAID" = "PAID",
-    "FAILED" = "FAILED",
-  }
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty()
+  currency: string;
 
-  
-  export enum S3BucketEnum {
-    "TICKET" = "TICKET",
-    "BANNER" = "BANNER",
-    "IMAGE" = "IMAGE",
-    "CATEGORY" = "CATEGORY",
-  }
+  @IsNotEmpty()
+  @IsArray()
+  @ApiProperty()
+  tickets: TicketDto[];
+}
+
+export class TicketDto {
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty()
+  name: string;
+
+  @IsNotEmpty()
+  @IsDecimal()
+  @ApiProperty()
+  amount: Decimal;
+
+  @IsNotEmpty()
+  @IsInt()
+  @ApiProperty()
+  quantity: number;
+}
+
+export class ChargeSetupDto {
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty()
+  eventId: string;
+
+  @IsNotEmpty()
+  @IsEnum(ChargeTypeEnum)
+  @ApiProperty()
+  type: ChargeTypeEnum;
+
+  @IsNotEmpty()
+  @IsNumber()
+  @ApiProperty()
+  value: number;
+}
+
+export enum PaymentStatusEnum {
+  'PENDING' = 'PENDING',
+  'PAID' = 'PAID',
+  'FAILED' = 'FAILED',
+}
+
+export enum S3BucketEnum {
+  'TICKET' = 'TICKET',
+  'BANNER' = 'BANNER',
+  'IMAGE' = 'IMAGE',
+  'CATEGORY' = 'CATEGORY',
+}

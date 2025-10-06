@@ -210,9 +210,15 @@ export class PaymentService {
           eventId: data.eventId,
           eventName: event.title,
           userId: data.userId,
+          vendorId: event.userId,
           ticketId: `Tic-${uuidv4()}`,
           ticketName: t.name,
           price: t.amount,
+          firstName: data.firstName,
+          lastName: data.lastName,
+          email: data.email,
+          email_CC: data.email_CC,
+          phone: data.phone,
         };
 
         transactionList.push(ticket);
@@ -292,13 +298,13 @@ export class PaymentService {
         payload = {
           email: data.email,
           amount: amount,
-          currency: event.currency,
+          currency: data.currency,
           reference: batchId,
           callback_url: callBackUrl,
           bearer: 'subaccount',
           split: {
             type: chargeSetup.type,
-            currency: event.currency,
+            currency: data.currency,
             subaccounts: [
               {
                 subaccount: subaccount.accountId,
@@ -312,13 +318,13 @@ export class PaymentService {
         payload = {
           email: data.email,
           amount: amount,
-          currency: event.currency,
+          currency: data.currency,
           reference: batchId,
           callback_url: callBackUrl,
           bearer: 'subaccount',
           split: {
             type: 'percentage',
-            currency: event.currency,
+            currency: data.currency,
             subaccounts: [
               {
                 subaccount: subaccount.accountId,
@@ -363,11 +369,17 @@ export class PaymentService {
           ticketId: t.ticketId,
           ticket: t.ticketName,
           userId: t.userId,
+          vendorId: t.vendorId,
           price: t.price,
+          firstName: t.firstName,
+          lastName: t.lastName,
+          email: t.email,
+          email_CC: t.email_CC,
+          phone: t.phone,
           createdBy: 'System',
           createdOn: new Date(),
         })),
-        skipDuplicates: true, // Skip 'Bobo'
+        //skipDuplicates: true, // Skip 'Bobo'
       });
 
       return {
@@ -432,7 +444,13 @@ export class PaymentService {
           ticketId: t.ticketId,
           ticket: t.ticketName,
           userId: t.userId,
+          vendorId: t.vendorId,
           price: t.price,
+          firstName: t.firstName,
+          lastName: t.lastName,
+          email: t.email,
+          email_CC: t.email_CC,
+          phone: t.phone,
           status: PaymentStatusEnum.PAID,
           createdBy: 'System',
           createdOn: new Date(),
@@ -549,6 +567,14 @@ export class PaymentService {
           t.ticketId,
           qrCode,
         );
+
+        const updateTicket = await this.prisma.eventTransaction.update({
+          where: { id: t.id },
+          data: {
+            ticketUrl: imageUrl,
+            updatedOn: new Date(),
+          },
+        });
 
         try {
           await this.emailService.sendTicketQRCode({

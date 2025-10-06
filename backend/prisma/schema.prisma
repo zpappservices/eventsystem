@@ -25,6 +25,8 @@ model User {
   Vendor               Vendor[]
   VendorAccount        VendorAccount[]
   EventTransaction     EventTransaction[]
+  VendorFollower       VendorFollower[]   @relation("Vendor")
+  BuyerFollower        VendorFollower[]   @relation("Buyer")
 
   @@unique(id)
   @@index([email])
@@ -39,39 +41,45 @@ model Category {
   createdOn   DateTime @default(now())
   updatedBy   String?
   updatedOn   DateTime @default(now())
+
+  Event Event[]
 }
 
 model Event {
-  id           String         @id @default(uuid())
-  userId       String
-  category     String
-  title        String
-  description  String?
-  locationType String?
-  location     String?
-  StartDate    DateTime?
-  EndDate      DateTime?
-  StartTime    String?
-  EndTime      String?
-  AllDay       Boolean?       @default(false)
-  image_banner String?
-  image_tile   String?
-  currency     String?
-  isPublished  Boolean?       @default(false)
-  active       Boolean        @default(true)
-  platformFee  Boolean        @default(false)
-  createdBy    String?
-  createdOn    DateTime       @default(now())
-  updatedBy    String?
-  updatedOn    DateTime       @default(now())
-  user         User           @relation(fields: [userId], references: [id])
-  EventContact EventContact[]
+  id               String         @id @default(uuid())
+  userId           String
+  category         String
+  title            String
+  description      String?
+  eventType        EventType      @default(SINGLE)
+  StartDate        DateTime?
+  EndDate          DateTime?
+  StartTime        String?
+  EndTime          String?
+  dates            EventDate[]
+  restrictionLevel String?
+  AllDay           Boolean?       @default(false)
+  image_banner     String[]
+  image_tile       String?
+  venue_image      String[]
+  isPublished      Boolean?       @default(false)
+  active           Boolean        @default(true)
+  platformFee      Boolean        @default(false)
+  createdBy        String?
+  createdOn        DateTime       @default(now())
+  updatedBy        String?
+  updatedOn        DateTime       @default(now())
+  user             User           @relation(fields: [userId], references: [id])
+  EventContact     EventContact[]
+  Category         Category       @relation(fields: [category], references: [id])
 
   EventTicket EventTicket[]
 
   EventTransaction EventTransaction[]
 
   ChargeSetup ChargeSetup[]
+
+  EventLocation EventLocation[]
 }
 
 model EventContact {
@@ -91,13 +99,33 @@ model EventContact {
   event Event @relation(fields: [eventId], references: [id])
 }
 
+model EventLocation {
+  id           String   @id @default(uuid())
+  locationType String?
+  location     String?
+  venueName    String?
+  latlong      String?
+  eventId      String
+  active       Boolean  @default(true)
+  createdBy    String?
+  createdOn    DateTime @default(now())
+  updatedBy    String?
+  updatedOn    DateTime @default(now())
+
+  event Event @relation(fields: [eventId], references: [id])
+}
+
 model EventTicket {
   id          String   @id @default(uuid())
   type        String
   name        String
   description String?
-  price       Decimal  @default(0)
-  quantity    Int
+  currency    String?
+  price       Decimal  @default(10)
+  quantity    Int      @default(1)
+  minOrder    Int      @default(1)
+  maxOrder    Int      @default(1)
+  sold        Int      @default(0)
   eventId     String
   active      Boolean  @default(true)
   createdBy   String?
@@ -109,7 +137,7 @@ model EventTicket {
 }
 
 model Vendor {
-  id        String   @id @default(uuid())
+  id        String       @id @default(uuid())
   userId    String
   firstName String
   lastName  String
@@ -118,12 +146,22 @@ model Vendor {
   company   String
   jobTitle  String?
   website   String?
+  bio       String?
+  address   String?
+  state     String?
+  zipcode   String?
+  country   String?
+  facebook  String?
+  twitter   String?
+  instagram String?
+  linkedin  String?
   photo     String?
-  active    Boolean  @default(true)
+  active    Boolean      @default(true)
+  status    VendorStatus @default(PENDING)
   createdBy String?
-  createdOn DateTime @default(now())
+  createdOn DateTime     @default(now())
   updatedBy String?
-  updatedOn DateTime @default(now())
+  updatedOn DateTime     @default(now())
 
   user User @relation(fields: [userId], references: [id])
 }
@@ -153,12 +191,19 @@ model EventTransaction {
   eventId   String
   eventName String
   userId    String
+  vendorId  String
   ticketId  String
   ticket    String
   price     Decimal       @default(0)
   status    PaymentStatus @default(PENDING)
   checkIn   Boolean?      @default(false)
   active    Boolean       @default(true)
+  firstName String?
+  lastName  String?
+  email     String?
+  email_CC  String?
+  phone     String?
+  ticketUrl String?
   createdBy String?
   createdOn DateTime      @default(now())
   updatedBy String?
@@ -182,13 +227,51 @@ model ChargeSetup {
   event Event @relation(fields: [eventId], references: [id])
 }
 
+model VendorFollower {
+  id        String   @id @default(uuid())
+  buyerId   String?
+  vendorId  String?
+  active    Boolean  @default(true)
+  createdBy String?
+  createdOn DateTime @default(now())
+  updatedBy String?
+  updatedOn DateTime @default(now())
+
+  buyer  User? @relation("Buyer", fields: [buyerId], references: [id], map: "Buyer_Follow_fkey")
+  vendor User? @relation("Vendor", fields: [vendorId], references: [id], map: "Vendor_Follow_fkey")
+}
+
 enum RoleType {
   USER
   VENDOR
+}
+
+enum LocationType {
+  ONLINE
+  PHYSICAL
+  HYBRID
 }
 
 enum PaymentStatus {
   PENDING
   PAID
   FAILED
+}
+
+enum VendorStatus {
+  PENDING
+  APPROVED
+  FAILED
+}
+
+model EventDate {
+  id      String   @id @default(uuid())
+  date    DateTime
+  eventId String
+  event   Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+}
+
+enum EventType {
+  SINGLE
+  MULTIPLE
 }
