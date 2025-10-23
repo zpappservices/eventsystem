@@ -7,14 +7,14 @@ const Step = ({ step, value = 0, title = "Create Your Profile" }) => {
          <div
             className={`h-[20px] w-[20px] sm:w-[28px] sm:h-[28px] shrink-0 border rounded-full p-0.5 md:p-[1.6px] ${
                step === value || step > value
-                  ? "border-[#FF7F50]"
+                  ? "border-primary"
                   : "border-gray-600"
             }`}
          >
             <div
                className={`w-full h-full rounded-full flex items-center justify-center ${
                   step === value || step > value
-                     ? "bg-[#FF7F50]"
+                     ? "bg-primary"
                      : "bg-gray-400"
                }`}
             >
@@ -25,7 +25,7 @@ const Step = ({ step, value = 0, title = "Create Your Profile" }) => {
          </div>
          <p className={`text-center text-[12px] sm:text-[14px] font-semibold leading-[136%] ${
                   step === value || step > value
-                     ? "text-[#FF7F50]"
+                     ? "text-primary"
                      : "text-gray-700"
                }`}>
             {title}

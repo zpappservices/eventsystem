@@ -185,9 +185,15 @@ const EventList = () => {
       </div>
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-        {paginatedData?.map((item, index) => (
-          <EventCard key={index} data={item} />
-        ))}
+        {paginatedData?.length > 0 ? (
+          paginatedData?.map((item, index) => (
+            <EventCard key={index} data={item} />
+          ))
+        ) : (
+          <div className="flex items-center justify-center w-full col-span-full py-20">
+            <p className="text-neutrals500 text-center text-sm sm:text-base">No events created</p>
+          </div>
+        )}
       </div>
 
       {filteredItems?.length > 10 && (
