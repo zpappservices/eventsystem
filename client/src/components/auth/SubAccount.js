@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import useApiRequest from "@/hooks/useApiRequest";
 import { toast } from "react-toastify";
 import useAuthToken from "@/hooks/useAuthToken";
+import Button from "../widgets/Button";
 
 const SubAccount = ({ isDashboard, onClose }) => {
   const { activeUser } = useAuthToken();
@@ -157,9 +158,11 @@ const SubAccount = ({ isDashboard, onClose }) => {
         maxWidth: "400px",
         margin: "0 auto",
       }}
-      className="w-full max-w-[440px] flex flex-col gap-5">
+      className="w-full max-w-[440px] flex flex-col gap-5"
+    >
       <div className="text-center">
-        This is the account for receiving your payments.<br /> Please confirm the details.
+        This is the account for receiving your payments.
+        <br /> Please confirm the details.
       </div>
       {fields?.map((field) =>
         field.type === "select" ? (
@@ -176,21 +179,23 @@ const SubAccount = ({ isDashboard, onClose }) => {
               helperText={errors[field.id] || ""}
               sx={{
                 "& .MuiOutlinedInput-root": {
+                  borderRadius: "10px",
                   "& fieldset": {
-                    borderColor: "#000000",
+                    borderColor: "#898384",
+                    borderRadius: "10px",
                   },
                   "&:hover fieldset": {
-                    borderColor: "#FF7F50",
+                    borderColor: "#068a4f",
                   },
                   "&.Mui-focused fieldset": {
-                    borderColor: "#FF7F50",
+                    borderColor: "#068a4f",
                   },
                 },
                 "& .MuiInputLabel-root": {
-                  color: "#000000",
+                  color: "#898384",
                 },
                 "& .MuiInputLabel-root.Mui-focused": {
-                  color: "#FF7F50",
+                  color: "#068a4f",
                 },
               }}
               SelectProps={{
@@ -201,7 +206,8 @@ const SubAccount = ({ isDashboard, onClose }) => {
                     },
                   },
                 },
-              }}>
+              }}
+            >
               {field?.options?.length > 0 &&
                 field?.options?.map((option) => (
                   <MenuItem key={option.id} value={option.code}>
@@ -225,21 +231,23 @@ const SubAccount = ({ isDashboard, onClose }) => {
             helperText={errors[field.id] || ""}
             sx={{
               "& .MuiOutlinedInput-root": {
+                borderRadius: "10px",
                 "& fieldset": {
-                  borderColor: "#000000",
+                  borderColor: "#898384",
+                  borderRadius: "10px",
                 },
                 "&:hover fieldset": {
-                  borderColor: "#FF7F50",
+                  borderColor: "#068a4f",
                 },
                 "&.Mui-focused fieldset": {
-                  borderColor: "#FF7F50",
+                  borderColor: "#068a4f",
                 },
               },
               "& .MuiInputLabel-root": {
-                color: "#000000",
+                color: "#898384",
               },
               "& .MuiInputLabel-root.Mui-focused": {
-                color: "#FF7F50",
+                color: "#068a4f",
               },
             }}
           />
@@ -250,16 +258,18 @@ const SubAccount = ({ isDashboard, onClose }) => {
           <ButtonLoading
             className="py-3.5 w-full flex-1 bg-gray-600"
             onClick={onClose}
-            isLoading={loading}>
+            isLoading={loading}
+          >
             Back
           </ButtonLoading>
         )}
-        <ButtonLoading
-          className="py-3.5 w-full flex-1"
+        <Button
+          className="py-3.5 w-full flex-1 !mt-5"
           onClick={handleSubmit}
-          isLoading={loading}>
+          isLoading={loading}
+        >
           Proceed
-        </ButtonLoading>
+        </Button>
       </div>
     </form>
   );

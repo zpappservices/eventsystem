@@ -99,29 +99,18 @@ const EventsList = ({ filters, setFilters }) => {
 
   return (
     <div className="pt-10">
-      <div className="flex flex-wrap items-center gap-5">
-        <p className="text-baseBlack text-base font-bold">Filter</p>
-        <p className="text-baseBlack text-sm">
-          <span onClick={resetFilters} className="cursor-pointer">
-            Reset filters{" "}
-          </span>
-          ({activeFilterCount})
-        </p>
-        <p className="text-baseBlack text-xl font-bold">
-          Results: All events <span className="text-primary">({events?.length})</span>
-        </p>
-        <OptionsInput
-          placeholder="Sort by"
-          options={["new", "popular"]}
-          onChange={(name, val) => setFilters({ ...filters, sortBy: val })}
-          value={`Sort by:${filters.sortBy}`}
-          style="!rounded-[10px] !py-2 !text-sm"
-          container="ms-auto"
-        />
-      </div>
-
-      <div className="flex items-start gap-5">
+      <div className="flex flex-col md:flex-row items-start gap-5">
         <div className="max-w-[210px] w-full">
+          <div className="flex flex-wrap items-center gap-5">
+            <p className="text-baseBlack text-base font-bold">Filter</p>
+            <p className="text-baseBlack text-sm">
+              <span onClick={resetFilters} className="cursor-pointer">
+                Reset filters{" "}
+              </span>
+              ({activeFilterCount})
+            </p>
+          </div>
+
           <CheckboxGroup
             title="All Categories"
             options={categories}
@@ -148,6 +137,21 @@ const EventsList = ({ filters, setFilters }) => {
         </div>
 
         <div className="w-full">
+          <div className="flex items-start gap-5 flex-wrap">
+            <p className="text-baseBlack text-xl font-bold">
+              Results: All events{" "}
+              <span className="text-primary">({events?.length})</span>
+            </p>
+            <OptionsInput
+              placeholder="Sort by"
+              options={["new", "popular"]}
+              onChange={(name, val) => setFilters({ ...filters, sortBy: val })}
+              value={`Sort by:${filters.sortBy}`}
+              style="!rounded-[10px] !py-2 !text-sm"
+              container="ms-auto"
+            />
+          </div>
+
           {sortedEvents?.length > 0 ? (
             <div className="w-full flex-1 grid grid-cols-1 gap-x-5 md:gap-x-7 gap-y-10 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 pt-4">
               {filteredEvents.map((item) => (

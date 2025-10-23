@@ -76,7 +76,7 @@ export default function WeeklyStats() {
                   <p className="text-2xl font-semibold text-black">
                     {item.value || 0}
                   </p>
-                  <div className="text-right ms-auto">
+                  {/* <div className="text-right ms-auto">
                     <span className="text-xs text-primary bg-primary100 px-2 py-0.5 rounded-md">
                       ↑ {item.change}
                     </span>
@@ -84,7 +84,7 @@ export default function WeeklyStats() {
                     <p className="text-right text-xs text-neutrals500">
                       from last week
                     </p>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>

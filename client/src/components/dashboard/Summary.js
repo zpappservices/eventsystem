@@ -19,7 +19,8 @@ const Card = ({ title, amount, icon, data, percentile }) => {
             <p className="text-xs text-neutrals600 ">{title}</p>
             <p className="text-sm text-baseBlack">{amount}</p>
           </div>
-          {percentile && (
+          
+          {/* {percentile && (
             <div
               className={`text-xs font-bold rounded-[4px] p-0.5 px-1 ms-auto flex items-center ${
                 percentile?.trend === "up"
@@ -34,7 +35,7 @@ const Card = ({ title, amount, icon, data, percentile }) => {
               )}
               {percentile?.value}
             </div>
-          )}
+          )} */}
         </div>
       </div>
     </div>

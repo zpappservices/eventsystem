@@ -73,23 +73,27 @@ const SignUp = () => {
     }
   }, [error]);
 
+  useEffect(() => {
+    setErrorMessage("");
+  }, [email,password]);
+
   return (
     <>
       {" "}
       <div className="mx-auto py-10 px-5 flex justify-center items-center">
         <div className="w-full max-w-[500px] space-y-10">
           <div className="!mb-14">
-            <Link href="/" className="!z-[1400]">
+            <Link href="/" className="!z-[1400] ">
               <StyledImage
                 src="/img/logo.svg"
-                className="w-full sm:min-w-[150px] max-w-[200px] !z-30"
+                className="w-full sm:min-w-[150px] max-w-[200px] !z-30 mx-auto"
               />
             </Link>
             <div>
-              <p className="text-[20px] sm:text-[32px] font-bold text-baseBlack text-center sm:text-left">
+              <p className="text-[20px] sm:text-[32px] font-bold text-baseBlack text-center">
                 Get Started
               </p>
-              <p className="text-base sm:text-[20px] text-baseBlack text-center sm:text-left">
+              <p className="text-base sm:text-[20px] text-baseBlack text-center">
                 Welcome to Zarafiplus - Let’s get started
               </p>
             </div>
@@ -127,7 +131,10 @@ const SignUp = () => {
               </Button>
               <p className="!text-baseBlack self-end text-sm sm:text-base mt-2 text-center">
                 Already have a vendor account?{" "}
-                <Link href="/auth/vendor/login" className="text-primary font-bold">
+                <Link
+                  href="/auth/vendor/login"
+                  className="text-primary font-bold"
+                >
                   Log in
                 </Link>
               </p>

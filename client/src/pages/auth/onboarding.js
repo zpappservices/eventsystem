@@ -22,24 +22,27 @@ const onboarding = () => {
   return (
     <>
       <div className="min-h-screen flex justify-center items-center">
-        <div className="w-full max-w-[600px] flex flex-col gap-10 py-20 relative">
+        <div className="w-full max-w-[600px] flex flex-col gap-3 py-20 relative">
           <Link href="/" className="!z-[1400] mx-auto">
             <StyledImage
               src="/img/logo.svg"
               className="w-full sm:min-w-[150px] max-w-[200px] !z-30 mx-auto"
             />
           </Link>
-          <div className="max-w-[370px] mx-auto text-black">
-            <p className="text-center text-[22px] font-medium leading-[30px]">
+
+          <div className="max-w-[370px] mx-auto text-black mb-8">
+            <p className="text-center text-base font-medium">
               Let’s create something spectacular
             </p>
-            <p className="text-center text-[22px] font-medium leading-[30px]">
+            <p className="text-center text-base font-medium">
               Start your event journey today!
             </p>
           </div>
+
           <OnboardingLayout>
             <div className="flex flex-col gap-5">
               <OnboardingHeader step={currentStep} />
+
               <StageFlow
                 steps={steps}
                 currentStep={currentStep}
