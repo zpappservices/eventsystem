@@ -3,6 +3,7 @@ import React from "react";
 import { FaLinkedinIn, FaTwitter } from "react-icons/fa6";
 import { RiFacebookFill } from "react-icons/ri";
 import Newsletter from "./Newsletter";
+import StyledImage from "../StyledImage";
 
 const Footer = () => {
   const year = new Date().getFullYear();
@@ -21,7 +22,7 @@ const Footer = () => {
       <div className="w-full max-w-[1512px] mx-auto flex flex-col sm:flex-row sm:flex-wrap px-5 sm:px-10 gap-10 items-center md:items-start sm:justify-center">
         <div className="space-y-2.5 w-full max-w-[354px] mx-auto sm:mx-0 xl:mx-auto">
           <p className="text-[28px] font-extrabold">
-            Zarafi<span className="text-[24px] font-semibold">plus</span>
+            <StyledImage src="/img/logo-white.svg" />
           </p>
           <p className="text-sm text-white">
             Zarafiplus is a global self-service ticketing platform for live

@@ -354,3 +354,33 @@ export class FilterEventDto {
   @Min(1)
   limit: number = 10;
 }
+
+export class EventTransactionDto {
+  @IsNotEmpty()
+  @ApiProperty()
+  @IsString()
+  eventId: string;
+
+  @IsOptional()
+  @ApiProperty()
+  //@IsDateString()
+  date?: string;
+
+  @IsOptional()
+  @ApiProperty()
+  ticket?: string;
+
+  @IsOptional()
+  @ApiProperty()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  page: number = 1;
+
+  @IsOptional()
+  @ApiProperty()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  limit: number = 10;
+}

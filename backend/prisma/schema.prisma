@@ -146,6 +146,15 @@ model Vendor {
   company   String
   jobTitle  String?
   website   String?
+  bio       String?
+  address   String?
+  state     String?
+  zipcode   String?
+  country   String?
+  facebook  String?
+  twitter   String?
+  instagram String?
+  linkedin  String?
   photo     String?
   active    Boolean      @default(true)
   status    VendorStatus @default(PENDING)
@@ -182,6 +191,7 @@ model EventTransaction {
   eventId   String
   eventName String
   userId    String
+  vendorId  String
   ticketId  String
   ticket    String
   price     Decimal       @default(0)

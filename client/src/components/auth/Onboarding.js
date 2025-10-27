@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { TextField } from "@mui/material";
-import { ButtonLoading } from "../widgets/ButtonLoading";
 import { useRouter } from "next/router";
 import useApiRequest from "@/hooks/useApiRequest";
 import { toast } from "react-toastify";
 import useAuthToken from "@/hooks/useAuthToken";
+import TextField from "../widgets/TextField";
+import Button from "../widgets/Button";
 
 const Onboarding = ({ next }) => {
-  const { activeUser } = useAuthToken()
+  const { activeUser } = useAuthToken();
   const [formData, setFormData] = useState({
     userId: activeUser,
     firstName: "",
@@ -52,7 +52,9 @@ const Onboarding = ({ next }) => {
   };
 
   const filteredFormData = Object.fromEntries(
-    Object.entries(formData).filter(([_, value]) => value != null && value !== "")
+    Object.entries(formData).filter(
+      ([_, value]) => value != null && value !== ""
+    )
   );
 
   const { data, error, loading, request } = useApiRequest({
@@ -70,15 +72,19 @@ const Onboarding = ({ next }) => {
   useEffect(() => {
     if (data?.statusCode >= 200 && data?.statusCode < 300) {
       toast.success(data?.message || "Vendor Profile created successfully!");
-      
+
       next();
     } else if (data?.error || data?.message) {
       toast.error(
-        data?.error || data?.message || "Couldn't Create Vendor Profile! Try again."
+        data?.error ||
+          data?.message ||
+          "Couldn't Create Vendor Profile! Try again."
       );
     } else if (data?.statusCode >= 400 && data?.statusCode < 500) {
       toast.error(
-        data?.error || data?.message || "Couldn't Create Vendor Profile! Try again."
+        data?.error ||
+          data?.message ||
+          "Couldn't Create Vendor Profile! Try again."
       );
     }
   }, [data]);
@@ -99,14 +105,7 @@ const Onboarding = ({ next }) => {
   return (
     <form
       onSubmit={handleSubmit}
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: "20px",
-        maxWidth: "400px",
-        margin: "0 auto",
-      }}
-      className="w-full max-w-[440px] flex flex-col gap-5"
+      className="w-full max-w-[500px] flex flex-col gap-3"
     >
       {[
         { id: "firstName", label: "First Name", type: "text", required: true },
@@ -123,41 +122,24 @@ const Onboarding = ({ next }) => {
       ].map((field) => (
         <div key={field.id} className="w-full">
           <TextField
-            fullWidth
             id={field.id}
             label={field.label}
-            variant="outlined"
             name={field.id}
             {...(field.required && { required: true })}
             value={formData[field.id]}
             onChange={handleChange}
             error={!!errors[field.id]}
-            helperText={errors[field.id] || ""}
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                "& fieldset": {
-                  borderColor: "#000000",
-                },
-                "&:hover fieldset": {
-                  borderColor: "#FF7F50",
-                },
-                "&.Mui-focused fieldset": {
-                  borderColor: "#FF7F50",
-                },
-              },
-              "& .MuiInputLabel-root": {
-                color: "#000000",
-              },
-              "& .MuiInputLabel-root.Mui-focused": {
-                color: "#FF7F50",
-              },
-            }}
           />
         </div>
       ))}
-      <ButtonLoading className="py-3.5 w-full" onClick={handleSubmit} isLoading={loading}>
+
+      <Button
+        className="py-3.5 w-full !mt-10"
+        onClick={handleSubmit}
+        isLoading={loading}
+      >
         Proceed
-      </ButtonLoading>
+      </Button>
     </form>
   );
 };

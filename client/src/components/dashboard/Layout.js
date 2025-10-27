@@ -3,7 +3,11 @@ import SideBar from "./SideBar";
 import Header from "./Header";
 import PrivateRoute from "./PrivateRoute";
 
-const Layout = ({ children, container = "max-w-[1440px]" }) => {
+const Layout = ({
+  children,
+  container = "",
+  isHeader = true,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -12,14 +16,20 @@ const Layout = ({ children, container = "max-w-[1440px]" }) => {
 
   return (
     <PrivateRoute>
-      <div className="w-full max-w-[1300px] bg-baseWhite mx-auto bg-gray-100">
-        <Header toggleMenu={toggleMenu} isOpen={isOpen} />
+      <div className="w-full mx-auto ">
         <div
-          className={`flex min-h-screen gap-0 ${container} mx-auto relative mt-4 pt-[80px]`}
+          className={`flex min-h-screen gap-0 ${container} mx-auto relative`}
         >
           <SideBar isOpen={isOpen} toggleMenu={toggleMenu} />
-          <div className="w-full relative max-w-[1300px] ms-auto">
-            <div className="w-full mx-auto">{children}</div>
+          <div className="w-full relative ms-auto md:pl-[262px]">
+            {isHeader && <Header isOpen={isOpen} toggleMenu={toggleMenu} />}
+            <div
+              className={`w-full mx-auto px-5 ${
+                isHeader ? "mt-24" : ""
+              }`}
+            >
+              {children}
+            </div>
           </div>
         </div>
       </div>

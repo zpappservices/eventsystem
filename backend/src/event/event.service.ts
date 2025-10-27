@@ -6,6 +6,7 @@ import {
   EventDto,
   EventImageDto,
   EventTicketDto,
+  EventTransactionDto,
   FilterEventDto,
   VendorEventDto,
 } from './dtos/event.dto';
@@ -879,6 +880,74 @@ export class EventService {
         statusCode: HttpStatus.EXPECTATION_FAILED,
         data: false,
         message: 'Unable to checkin event ticket.',
+      };
+    }
+  }
+
+  async getEventTransaction(filters: EventTransactionDto) {
+    try {
+      const { ticket, date, eventId, page, limit } = filters;
+
+      const where: any = {};
+
+      // Date filter
+
+      if (date) {
+        const parsedDate = new Date(date);
+        where.OR = [
+          {
+            startDate: { lte: parsedDate },
+            endDate: { gte: parsedDate },
+          },
+          {
+            dates: { some: { date: parsedDate } }, // supports multiple date events
+          },
+        ];
+      }
+
+      // Ticket type filter
+      if (ticket) {
+        where.ticket = ticket;
+      }
+
+      const skip = (page - 1) * limit;
+
+      const [data, total, tickets] = await Promise.all([
+        this.prisma.eventTransaction.findMany({
+          where,
+          skip,
+          take: limit,
+          orderBy: { createdOn: 'desc' },
+          include: {
+            event: true,
+          },
+        }),
+        this.prisma.event.count({ where }),
+
+        this.prisma.eventTicket.findMany({ where: { eventId: eventId } }),
+      ]);
+
+      return {
+        statusCode: HttpStatus.OK,
+        data: {
+          events: data,
+          tickets: tickets,
+          meta: {
+            total,
+            page,
+            limit,
+            totalPages: Math.ceil(total / limit),
+          },
+        },
+        message: 'Event retrieved successfully.',
+      };
+    } catch (err) {
+      console.log(err);
+
+      return {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        data: null,
+        message: 'Unable to retrieve event.',
       };
     }
   }

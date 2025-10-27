@@ -2,10 +2,12 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import useLoading from "@/hooks/useLoading";
-import { ButtonLoading } from "@/components/widgets/ButtonLoading";
-import { apiRequest } from "@/utils/apiService";
 import { toast } from "react-toastify";
 import StyledImage from "@/components/StyledImage";
+import { sendPasswordResetEmail } from "firebase/auth";
+import { auth } from "@/config/firebase";
+import Button from "@/components/widgets/Button";
+import TextField from "@/components/widgets/TextField";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -53,33 +55,17 @@ const ForgotPassword = () => {
 
   const forgotPassword = async () => {
     startLoading();
-    try {
-      const response = await apiRequest(
-        "post",
-        "auth/forgotpassword",
-        { email: email },
-        false
-      );
 
-      const data = response;
-      console.log(data);
-      if (data?.statusCode >= 200 && data?.statusCode < 300) {
-        toast.success(
-          "Password reset link sent successfully! Please check your email to reset your password."
-        );
-      } else if (data?.message == "Operation fail!") {
-        toast.error("Email not found!");
-      } else if (data?.error || data?.message) {
-        toast.error(data?.error || data?.message || "Forgot password failed!");
-      } else if (data?.statusCode >= 400 && data?.statusCode < 500) {
-        toast.error(data?.error || data?.message || "Forgot password failed!");
-      }
+    try {
+      await sendPasswordResetEmail(auth, email);
+      setEmail("")
+      toast.success("Password reset link sent! Check your inbox.");
     } catch (error) {
-      toast.error("error");
-      console.error(
-        "Error:",
-        error.response ? error.response.data : error.message
-      );
+      if (error.code === "auth/user-not-found") {
+        toast.error("No user found with that email.");
+      } else {
+        toast.error("Failed to send reset email. Try again.");
+      }
     } finally {
       stopLoading();
     }
@@ -99,7 +85,7 @@ const ForgotPassword = () => {
 
   return (
     <div className="w-full min-h-screen flex items-center justify-center">
-      <div className="max-w-[450px] flex items-center justify-center px-3 py-10 pt-24 lg:pt-10 mx-auto lg:mx-0">
+      <div className="w-full max-w-[450px] flex items-center justify-center px-3 py-10 pt-24 lg:pt-10 mx-auto lg:mx-0">
         <div className="w-full bg-white p-3 sm:p-10 rounded-xl">
           <Link href="/" className="ms-[40px]">
             <StyledImage
@@ -116,27 +102,18 @@ const ForgotPassword = () => {
           <hr className="mt-5" />
           <form className="mt-5" onSubmit={handleSubmit}>
             <div className="w-full flex flex-col gap-y-6">
-              <div className="relative">
-                <label className="text-[15px] text-[#81909D]">
-                  Email Address
-                </label>
-                <input
-                  type="text"
-                  name="email"
-                  value={email}
-                  onChange={handleInputChange}
-                  className={`${
-                    errors.email && "border-1 border-[#CA1B1B]"
-                  } input mt-1 w-full border border-gray-300 py-2.5 p-5 rounded-[8px] focus:outline-none focus:border-apple500 focus:border-1 text-[16px] text-apple900 placeholder:text-apple900`}
-                />
-                <span className="text-[12px] text-[#CA1B1B] absolute bottom-[-19px] left-0">
-                  {errors.email}
-                </span>
-              </div>
-              <ButtonLoading
+              <TextField
+                value={email}
+                label="Email"
+                passwordToggleClass="!top-10"
+                onChange={(e) => setEmail(e.target.value)}
+              />
+
+              <Button
                 isLoading={isLoading}
                 className="rounded-[5px] duration-300"
-                disabled={!emailComplete || isLoading}>
+                disabled={!emailComplete || isLoading}
+              >
                 {isLoading ? (
                   <div className="flex items-center justify-center">
                     <span className="loading loading-spinner"></span>
@@ -144,7 +121,7 @@ const ForgotPassword = () => {
                 ) : (
                   "Proceed"
                 )}
-              </ButtonLoading>
+              </Button>
             </div>
           </form>
           <p className="text-[15px] text-[#81909D] text-center mt-3">

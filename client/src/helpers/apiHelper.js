@@ -24,7 +24,7 @@ const apiHelper = async (
     const { statusCode, data: result, message = "" } = response || {};
 
     if (statusCode >= 200 && statusCode < 303) {
-      return { success: true, data: result, message };
+      return { success: true, data: result, message, response };
     } else {
       const errorMessage =
         response?.error || response?.message || "Operation failed!";
@@ -37,7 +37,7 @@ const apiHelper = async (
         : error?.response?.data?.message) ||
       error?.message ||
       "An unexpected error occurred.";
-    return { success: false, error, message: errorMessage };
+    return { success: false, error, message: errorMessage, };
   } finally {
     stopLoading?.();
   }

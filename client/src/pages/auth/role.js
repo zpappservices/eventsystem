@@ -8,6 +8,7 @@ import { FaAddressCard } from "react-icons/fa6";
 
 const Card = ({ icon, role, subHeading, selectedRole, setRole }) => {
   const isSelected = role === selectedRole;
+  const color = isSelected ? "text-primary" : "text-baseBlack";
   return (
     <div
       onClick={() => setRole(role)}
@@ -22,10 +23,10 @@ const Card = ({ icon, role, subHeading, selectedRole, setRole }) => {
       >
         <StyledImage src="/img/selected-role.svg" className="mx-auto" />
       </div>
-      <p className="text-baseBlack text-[50px] sm:text-[61px]">{icon}</p>
+      <p className={`${color} text-[50px] sm:text-[61px]`}>{icon}</p>
 
       <div>
-        <p className="font-medium text-center text-xl sm:text-2xl text-baseBlack">
+        <p className={`font-medium text-center text-xl sm:text-2xl ${color}`}>
           {role}
         </p>
         <p className="font-medium text-center text-sm sm:text-base text-baseBlack/30">

@@ -9,7 +9,6 @@ import { FiLogOut } from "react-icons/fi";
 import StyledImage from "./StyledImage";
 import { BiCaretDown } from "react-icons/bi";
 import Search from "./ui/Search";
-import { FaListUl } from "react-icons/fa";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import { Backdrop } from "@mui/material";
