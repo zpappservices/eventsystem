@@ -9,7 +9,7 @@ const Index = () => {
   return (
     <Layout>
       <div className="space-y-16">
-        <Ads />
+        {/* <Ads /> */}
 
         <Categories />
 

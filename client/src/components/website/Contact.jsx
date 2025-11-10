@@ -67,9 +67,12 @@ const Contact = () => {
 
         <Card
           icon={<StyledImage src="/img/help-center.svg" className="w-[19px]" />}
-          heading={"Help Center"}
+          heading={"FAQ"}
           text="Browse through our documentation and customer’s frequently asked questions"
-          actionText="Visit our help center"
+          actionText="Visit our FAQ page"
+          action={() => {
+            router.push("/faqs");
+          }}
         />
       </div>
     </div>

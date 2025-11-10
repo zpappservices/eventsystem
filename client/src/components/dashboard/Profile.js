@@ -6,7 +6,7 @@ const Profile = () => {
   const { activeUser, token } = useAuthToken();
   const { data, request } = useApiRequest({
     method: "get",
-    url: `user/getoneuser/${activeUser}`,
+    url: `user/getvendorbyuserid/${activeUser}`,
     useToken: true,
   });
 
@@ -18,11 +18,11 @@ const Profile = () => {
     getUser();
   }, [activeUser, token]);
 
-  const { username } = data?.data || {};
+  const { firstName } = data?.data || {};
   return (
     <div className="text-[15px] sm:text-[20px] leading-[20px] ms-auto">
       {" "}
-      Welcome <span className="capitalize font-bold">{username}</span>
+      Welcome <span className="capitalize font-bold">{firstName}</span>
     </div>
   );
 };

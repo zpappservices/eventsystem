@@ -34,7 +34,7 @@ const AllCategoriesDropdown = () => {
       ref={anchorRef}
       onClick={() => setOpen(true)}>
       <FaListUl className="text-[20px] sm:text-[24px] text-baseBlack" />
-      All catergories
+      All categories
       <Popper
         open={open}
         anchorEl={anchorRef.current}

@@ -8,7 +8,7 @@ const Layout = ({ children, container, isHeader = true, isFooter = true }) => {
   const router = useRouter();
   const isHome = router.pathname === "/";
   return (
-    <div className="w-full mx-auto selection:bg-orange-600 selection:text-black">
+    <div className="w-full mx-auto selection:bg-green-200 selection:text-black">
       <NavBar />
 
       {isHome && (
@@ -19,7 +19,8 @@ const Layout = ({ children, container, isHeader = true, isFooter = true }) => {
       <div
         className={`w-full ${container} min-h-screen mx-auto ${
           !isHome ? "mt-[120px] pb-10" : "pb-10"
-        }`}>
+        }`}
+      >
         {children}
       </div>
       {isFooter && <Footer />}

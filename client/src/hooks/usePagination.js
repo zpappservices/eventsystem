@@ -7,7 +7,6 @@ const usePagination = (data, itemsPerPage = 7) => {
 
   useEffect(() => {
     if (!Array.isArray(data)) {
-      console.warn("usePagination: data is not an array", data);
       setPaginatedData([]); 
       return;
     }
