@@ -33,6 +33,13 @@ const PrivateRoute = ({ children }) => {
   });
 
   useEffect(() => {
+    if (!activeUser || !token) {
+       toast.info("Session expired. Please login to continue");
+       router.push("/");
+       setHasRedirected(true);
+       return;
+    }
+    
     if (loginStatus) {
       const { data: isLoggedIn } = loginStatus;
       if (!isLoggedIn && !hasRedirected) {

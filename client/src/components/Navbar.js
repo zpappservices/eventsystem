@@ -9,11 +9,11 @@ import { FiLogOut } from "react-icons/fi";
 import StyledImage from "./StyledImage";
 import { BiCaretDown } from "react-icons/bi";
 import Search from "./ui/Search";
-import { FaListUl } from "react-icons/fa";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import { Backdrop } from "@mui/material";
 import AllCategoriesDropdown from "./categories/AllCategoriesDropdown";
+import Button from "./widgets/Button";
 
 const NavBar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -85,7 +85,7 @@ const NavBar = () => {
       } */
     } else {
       items.push({
-        item: "Sign in to buy",
+        item: "Login",
         id: 3,
         ariaLabel: "Signin",
         onClick: handleLoginClick,
@@ -154,22 +154,26 @@ const NavBar = () => {
             id="dynamic-backdrop"
             sx={{ color: "#fff", zIndex: 1300 }}
             open={isOpen}
-            onClick={() => setIsOpen(false)}>
+            onClick={() => setIsOpen(false)}
+          >
             <div
               ref={bgRef}
               className={`flex flex-col md2:hidden ${
                 isOpen ? "left-0" : "left-[-100%]"
-              } absolute top-0 left-0 z-10 shadow-xl px-7 lg:px-[68px] transition-all h-screen w-[75%] sm:w-[50%] bg-white pt-[150px] gap-y-6 gap-x-[70px] items-start text-baseBlack text-[16px] md:text-[18px] leading-[24px]`}>
+              } absolute top-0 left-0 z-10 shadow-xl px-7 lg:px-[68px] transition-all h-screen w-[75%] sm:w-[50%] bg-white pt-[150px] gap-y-6 gap-x-[70px] items-start text-baseBlack text-[16px] md:text-[18px] leading-[24px]`}
+            >
               <Link
                 href="/events"
                 className={
                   pathname === "/events" ? "text-baseBlack font-bold" : ""
-                }>
+                }
+              >
                 Events
               </Link>
               <Link
                 href="/"
-                className={pathname === "" ? "text-baseBlack font-bold" : ""}>
+                className={pathname === "" ? "text-baseBlack font-bold" : ""}
+              >
                 Concerts
               </Link>
               {/* <Link
@@ -179,14 +183,16 @@ const NavBar = () => {
               </Link> */}
               <Link
                 href="/"
-                className={pathname === "" ? "text-baseBlack font-bold" : ""}>
+                className={pathname === "" ? "text-baseBlack font-bold" : ""}
+              >
                 Theater & Comedy
               </Link>
               <Link
                 href="/contact"
                 className={
                   pathname === "/contact" ? "text-baseBlack font-bold" : ""
-                }>
+                }
+              >
                 Help Center
               </Link>
 
@@ -198,18 +204,19 @@ const NavBar = () => {
                   }`}
                   key={i.id}
                   aria-label={i.ariaLabel}
-                  onClick={i.onClick}>
+                  onClick={i.onClick}
+                >
                   {i.item}
                 </p>
               ))}
 
               {!isLoggedIn && (
-                <li
-                  role="button"
-                  className="flex lg:hidden justify-center items-center transition-all duration-300 ease-in-out hover:scale-[1.1] hover:opacity-80"
-                  onClick={() => router.push("/auth/vendor/signup")}>
-                  Create an Event / Log in
-                </li>
+                <Button
+                  style="!lg:hidden"
+                  onClick={() => router.push("/auth/vendor/signup")}
+                >
+                  Sign up
+                </Button>
               )}
 
               {isLoggedIn && (
@@ -228,12 +235,14 @@ const NavBar = () => {
                 pathname === "/events" || pathname.includes("events")
                   ? "text-baseBlack font-bold"
                   : ""
-              }>
+              }
+            >
               Events
             </Link>
             <Link
               href="/"
-              className={pathname === "" ? "text-baseBlack font-bold" : ""}>
+              className={pathname === "" ? "text-baseBlack font-bold" : ""}
+            >
               Concerts
             </Link>
             {/* <Link
@@ -243,18 +252,20 @@ const NavBar = () => {
             </Link> */}
             <Link
               href="/"
-              className={pathname === "" ? "text-baseBlack font-bold" : ""}>
+              className={pathname === "" ? "text-baseBlack font-bold" : ""}
+            >
               Theater & Comedy
             </Link>
             <Link
               href="/contact"
               className={
                 pathname === "/contact" ? "text-baseBlack font-bold" : ""
-              }>
+              }
+            >
               Help Center
             </Link>
           </div>
-          <div className="min-w-fit flex justify-end gap-5 !ms-auto">
+          <div className="min-w-fit flex items-center justify-end gap-5 !ms-auto">
             <div className="hidden md:block">
               {navItems?.map((i) => (
                 <li
@@ -264,25 +275,27 @@ const NavBar = () => {
                   }`}
                   key={i.id}
                   aria-label={i.ariaLabel}
-                  onClick={i.onClick}>
+                  onClick={i.onClick}
+                >
                   {i.item}
                 </li>
               ))}
             </div>
             {!isLoggedIn && (
-              <li
-                role="button"
-                className="ms-auto hidden lg:flex justify-center items-center transition-all duration-300 ease-in-out hover:scale-[1.1] hover:opacity-80"
-                onClick={() => router.push("/auth/vendor/signup")}>
-                Create an Event / Log in
-              </li>
+              <Button
+                style="ms-auto hidden lg:flex !py-2.5"
+                onClick={() => router.push("/auth/signup")}
+              >
+                Sign up
+              </Button>
             )}
           </div>
           {isLoggedIn && user && (
             <div
               className="relative flex gap-2 items-center"
               ref={dropdownRef}
-              onClick={() => setDropdown(!dropdown)}>
+              onClick={() => setDropdown(!dropdown)}
+            >
               <p className="ms-auto flex justify-center items-center transition-all duration-300 ease-in-out hover:scale-[1.1] hover:opacity-80">
                 {user}
               </p>
@@ -324,7 +337,8 @@ const NavBar = () => {
 
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="text-gray-600 focus:outline-none lg:hidden z-[1400]">
+            className="text-gray-600 focus:outline-none lg:hidden z-[1400]"
+          >
             {isOpen ? (
               <CloseRoundedIcon
                 style={{

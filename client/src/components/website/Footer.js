@@ -1,5 +1,9 @@
 import Link from "next/link";
 import React from "react";
+import { FaLinkedinIn, FaTwitter } from "react-icons/fa6";
+import { RiFacebookFill } from "react-icons/ri";
+import Newsletter from "./Newsletter";
+import StyledImage from "../StyledImage";
 
 const Footer = () => {
   const year = new Date().getFullYear();
@@ -12,91 +16,111 @@ const Footer = () => {
     )}`;
     window.open(whatsappUrl, "_blank");
   };
+
   return (
-    <div className="mt-auto bg-gray-900 py-3 px-5 text-[white] text-center sm:text-left space-y-6">
-      <div className="flex flex-col sm:flex-row gap-5 sm:gap-[120px] items-center sm:items-start sm:justify-center">
-        <div>
-          <p className="text-[18px] font-bold leading-normal">Resources:</p>
-
-          <Link
-            href="/about"
-            className="text-baseWhite text-[14px] leading-normal"
-          >
-            About us
-          </Link>
-          {/* <Link href="/">
-            <p className="text-baseWhite text-[14px] leading-normal">Jobs</p>
-          </Link>
-          <Link href="/">
-            <p className="text-baseWhite text-[14px] leading-normal">Career</p>
-          </Link>
-          <Link href="/">
-            <p className="text-baseWhite text-[14px] leading-normal">FAQ</p>
-          </Link> */}
-        </div>
-
-        <div>
-          <p className="text-[18px] font-bold leading-normal">Social:</p>
-          <Link href="https://www.facebook.com/share/p/19SDKuBeMj/">
-            <p className="text-baseWhite text-[14px] leading-normal">
-              Facebook
-            </p>
-          </Link>
-          <Link href="https://www.instagram.com/zafariplusafrika/">
-            <p className="text-baseWhite text-[14px] leading-normal">
-              Instagram
-            </p>
-          </Link>
-          <Link
-            href="https://x.com/zafariplus"
-            target="_blank"
-            className="text-baseWhite text-[14px] leading-normal"
-          >
-            Twitter
-          </Link>
-        </div>
-
-        <div>
-          <p className="text-[18px] font-bold leading-normal">Support:</p>
-          <Link href="/">
-            <p className="text-baseWhite text-[14px] leading-normal">
-              Sell Tickets
-            </p>
-          </Link>
-          <Link href="/">
-            <p className="text-baseWhite text-[14px] leading-normal">FAQs</p>
-          </Link>
-          <p
-            onClick={handleWhatsAppClick}
-            className="text-baseWhite text-[14px] leading-normal cursor-pointer"
-          >
-            Chat with Agent Zafari
+    <div className="mt-auto bg-baseBlack py-10 sm:py-20 text-[white] text-center sm:text-left space-y-6">
+      <div className="w-full max-w-[1512px] mx-auto flex flex-col sm:flex-row sm:flex-wrap px-5 sm:px-10 gap-10 items-center md:items-start sm:justify-center">
+        <div className="space-y-2.5 w-full max-w-[354px] mx-auto sm:mx-0 xl:mx-auto">
+          <p className="text-[28px] font-extrabold">
+            <StyledImage src="/img/logo-white.svg" />
           </p>
-          <Link href="/contact">
-            <p className="text-baseWhite text-[14px] leading-normal">
-              Contact us
-            </p>
-          </Link>
-          <Link
-            href="/terms"
-            className="text-baseWhite text-[14px] leading-normal"
-          >
-            Terms & Privacy
-          </Link>
-          <Link
-            href="/useragreement"
-            className="text-baseWhite text-[14px] leading-normal"
-          >
-            User agreement
-          </Link>
+          <p className="text-sm text-white">
+            Zarafiplus is a global self-service ticketing platform for live
+            experiences that allows anyone to create, share, find and attend
+            events that fuel their passions and enrich their lives.
+          </p>
+          <div className="flex items-center justify-center sm:justify-start gap-3">
+            <Link href="https://web.facebook.com/zafariplusng">
+              <RiFacebookFill className="text-white text-[34px] p-1 bg-[#4267B2] rounded-full" />
+            </Link>
+            <Link href="https://x.com/zafariplus">
+              <FaTwitter className="text-white text-[34px] p-1.5 bg-[#1DA1F2] rounded-full" />
+            </Link>
+            <Link href="https://www.linkedin.com/in/zafariplus/">
+              <div className="text-white w-[34px] h-[34px] p-1.5 bg-[#0A66C2] rounded-full">
+                <FaLinkedinIn className="w-full h-full" />
+              </div>
+            </Link>
+          </div>
+        </div>
+
+        <div className="space-y-3 shrink-0 mx-auto sm:mx-0 xl:mx-auto">
+          <p className="text-base font-bold leading-normal">Plan Events</p>
+
+          <div className="flex flex-col gap-1">
+            <Link href="/" className="text-white text-[14px] leading-normal">
+              Create and Set Up
+            </Link>
+            <Link href="/">
+              <p className="text-white text-[14px] leading-normal">
+                Sell Tickets
+              </p>
+            </Link>
+            <Link href="/">
+              <p className="text-white text-[14px] leading-normal">
+                Online RSVP{" "}
+              </p>
+            </Link>
+            <Link href="/">
+              <p className="text-white text-[14px] leading-normal">
+                Online Events
+              </p>
+            </Link>
+          </div>
+        </div>
+
+        <div className="space-y-3 shrink-0 mx-auto sm:mx-0 xl:mx-auto">
+          <p className="text-[18px] font-bold leading-normal">About Us</p>
+
+          <div className="flex flex-col gap-1">
+            <Link href="/contact">
+              <p className="text-white text-[14px] leading-normal">
+                Contact Us
+              </p>
+            </Link>
+            <Link href="/">
+              <p className="text-white text-[14px] leading-normal">
+                Help Center
+              </p>
+            </Link>
+            <Link href="/" className="text-white text-[14px] leading-normal">
+              <p className="text-white text-[14px] leading-normal">
+                How it Works
+              </p>
+            </Link>
+            <Link
+              href="/useragreement"
+              className="text-white text-[14px] leading-normal"
+            >
+              <p className="text-white text-[14px] leading-normal">Privacy</p>
+            </Link>
+            <Link
+              href="/terms"
+              className="text-white text-[14px] leading-normal"
+            >
+              <p className="text-white text-[14px] leading-normal">Terms</p>
+            </Link>
+          </div>
+        </div>
+
+        <div className="w-full max-w-[387px]  space-y-2.5 mx-auto sm:mx-0 xl:mx-auto">
+          <p className="text-[18px] font-bold leading-normal">
+            Stay in the loop
+          </p>
+
+          <p className="text-white text-[14px] leading-normal">
+            Join our mailing list to stay in the loop with our newest for Event
+            and concert
+          </p>
+
+          <Newsletter />
         </div>
       </div>
-      <div className="w-full text-center ">
+      {/* <div className="w-full text-center ">
         <p className="text-[14px] sm:text-[16px]">
-          &copy; {year} Zafariplus LTD, All Rights Reserved ZAFARIPLUS is not
-          responsible for the content of external sites.
+          &copy; {year} Zafariplus LTD
         </p>
-      </div>
+      </div> */}
     </div>
   );
 };

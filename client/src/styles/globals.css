@@ -9,7 +9,6 @@ html {
   scroll-padding-top: 100px;
 }
 
-
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -66,4 +65,11 @@ html {
   }
 }
 
+.hide-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
 
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}

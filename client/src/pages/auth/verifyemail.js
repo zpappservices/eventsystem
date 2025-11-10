@@ -7,6 +7,8 @@ import { toast } from "react-toastify";
 import { emailVerifySignIn } from "../api/emailverifyauth";
 import { removeCredentials, retrieveCredentials } from "@/utils/token";
 import useAuthToken from "@/hooks/useAuthToken";
+import Layout from "@/components/auth/Layout";
+import Button from "@/components/widgets/Button";
 
 const Verifyemail = () => {
   const [otp, setOtp] = useState("");
@@ -69,7 +71,7 @@ const Verifyemail = () => {
       toast.success("User Successfully Signed up");
       removeCredentials();
       storeUserToken(id, accessToken, true);
-      router.push("/");
+      router.push("/auth/role");
     } catch (error) {
       toast.error("There was an error");
     } finally {
@@ -112,41 +114,50 @@ const Verifyemail = () => {
   }, [email]);
 
   return (
-    <div className="h-screen flex justify-center items-center">
-      <div className="flex flex-col items-center">
-        <div className="w-full max-w-[577px] flex flex-col gap-5 items-center">
-          <img src="/img/verify-email.svg" />
-          <p className="text-center text-[18px] not-italic font-semibold leading-[140%] text-primary1000">
-            Verify Email
-          </p>
-          <p className="text-center text-[20px] text-[#9DA9B3] not-italic font-normal leading-[140%]">
-            A confirmation code has been sent to
-            <span> {email}</span>
-          </p>
-        </div>
-        <form onSubmit={handleSubmit}>
-          <OtpForm onOtpChange={handleOtpChange} error={error} />
-          {error && (
-            <p className="text-[16px] text-center text-error">
-              {Array.isArray(error.errors) &&
-                error.errors.length > 0 &&
-                error.errors[0].message}
+    <Layout img="/img/verify-email.png">
+      <div className="flex justify-center items-center">
+        <div className="flex flex-col items-center">
+          <div className="w-full max-w-[493px] flex flex-col gap-3 items-center">
+            <img src="/img/verify-email.svg" />
+            <p className="text-center text-xl sm:text-[40px] not-italic font-bold leading-[140%] text-primary1000">
+              Check your email for code
             </p>
-          )}
-          <p
-            className="text-center underline underline-offset-2 cursor-pointer"
-            onClick={resendOtp}>
-            Resend otp
-          </p>
-          <ButtonLoading
-            disabled={!isComplete}
-            isLoading={isLoading}
-            className="mx-auto py-3 w-fit px-5 font-medium mt-[50px]">
-            Verify email
-          </ButtonLoading>
-        </form>
+            <p className="text-center text-sm text-baseBlack not-italic font-normal leading-[140%]">
+              We have a 6 digit code sent to
+              <span> {email}</span>. The code expires shortly so please enter it
+              soon
+            </p>
+          </div>
+          <form onSubmit={handleSubmit}>
+            <OtpForm onOtpChange={handleOtpChange} error={error} />
+            {error && (
+              <p className="text-[16px] text-center text-error">
+                {Array.isArray(error.errors) &&
+                  error.errors.length > 0 &&
+                  error.errors[0].message}
+              </p>
+            )}
+            <Button
+              style="w-full"
+              disabled={!isComplete}
+              isLoading={isLoading}
+              className="mx-auto py-3 w-fit px-5 font-medium mt-[50px]"
+            >
+              Verify email
+            </Button>
+            <p className="text-sm text-center mx-auto mt-1.5">
+              Didn’t receive an email?{" "}
+              <span
+                className="text-center text-baseBlack/70 underline underline-offset-2 font-bold cursor-pointer"
+                onClick={resendOtp}
+              >
+                Resend
+              </span>
+            </p>
+          </form>
+        </div>
       </div>
-    </div>
+    </Layout>
   );
 };
 

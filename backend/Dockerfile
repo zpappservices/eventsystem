@@ -13,7 +13,7 @@ RUN npm install
 COPY prisma ./prisma/
 
 # Set the environment variables for Prisma
-ENV DATABASE_URL="postgresql://shakeem:Oliv3tree@74.208.104.49:5432/eventticketdb?schema=zpeventtba"
+ENV DATABASE_URL="postgresql://shakeem:Oliv3tree@74.208.104.49:5432/eventticketdb?schema=zpeventtba2"
 ENV POSTGRES_PASSWORD=Oliv3tree
 ENV POSTGRES_USER=shakeem
 ENV POSTGRES_DB=eventticketdb

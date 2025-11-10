@@ -5,7 +5,7 @@ const useSearch = (items, searchTerm, searchFunction) => {
 
   useEffect(() => {
     if (searchTerm.trim() === "") {
-      setSearchedItems([]);
+      setSearchedItems(items);
     } else {
       setSearchedItems(
         items.filter((item) => searchFunction(item, searchTerm))

@@ -90,9 +90,10 @@ const GoogleSignin = ({ closeModal }) => {
       <button
         type="button"
         onClick={() => handleGoogleLogin("Google")}
-        className="w-full flex justify-center gap-3 duration-300 items-center p-1 py-2.5 mt-4 font-medium text-black border border-gray-500 rounded-[5px] transition-transform ease-in-out hover:scale-[1.05]">
+        className="w-full flex justify-center gap-3 duration-300 items-center p-1 py-2.5 mt-4 font-medium text-black border border-neutrals100 bg-neutrals100/20 rounded-[5px] transition-transform ease-in-out hover:scale-[1.05]"
+      >
         <FcGoogle className="text-xl" />
-        <p className="text-gray-800 text-sm"> Continue with Google</p>
+        <p className="text-gray-800 text-sm"> Sign up with Google</p>
       </button>
     </>
   );

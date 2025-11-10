@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { TfiLocationPin } from "react-icons/tfi";
 import Button from "../widgets/Button";
 import moment from "moment";
-import { RiSendPlaneFill } from "react-icons/ri";
 import DynamicModal from "../widgets/DynamicModal";
 import { useModal } from "@/hooks/useModal";
 import Share from "../website/Share";
@@ -53,7 +52,7 @@ const UpcomingEventCard = ({ data }) => {
           <div className="flex items-center gap-1">
             <TfiLocationPin className="text-white text-[14px] sm:text-[16px] -ms-0.5" />
             <p className="text-[14px] capitalize sm:text-[16px] leading-normal text-white font-medium">
-              {data?.location}
+              {data?.EventLocation?.[0]?.location}
             </p>
           </div>
 

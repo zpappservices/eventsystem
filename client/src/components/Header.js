@@ -12,7 +12,7 @@ const Header = () => {
 
     if (success) {
       const lastItem = data.length - 1;
-      setImage(data[lastItem]?.image_banner);
+      setImage(data[lastItem]?.image_banner?.[0]);
     } else {
     }
   };
@@ -60,7 +60,8 @@ const Header = () => {
               background="!bg-inherit"
               hover="hover:!bg-primary"
               border="border-1 border-primary"
-              outline={true}>
+              outline={true}
+            >
               Create Event
             </Button>
           </div>
@@ -91,7 +92,7 @@ const Header = () => {
           <div className="flex items-center">
             <div className="max-w-[191px] h-[169px] mx-auto relative">
               <StyledImage
-                src={image}
+                src={image || "/img/hero-4.png"}
                 className="w-full h-full object-cover animate-pulseScale"
               />
               <StyledImage
