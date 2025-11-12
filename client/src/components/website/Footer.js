@@ -29,6 +29,7 @@ const Footer = () => {
             experiences that allows anyone to create, share, find and attend
             events that fuel their passions and enrich their lives.
           </p>
+          
           <div className="flex items-center justify-center sm:justify-start gap-3">
             <Link href="https://web.facebook.com/zafariplusng">
               <RiFacebookFill className="text-white text-[34px] p-1 bg-[#4267B2] rounded-full" />
